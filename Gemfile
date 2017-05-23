@@ -70,9 +70,3 @@ gem 'devise'
 
 #rubocop for syntax checking
 gem 'rubocop', require: false
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 541f44d080e71ec33e1a9ee45de5fbad663e2596
