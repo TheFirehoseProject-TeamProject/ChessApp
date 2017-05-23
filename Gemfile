@@ -61,7 +61,9 @@ end
 # simple_form gem
 gem 'simple_form'
 
+
+gem 'devise'
+
 #rubocop for syntax checking
 
 gem 'rubocop', require: false
-
