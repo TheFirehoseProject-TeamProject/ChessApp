@@ -60,3 +60,8 @@ end
 
 # simple_form gem
 gem 'simple_form'
+
+#rubocop for syntax checking
+
+gem 'rubocop', require: false
+
