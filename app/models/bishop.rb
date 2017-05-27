@@ -1,1 +1,0 @@
-class Bishop < Piece; end

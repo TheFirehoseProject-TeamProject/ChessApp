@@ -1,1 +1,0 @@
-class Rook < Piece; end

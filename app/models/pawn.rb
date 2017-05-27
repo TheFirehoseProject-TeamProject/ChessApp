@@ -1,1 +1,0 @@
-class Pawn < Piece; end
