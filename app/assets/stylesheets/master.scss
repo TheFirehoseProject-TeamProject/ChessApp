@@ -1,1 +1,17 @@
 @import "bootstrap";
+
+.chessboard{
+  border-style: solid;
+  border-width: 1px;
+  margin: 20px;
+  padding: 30px;
+  background-image: url('board_background.png');
+  background-size: cover;
+}
+
+.chess_field{
+  margin: 0;
+  padding: 0;
+  border-style: solid;
+  border-width: 2px;
+}
