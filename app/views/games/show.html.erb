@@ -2,7 +2,7 @@
   <% @board.reverse.each do |row| %>
       <div class = "row offset-4">
         <% row.each do |field| %>
-          <b class="chess_field"><%= image_tag(field) %></b>
+          <span class="chess_field <%=field%>"></span>
         <%end%>
       </div>
   <%end%>

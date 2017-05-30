@@ -15,10 +15,10 @@ class GamesController < ApplicationController
     row = [1, 2, 3, 4, 5, 6, 7, 8]
     row.each_with_index do |_row, ri|
       column.each_with_index do |_column, ci|
-        @board[ri][ci] = if ci.even? && ri.even? || ri % 2 > 0 && ci % 2 > 0
-                           'white_field.png'
+        @board[ri][ci] = if ci.even? && ri.even? || ri.odd? && ci.odd?
+                           'white_field'
                          else
-                           'black_field.png'
+                           'black_field'
                          end
       end
     end
