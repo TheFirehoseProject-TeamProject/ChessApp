@@ -8,9 +8,6 @@ script:
   - bundle exec rake db:test:prepare
   - bundle exec rspec spec/
 before_script:
-<<<<<<< HEAD
-  - psql -c 'create database ChessApp_test' -U postgres
-=======
 
 deploy:
   provider: heroku
