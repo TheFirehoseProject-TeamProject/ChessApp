@@ -1,16 +1,16 @@
 class GamesController < ApplicationController
   def new; end
 
-<<<<<<< HEAD
+
   def create
     @game = Game.create(game_params)
     @game.populate_board!
 
     redirect_to game_path(@game)
   end
-=======
+
   def create; end
->>>>>>> master
+
 
   def show
     @board = draw_board
@@ -33,4 +33,6 @@ class GamesController < ApplicationController
     end
     return board
   end
+
+
 end
