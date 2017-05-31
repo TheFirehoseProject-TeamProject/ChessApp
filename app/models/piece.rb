@@ -3,7 +3,7 @@ class Piece < ApplicationRecord
   belongs_to :game
 
   def self.types
-    %w(King Queen Rook Bishop Knight Pawn)
+    %w[King Queen Rook Bishop Knight Pawn]
   end
 
   def self.colors
