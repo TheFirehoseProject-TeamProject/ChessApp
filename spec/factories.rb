@@ -14,6 +14,10 @@ FactoryGirl.define do
   end
 
   factory :game do
+    name 'game'
+    game_status 0
+    black_player_id 1
+    white_player_id 2
     association :user
   end
  
