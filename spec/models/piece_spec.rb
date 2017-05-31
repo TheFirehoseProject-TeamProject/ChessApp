@@ -67,7 +67,7 @@ RSpec.describe Piece, type: :model do
     end
     it 'should return true if there is a piece between destination and origin (upper left)' do
       piece2 = Piece.create(game_id: 1, user_id: 1, column_coordinate: 2, row_coordinate: 6)
-      expect(subject.obstructed?(1,7)).to eq true 
+      expect(subject.obstructed?(1,7)).to eq true
     end
     it 'should return true if there is a piece between destination and origin (lower right)' do
       piece2 = Piece.create(game_id: 1, user_id: 1, column_coordinate: 6, row_coordinate: 2)
@@ -77,12 +77,12 @@ RSpec.describe Piece, type: :model do
 
     describe 'method obstructed # checking for invalid input' do
       it "should return an error if destination is outside of board" do
-        expect(subject.obstructed?(8,8)).to eq 'Error Message'
-        expect(subject.obstructed?(-1,4)).to eq 'Error Message'
-        expect(subject.obstructed?(4,8)).to eq 'Error Message'
+        expect(subject.obstructed?(8,8)).to eq 'Error: Invalid Input'
+        expect(subject.obstructed?(-1,4)).to eq 'Error: Invalid Input'
+        expect(subject.obstructed?(4,8)).to eq 'Error: Invalid Input'
       end
       it "should return an error if move is invalid" do
-        expect(subject.obstructed?(1,5)).to eq 'Error Message'
+        expect(subject.obstructed?(1,5)).to eq 'Error: Invalid Input'
       end
     end
 end
