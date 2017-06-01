@@ -1,6 +1,4 @@
 class GamesController < ApplicationController
-  def new; end
-
 
   def create
     @game = Game.create(game_params)
@@ -33,7 +31,7 @@ class GamesController < ApplicationController
   end
 
   def game_params
-    params.require(:game).permit(:name, :number_of_moves, :game_status, :white_player_id, :black_player_id)
+    params.require(:game).permit(:name, :number_of_moves, :black_player_id, :white_player_id, :game_status)
   end
 
 

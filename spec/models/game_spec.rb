@@ -5,23 +5,22 @@ RSpec.describe Game, type: :model do
   describe "#populate_board!" do
     it 'places the correct number of pawns on the board' do
       
-      white_user = FactoryGirl.create(:user)
-      black_user = FactoryGirl.create(:user)
+      # white_user = FactoryGirl.create(:user)
+      # black_user = FactoryGirl.create(:user)
 
-      # user = User.create(game_id: 1, email: 'dummyemail@123.com', password: 'SecretPassword')
-      game = FactoryGirl.create(:game)
-      game.update(white_player_id: white_user.id, black_player_id: black_user.id)
-      # game = Game.create(id: 1, white_player: 1, black_player: 2)
+      game = FactoryGirl.create(:game, white_player_id: :white_player, black_player_id: :black_player)
       
+      # game.update(white_player_id: white_user.id, black_player_id: black_user.id)
+      # game = Game.create(id: 1, white_player: 1, black_player: 2)
       
       game.populate_board!
 
-      expect(game.white_player.pawns.count).to eq 8
-      expect(game.white_player.row_coordinate).to eq(1)
-      expect(game.white_player.column_coordinate).to eq(0..7)
-      expect(game.black_player.pawns.count).to eq 8
-      expect(game.black_player.pawns.row_coordinate).to eq(6)
-      expect(game.black_player.pawns.column_coordinate).to eq(0..7)
+      expect(game.pawns.white.count).to eq 8
+      # expect(game.white_player.row_coordinate).to eq(1)
+      # expect(game.white_player.column_coordinate).to eq(0..7)
+      # expect(game.black_player.pawns.count).to eq 8
+      # expect(game.black_player.pawns.row_coordinate).to eq(6)
+      # expect(game.black_player.pawns.column_coordinate).to eq(0..7)
     end
 
     it 'places the correct number of rooks on the board' do
