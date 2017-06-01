@@ -9,8 +9,6 @@ class GamesController < ApplicationController
     redirect_to game_path(@game)
   end
 
-  def create; end
-
 
   def show
     @board = draw_board
@@ -32,6 +30,10 @@ class GamesController < ApplicationController
       end
     end
     return board
+  end
+
+  def game_params
+    params.require(:game).permit(:name, :number_of_moves, :game_status, :white_player_id, :black_player_id)
   end
 
 

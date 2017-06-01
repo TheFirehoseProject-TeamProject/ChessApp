@@ -13,7 +13,7 @@ class Game < ApplicationRecord
     # Build white pieces
 
     (0..7).each do |i|
-      pieces.create(
+      Piece.create(
         type: 'Pawn',
         game_id: id,
         row_coordinate: 6,
@@ -22,7 +22,7 @@ class Game < ApplicationRecord
         )
     end
 
-    pieces.create(
+    Piece.create(
       type: 'Rook',
       game_id: id,
       row_coordinate: 7,
@@ -30,7 +30,7 @@ class Game < ApplicationRecord
       color: "White"
       )
 
-    pieces.create(
+    Piece.create(
       type: 'Rook',
       game_id: id,
       row_coordinate: 7,
@@ -38,7 +38,7 @@ class Game < ApplicationRecord
       color: "white"
       )
 
-    pieces.create(
+    Piece.create(
       type: 'Knight',
       game_id: id,
       row_coordinate: 7,
@@ -46,7 +46,7 @@ class Game < ApplicationRecord
       color: "white"
       )
 
-    pieces.create(
+    Piece.create(
       type: 'Knight',
       game_id: id,
       row_coordinate: 7,
@@ -54,7 +54,7 @@ class Game < ApplicationRecord
       color: "white"
       )
 
-    pieces.create(
+    Piece.create(
       type: 'Bishop',
       game_id: id,
       row_coordinate: 7,
@@ -62,7 +62,7 @@ class Game < ApplicationRecord
       color: "white"
       )
 
-    pieces.create(
+    Piece.create(
       type: 'Bishop',
       game_id: id,
       row_coordinate: 7,
@@ -70,7 +70,7 @@ class Game < ApplicationRecord
       color: "white"
       )
 
-    pieces.create(
+    Piece.create(
       type: 'Queen',
       game_id: id,
       row_coordinate: 0,
@@ -78,7 +78,7 @@ class Game < ApplicationRecord
       color: "white"
       )
 
-    pieces.create(
+    Piece.create(
       type: 'King',
       game_id: id,
       row_coordinate: 7,
@@ -86,9 +86,9 @@ class Game < ApplicationRecord
       color: "white"
       )
 
-    # Build black pieces
+    # Build black Piece
     (0..7).each do |i|
-      pieces.create(
+      Piece.create(
         type: 'Pawn',
         game_id: id,
         row_coordinate: 1,
@@ -97,7 +97,7 @@ class Game < ApplicationRecord
         )
     end
 
-      pieces.create(
+      Piece.create(
         type: 'Rook',
         game_id: id,
         row_coordinate: 0,
@@ -105,14 +105,14 @@ class Game < ApplicationRecord
         color: "black"
         )
 
-      pieces.create(
+      Piece.create(
         type: 'Rook',
         row_coordinate: 0,
         column_coordinate: 7,
         color: "black"
         )
 
-      pieces.create(
+      Piece.create(
         type: 'Knight',
         game_id: id,
         row_coordinate: 0,
@@ -120,7 +120,7 @@ class Game < ApplicationRecord
         color: "black"
         )
 
-      pieces.create(
+      Piece.create(
         type: 'Knight',
         game_id: id,
         row_coordinate: 0,
@@ -128,7 +128,7 @@ class Game < ApplicationRecord
         color: "black"
         )
 
-      pieces.create(
+      Piece.create(
         type: 'Bishop',
         game_id: id,
         row_coordinate: 0,
@@ -136,7 +136,7 @@ class Game < ApplicationRecord
         color: "black"
         )
 
-      pieces.create(
+      Piece.create(
         type: 'Bishop',
         game_id: id,
         row_coordinate: 0,
@@ -144,7 +144,7 @@ class Game < ApplicationRecord
         color: "black"
         )
 
-      pieces.create(
+      Piece.create(
         type: 'Queen',
         game_id: id,
         row_coordinate: 0,
@@ -152,7 +152,7 @@ class Game < ApplicationRecord
         color: "black"
         )
 
-      pieces.create(
+      Piece.create(
         type: 'King',
         game_id: id,
         row_coordinate: 0,
