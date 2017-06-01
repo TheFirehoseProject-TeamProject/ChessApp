@@ -9,10 +9,23 @@ class Piece < ApplicationRecord
   def obstructed?(destination_x, destination_y)
     @destination_x = destination_x
     @destination_y = destination_y
-    return 'Error: Invalid Input' if invalid_input?
-    return true if horizontal? || vertically? || diagonal_up_right_down_left? || diagonal_up_left_down_right?
-    false
+
+    destination_tests = [horizontal?, vertically?, diagonal_up_right_down_left?, diagonal_up_left_down_right?]
+
+    if destination_tests.include?(true)
+      return true
+    elsif invalid_input?(destination_tests)
+      return 'Error: Invalid Input'
+    else
+      false
+    end
   end
+
+  def invalid_input?(destination_tests)
+    invalid_input = @destination_y > 7 || @destination_x > 7 || @destination_y < 0 || @destination_x < 0
+    return true if (!destination_tests.include?(true) && !destination_tests.include?(false)) || invalid_input
+  end
+
 
   def horizontal?
     if @destination_x < column_coordinate && @destination_y == row_coordinate # checking left
@@ -88,10 +101,5 @@ class Piece < ApplicationRecord
       end
       return false
     end
-  end
-
-  def invalid_input?
-    return true if @destination_y > 7 || @destination_x > 7 || @destination_y < 0 || @destination_x < 0
-    return true if horizontal?.nil? && vertically?.nil? && diagonal_up_right_down_left?.nil? && diagonal_up_left_down_right?.nil?
   end
 end
