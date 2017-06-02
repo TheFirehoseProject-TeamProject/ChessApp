@@ -6,5 +6,5 @@ class Game < ApplicationRecord
   belongs_to :black_player, class_name: 'User'
 
   enum game_status: { in_progress: 0, checkmate: 1, stalemate: 2 }
-  scope :available, -> { where('black_player_id = ? OR white_player_id = ?', nil, nil) }
+  scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 end
