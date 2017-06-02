@@ -5,14 +5,12 @@ RSpec.describe Game, type: :model do
   describe "#populate_board!" do
     it 'places the correct number of pawns on the board' do
       
-      # white_user = FactoryGirl.create(:user)
-      # black_user = FactoryGirl.create(:user)
+      white_player = FactoryGirl.create(:user)
+      black_player = FactoryGirl.create(:user)
 
-      game = FactoryGirl.create(:game, white_player_id: :white_player, black_player_id: :black_player)
-      
-      # game.update(white_player_id: white_user.id, black_player_id: black_user.id)
-      # game = Game.create(id: 1, white_player: 1, black_player: 2)
-      
+      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player )
+      # game = FactoryGirl.create(:game, params: { white_player: white_player, black_player: black_player })
+
       game.populate_board!
 
       expect(game.pieces.where(type: 'Pawn', color: 'white').count).to eq 8
