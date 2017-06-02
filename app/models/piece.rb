@@ -1,3 +1,4 @@
+
 class Piece < ApplicationRecord
   belongs_to :user
   belongs_to :game
@@ -117,3 +118,4 @@ class Piece < ApplicationRecord
     end
   end
 end
+
