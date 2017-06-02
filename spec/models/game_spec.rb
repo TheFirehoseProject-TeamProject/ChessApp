@@ -15,7 +15,7 @@ RSpec.describe Game, type: :model do
       
       game.populate_board!
 
-      expect(game.pawns.white.count).to eq 8
+      expect(game.pieces.where(type: 'Pawn', color: 'white').count).to eq 8
       # expect(game.white_player.row_coordinate).to eq(1)
       # expect(game.white_player.column_coordinate).to eq(0..7)
       # expect(game.black_player.pawns.count).to eq 8
