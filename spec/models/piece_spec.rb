@@ -101,7 +101,7 @@ RSpec.describe Piece, type: :model do
       expect { piece.obstructed?(5, -1) }.to raise_error('Error: Invalid Input')
     end
     it 'should return an error if move is invalid' do
-      expect(piece.obstructed?(1, 5)).to eq 'Error: Invalid Input'
+      expect { piece.obstructed?(1, 5) }.to raise_error('Error: Invalid Input')
     end
   end
 end
