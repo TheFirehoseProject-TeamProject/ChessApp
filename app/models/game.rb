@@ -2,8 +2,8 @@ class Game < ApplicationRecord
   has_many :users
   has_many :pieces
 
-  # belongs_to :white_player, class: 'User'
-  # belongs_to :black_player, class: 'User'
+  belongs_to :white_player, class_name: 'User'
+  belongs_to :black_player, class_name: 'User'
 
   enum game_status: { in_progress: 0, checkmate: 1, stalemate: 2 }
 
@@ -38,7 +38,7 @@ class Game < ApplicationRecord
       game_id: id,
       row_coordinate: 7,
       column_coordinate: 0,
-      color: "White"
+      color: "white"
       )
 
     Piece.create(
@@ -84,7 +84,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'Queen',
       game_id: id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 3,
       color: "white"
       )
@@ -104,7 +104,7 @@ class Game < ApplicationRecord
         game_id: id,
         row_coordinate: 1,
         column_coordinate: i,
-        color: "Black"
+        color: "black"
         )
     end
 
