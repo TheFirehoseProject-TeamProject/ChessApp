@@ -1,3 +1,4 @@
+
 require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
@@ -8,3 +9,4 @@ RSpec.describe GamesController, type: :controller do
     end
   end
 end
+

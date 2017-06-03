@@ -1,3 +1,4 @@
+
 FactoryGirl.define do
   factory :user do
     sequence :email do |n|
@@ -27,3 +28,4 @@ FactoryGirl.define do
   factory :game do
   end
 end
+

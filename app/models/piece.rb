@@ -1,10 +1,15 @@
 
+
 class Piece < ApplicationRecord
   belongs_to :user
   belongs_to :game
 
   def self.types
     %w[King Queen Rook Bishop Knight Pawn]
+  end
+  
+  def self.colors
+    %w(White Black)
   end
 
   def obstructed?(destination_x, destination_y)
@@ -179,3 +184,4 @@ class Piece < ApplicationRecord
     false
   end
 end
+
