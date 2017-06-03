@@ -27,6 +27,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'Pawn',
         game_id: id,
+        user_id: white_player.id,
         row_coordinate: 6,
         column_coordinate: i,
         color: "white",
@@ -36,6 +37,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'Rook',
       game_id: id,
+      user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 0,
       color: "white"
@@ -44,6 +46,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'Rook',
       game_id: id,
+      user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 7,
       color: "white"
@@ -52,6 +55,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'Knight',
       game_id: id,
+      user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 1,
       color: "white"
@@ -60,6 +64,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'Knight',
       game_id: id,
+      user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 6,
       color: "white"
@@ -68,6 +73,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'Bishop',
       game_id: id,
+      user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 2,
       color: "white"
@@ -76,6 +82,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'Bishop',
       game_id: id,
+      user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 5,
       color: "white"
@@ -84,6 +91,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'Queen',
       game_id: id,
+      user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 3,
       color: "white"
@@ -92,6 +100,7 @@ class Game < ApplicationRecord
     Piece.create(
       type: 'King',
       game_id: id,
+      user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 4,
       color: "white"
@@ -102,6 +111,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'Pawn',
         game_id: id,
+        user_id: black_player.id,
         row_coordinate: 1,
         column_coordinate: i,
         color: "black"
@@ -111,6 +121,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'Rook',
         game_id: id,
+        user_id: black_player.id,
         row_coordinate: 0,
         column_coordinate: 0,
         color: "black"
@@ -118,6 +129,8 @@ class Game < ApplicationRecord
 
       Piece.create(
         type: 'Rook',
+        game_id: id,
+        user_id: black_player.id,
         row_coordinate: 0,
         column_coordinate: 7,
         color: "black"
@@ -126,6 +139,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'Knight',
         game_id: id,
+        user_id: black_player.id,
         row_coordinate: 0,
         column_coordinate: 1,
         color: "black"
@@ -134,6 +148,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'Knight',
         game_id: id,
+        user_id: black_player.id,
         row_coordinate: 0,
         column_coordinate: 6,
         color: "black"
@@ -142,6 +157,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'Bishop',
         game_id: id,
+        user_id: black_player.id,
         row_coordinate: 0,
         column_coordinate: 2,
         color: "black"
@@ -150,6 +166,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'Bishop',
         game_id: id,
+        user_id: black_player.id,
         row_coordinate: 0,
         column_coordinate: 5,
         color: "black"
@@ -158,6 +175,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'Queen',
         game_id: id,
+        user_id: black_player.id,
         row_coordinate: 0,
         column_coordinate: 3,
         color: "black"
@@ -166,6 +184,7 @@ class Game < ApplicationRecord
       Piece.create(
         type: 'King',
         game_id: id,
+        user_id: black_player.id,
         row_coordinate: 0,
         column_coordinate: 4,
         color: "black"
