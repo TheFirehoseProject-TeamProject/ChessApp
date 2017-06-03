@@ -12,17 +12,6 @@ class Game < ApplicationRecord
     
     # Build white pieces
 
-    # (0..7).each do |i|
-    #   pieces.create(
-    #     type: 'Pawn',
-    #     game_id: id,
-    #     row_coordinate: 6,
-    #     column_coordinate: i,
-    #     color: "white",
-    #     )
-    # end
-
-
     (0..7).each do |i|
       Piece.create(
         type: 'Pawn',
