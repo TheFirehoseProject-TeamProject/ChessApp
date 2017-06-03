@@ -39,38 +39,55 @@ class Piece < ApplicationRecord
     # end
     # return true if destination_tests.include?(true)
     # false
-
+      # byebug
     if horizontal_move?(destination_y)
-      return true if horizontal_obstruction_left? || horizontal_obstruction_right?
-      false
+      if horizontal_obstruction_left?(destination_x) || horizontal_obstruction_right?(destination_x)
+        return true
+      else
+        return false
+      end
     end
-
-    if vertical_move?(destination_y)
-      return true if vertical_obstruction_up? || vertical_obstruction_down?
-      false
+    if vertical_move?(destination_x)
+      if vertical_obstruction_up?(destination_y) || vertical_obstruction_down?(destination_y)
+        return true
+      else
+        return false
+      end
     end
 
     if diagonal_up_and_right_move?(destination_x, destination_y)
-      return true if diagonal_obstruction_up_right?(destination_y)
-      false
+      if diagonal_obstruction_up_right?(destination_y)
+        return true
+      else
+        return false
+      end
     end
 
     if diagonal_down_and_left_move?(destination_x, destination_y)
-      return true if diagonal_obstruction_down_left?(destination_y)
-      false
+      if diagonal_obstruction_down_left?(destination_y)
+        return true
+      else
+        return false
+      end
     end
 
     if diagonal_up_and_left_move?(destination_x, destination_y)
-      return true if diagonal_obstruction_up_left?(destination_y)
-      false
+      if diagonal_obstruction_up_left?(destination_y)
+        return true
+      else
+        return false
+      end
     end
 
     if diagonal_down_and_right_move?(destination_x, destination_y)
-      return true if diagonal_obstruction_down_right?(destination_y)
-      false
+      if diagonal_obstruction_down_right?(destination_y)
+        return true
+      else
+        return false
+      end
     end
 
-    raise 'Error: Invalid_Input'
+    raise 'Error: Invalid Input'
   end
 
   private
@@ -82,33 +99,46 @@ class Piece < ApplicationRecord
 
   def vertical_move?(destination_x)
     return true if destination_x == column_coordinate
+    false
   end
 
   def diagonal_up_and_right_move?(destination_x, destination_y)
-    diagonal_move_check_destination_up_and_right = destination_x - destination_y
-    diagonal_move_check_origin_up_and_right = column_coordinate - row_coordinate
-    return true if diagonal_move_check_destination_up_and_right == diagonal_move_check_origin_up_and_right
+    if destination_x > column_coordinate && destination_y > row_coordinate
+      diagonal_move_check_destination_up_and_right = destination_x - destination_y
+      diagonal_move_check_origin_up_and_right = column_coordinate - row_coordinate
+      return true if diagonal_move_check_destination_up_and_right == diagonal_move_check_origin_up_and_right
+      false
+    end
     false
   end
 
   def diagonal_down_and_left_move?(destination_x, destination_y)
-    diagonal_move_check_destination_down_and_left = destination_x - destination_y
-    diagonal_move_check_origin_down_and_left = column_coordinate - row_coordinate
-    return true if diagonal_move_check_destination_down_and_left == diagonal_move_check_origin_down_and_left
+    if destination_x < column_coordinate && destination_y < row_coordinate
+      diagonal_move_check_destination_down_and_left = destination_x - destination_y
+      diagonal_move_check_origin_down_and_left = column_coordinate - row_coordinate
+      return true if diagonal_move_check_destination_down_and_left == diagonal_move_check_origin_down_and_left
+      false
+    end
     false
   end
 
   def diagonal_up_and_left_move?(destination_x, destination_y)
-    diagonal_move_check_column_up_and_left = column_coordinate - destination_x
-    diagonal_move_check_row_up_and_left = destination_y - row_coordinate
-    return true if diagonal_move_check_column_up_and_left == diagonal_move_check_row_up_and_left
+    if destination_x < column_coordinate && destination_y > row_coordinate
+      diagonal_move_check_column_up_and_left = column_coordinate - destination_x
+      diagonal_move_check_row_up_and_left = destination_y - row_coordinate
+      return true if diagonal_move_check_column_up_and_left == diagonal_move_check_row_up_and_left
+      false
+    end
     false
   end
 
   def diagonal_down_and_right_move?(destination_x, destination_y)
-    diagonal_move_check_column_down_and_right = column_coordinate - destination_x
-    diagonal_move_check_row_down_and_right = destination_y - row_coordinate
-    return true if diagonal_move_check_column_down_and_right == diagonal_move_check_row_down_and_right
+    if destination_x > column_coordinate && destination_y < row_coordinate
+      diagonal_move_check_column_down_and_right = column_coordinate - destination_x
+      diagonal_move_check_row_down_and_right = destination_y - row_coordinate
+      return true if diagonal_move_check_column_down_and_right == diagonal_move_check_row_down_and_right
+      false
+    end
     false
   end
 
