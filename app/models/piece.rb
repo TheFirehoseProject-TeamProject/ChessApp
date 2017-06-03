@@ -1,3 +1,4 @@
+
 class Piece < ApplicationRecord
   belongs_to :user
   belongs_to :game
@@ -8,7 +9,6 @@ class Piece < ApplicationRecord
 
   def obstructed?(destination_x, destination_y)
     raise 'Error: Invalid Input' if destination_y > 7 || destination_x > 7 || destination_y < 0 || destination_x < 0
-
     invalid_move_tests =
       [
         horizontal_move?(destination_y),
@@ -18,21 +18,25 @@ class Piece < ApplicationRecord
         diagonal_up_and_left_move?(destination_x, destination_y),
         diagonal_down_and_right_move?(destination_x, destination_y)
       ]
-
     raise 'Error: Invalid Input' unless invalid_move_tests.include?(true)
-
-    destination_tests =
-      [
-        horizontal_obstruction_left?(destination_x, destination_y),
-        horizontal_obstruction_right?(destination_x, destination_y),
-        vertical_obstruction_up?(destination_x, destination_y),
-        vertical_obstruction_down?(destination_x, destination_y),
-        diagonal_obstruction_down_left?(destination_x, destination_y),
-        diagonal_obstruction_up_right?(destination_x, destination_y),
-        diagonal_obstruction_down_right?(destination_x, destination_y),
-        diagonal_obstruction_up_left?(destination_x, destination_y)
-      ]
-
+    destination_tests = []
+    invalid_move_tests.each_with_index do |test, index|
+      if test == true && index == 0
+        destination_tests << horizontal_obstruction_left?(destination_x)
+        destination_tests << horizontal_obstruction_right?(destination_x)
+      elsif test == true && index == 1
+        destination_tests << vertical_obstruction_up?(destination_y)
+        destination_tests << vertical_obstruction_down?(destination_y)
+      elsif test == true && index == 2
+        destination_tests << diagonal_obstruction_up_right?(destination_y)
+      elsif test == true && index == 3
+        destination_tests << diagonal_obstruction_down_left?(destination_y)
+      elsif test == true && index == 4
+        destination_tests << diagonal_obstruction_up_left?(destination_y)
+      elsif test == true && index == 5
+        destination_tests << diagonal_obstruction_down_right?(destination_y)
+      end
+    end
     return true if destination_tests.include?(true)
     false
   end
@@ -74,86 +78,70 @@ class Piece < ApplicationRecord
     false
   end
 
-  def horizontal_obstruction_left?(destination_x, destination_y)
-    if destination_x < column_coordinate && horizontal_move?(destination_y)
-      ((destination_x + 1)..(column_coordinate - 1)).each do |col|
-        present_pieces_check = Piece.where(column_coordinate: col, row_coordinate: row_coordinate).present?
-        return true if present_pieces_check
-      end
+  def horizontal_obstruction_left?(destination_x)
+    ((destination_x + 1)..(column_coordinate - 1)).each do |col|
+      present_pieces_check = Piece.where(column_coordinate: col, row_coordinate: row_coordinate).present?
+      return true if present_pieces_check
     end
     false
   end
 
-  def horizontal_obstruction_right?(destination_x, destination_y)
-    if destination_x > column_coordinate && horizontal_move?(destination_y)
-      ((column_coordinate + 1)..(destination_x - 1)).each do |col|
-        present_pieces_check = Piece.where(column_coordinate: col, row_coordinate: row_coordinate).present?
-        return true if present_pieces_check
-      end
+  def horizontal_obstruction_right?(destination_x)
+    ((column_coordinate + 1)..(destination_x - 1)).each do |col|
+      present_pieces_check = Piece.where(column_coordinate: col, row_coordinate: row_coordinate).present?
+      return true if present_pieces_check
     end
     false
   end
 
-  def vertical_obstruction_up?(destination_x, destination_y)
-    if destination_y > row_coordinate && vertical_move?(destination_x)
-      ((row_coordinate + 1)..(destination_y - 1)).each do |row|
-        present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate).present?
-        return true if present_pieces_check
-      end
+  def vertical_obstruction_up?(destination_y)
+    ((row_coordinate + 1)..(destination_y - 1)).each do |row|
+      present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate).present?
+      return true if present_pieces_check
     end
     false
   end
 
-  def vertical_obstruction_down?(destination_x, destination_y)
-    if destination_y < row_coordinate && vertical_move?(destination_x)
-      ((destination_y + 1)..(row_coordinate - 1)).each do |row|
-        present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate).present?
-        return true if present_pieces_check
-      end
+  def vertical_obstruction_down?(destination_y)
+    ((destination_y + 1)..(row_coordinate - 1)).each do |row|
+      present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate).present?
+      return true if present_pieces_check
     end
     false
   end
 
-  def diagonal_obstruction_up_right?(destination_x, destination_y)
-    if destination_y > row_coordinate && destination_x > column_coordinate && diagonal_up_and_right_move?(destination_x, destination_y)
-      ((row_coordinate + 1)..(destination_y - 1)).each_with_index do |row, index|
-        index += 1
-        present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate + index).present?
-        return true if present_pieces_check
-      end
+  def diagonal_obstruction_up_right?(destination_y)
+    ((row_coordinate + 1)..(destination_y - 1)).each_with_index do |row, index|
+      index += 1
+      present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate + index).present?
+      return true if present_pieces_check
     end
     false
   end
 
-  def diagonal_obstruction_down_left?(destination_x, destination_y)
-    if destination_y < row_coordinate && destination_x < column_coordinate && diagonal_down_and_left_move?(destination_x, destination_y)
-      ((destination_y + 1)..(row_coordinate - 1)).each_with_index do |row, index|
-        index += 1
-        present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate - index).present?
-        return true if present_pieces_check
-      end
+  def diagonal_obstruction_down_left?(destination_y)
+    ((destination_y + 1)..(row_coordinate - 1)).each_with_index do |row, index|
+      index += 1
+      present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate - index).present?
+      return true if present_pieces_check
     end
     false
   end
 
-  def diagonal_obstruction_up_left?(destination_x, destination_y)
-    if destination_y > row_coordinate && destination_x < column_coordinate && diagonal_up_and_left_move?(destination_x, destination_y)
-      ((row_coordinate + 1)..(destination_y - 1)).each_with_index do |row, index|
-        index += 1
-        present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate - index).present?
-        return true if present_pieces_check
-      end
+  def diagonal_obstruction_up_left?(destination_y)
+    ((row_coordinate + 1)..(destination_y - 1)).each_with_index do |row, index|
+      index += 1
+      present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate - index).present?
+      return true if present_pieces_check
     end
     false
   end
 
-  def diagonal_obstruction_down_right?(destination_x, destination_y)
-    if destination_y < row_coordinate && destination_x > column_coordinate && diagonal_down_and_right_move?(destination_x, destination_y)
-      ((destination_y + 1)..(row_coordinate - 1)).to_a.reverse.each_with_index do |row, index|
-        index += 1
-        present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate + index).present?
-        return true if present_pieces_check
-      end
+  def diagonal_obstruction_down_right?(destination_y)
+    ((destination_y + 1)..(row_coordinate - 1)).to_a.reverse.each_with_index do |row, index|
+      index += 1
+      present_pieces_check = Piece.where(row_coordinate: row, column_coordinate: column_coordinate + index).present?
+      return true if present_pieces_check
     end
     false
   end
