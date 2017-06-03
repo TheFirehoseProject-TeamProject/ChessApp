@@ -50,6 +50,8 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   # rpsec for Test driven development
   gem 'rspec-rails', '~> 3.5'
+  # rubocop for syntax checking
+  gem 'rubocop', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -66,5 +68,4 @@ gem 'simple_form'
 
 gem 'devise'
 
-# rubocop for syntax checking
-gem 'rubocop', require: false
+
