@@ -220,7 +220,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.2)
   devise
-  factory_girl_rails (~> 4.0)
+  factory_girl_rails
   jbuilder (~> 2.5)
   jquery-rails
   listen (~> 3.0.5)
