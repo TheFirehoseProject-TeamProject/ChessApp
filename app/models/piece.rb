@@ -9,37 +9,71 @@ class Piece < ApplicationRecord
 
   def obstructed?(destination_x, destination_y)
     raise 'Error: Invalid Input' if destination_y > 7 || destination_x > 7 || destination_y < 0 || destination_x < 0
-    invalid_move_tests =
-      [
-        horizontal_move?(destination_y),
-        vertical_move?(destination_x),
-        diagonal_up_and_right_move?(destination_x, destination_y),
-        diagonal_down_and_left_move?(destination_x, destination_y),
-        diagonal_up_and_left_move?(destination_x, destination_y),
-        diagonal_down_and_right_move?(destination_x, destination_y)
-      ]
-    raise 'Error: Invalid Input' unless invalid_move_tests.include?(true)
-    destination_tests = []
-    invalid_move_tests.each_with_index do |test, index|
-      if test == true && index == 0
-        destination_tests << horizontal_obstruction_left?(destination_x)
-        destination_tests << horizontal_obstruction_right?(destination_x)
-      elsif test == true && index == 1
-        destination_tests << vertical_obstruction_up?(destination_y)
-        destination_tests << vertical_obstruction_down?(destination_y)
-      elsif test == true && index == 2
-        destination_tests << diagonal_obstruction_up_right?(destination_y)
-      elsif test == true && index == 3
-        destination_tests << diagonal_obstruction_down_left?(destination_y)
-      elsif test == true && index == 4
-        destination_tests << diagonal_obstruction_up_left?(destination_y)
-      elsif test == true && index == 5
-        destination_tests << diagonal_obstruction_down_right?(destination_y)
-      end
+    # invalid_move_tests =
+    #   [
+    #     horizontal_move?(destination_y),
+    #     vertical_move?(destination_x),
+    #     diagonal_up_and_right_move?(destination_x, destination_y),
+    #     diagonal_down_and_left_move?(destination_x, destination_y),
+    #     diagonal_up_and_left_move?(destination_x, destination_y),
+    #     diagonal_down_and_right_move?(destination_x, destination_y)
+    #   ]
+    # raise 'Error: Invalid Input' unless invalid_move_tests.include?(true)
+    # destination_tests = []
+    # invalid_move_tests.each_with_index do |test, index|
+    #   if test == true && index == 0
+    #     destination_tests << horizontal_obstruction_left?(destination_x)
+    #     destination_tests << horizontal_obstruction_right?(destination_x)
+    #   elsif test == true && index == 1
+    #     destination_tests << vertical_obstruction_up?(destination_y)
+    #     destination_tests << vertical_obstruction_down?(destination_y)
+    #   elsif test == true && index == 2
+    #     destination_tests << diagonal_obstruction_up_right?(destination_y)
+    #   elsif test == true && index == 3
+    #     destination_tests << diagonal_obstruction_down_left?(destination_y)
+    #   elsif test == true && index == 4
+    #     destination_tests << diagonal_obstruction_up_left?(destination_y)
+    #   elsif test == true && index == 5
+    #     destination_tests << diagonal_obstruction_down_right?(destination_y)
+    #   end
+    # end
+    # return true if destination_tests.include?(true)
+    # false
+
+    if horizontal_move?(destination_y)
+      return true if horizontal_obstruction_left? || horizontal_obstruction_right?
+      false
     end
-    return true if destination_tests.include?(true)
-    false
+
+    if vertical_move?(destination_y)
+      return true if vertical_obstruction_up? || vertical_obstruction_down?
+      false
+    end
+
+    if diagonal_up_and_right_move?(destination_x, destination_y)
+      return true if diagonal_obstruction_up_right?(destination_y)
+      false
+    end
+
+    if diagonal_down_and_left_move?(destination_x, destination_y)
+      return true if diagonal_obstruction_down_left?(destination_y)
+      false
+    end
+
+    if diagonal_up_and_left_move?(destination_x, destination_y)
+      return true if diagonal_obstruction_up_left?(destination_y)
+      false
+    end
+
+    if diagonal_down_and_right_move?(destination_x, destination_y)
+      return true if diagonal_obstruction_down_right?(destination_y)
+      false
+    end
+
+    raise 'Error: Invalid_Input'
   end
+
+  private
 
   def horizontal_move?(destination_y)
     return true if destination_y == row_coordinate

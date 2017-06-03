@@ -2,7 +2,6 @@
 require 'rails_helper'
 
 RSpec.describe Piece, type: :model do
-
   let(:game) { FactoryGirl.create(:game) }
   let(:user) { FactoryGirl.create(:user) }
   let(:piece) { FactoryGirl.create(:piece, :is_on_board) }
