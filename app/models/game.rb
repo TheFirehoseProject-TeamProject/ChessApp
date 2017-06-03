@@ -4,6 +4,9 @@ class Game < ApplicationRecord
 
   enum game_status: { in_progress: 0, checkmate: 1, stalemate: 2 }
 
+  scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
+
+
   def populate_board!
     # this should create all 32 pieces with their initial X/Y coordinates.
     
