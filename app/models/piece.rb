@@ -159,4 +159,3 @@ class Piece < ApplicationRecord
     false
   end
 end
-
