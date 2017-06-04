@@ -64,7 +64,7 @@ class Piece < ApplicationRecord
     raise 'Error: Invalid Input'
   end
 
-  private
+  # private
 
   def horizontal_move?(destination_y)
     return true if destination_y == row_coordinate
