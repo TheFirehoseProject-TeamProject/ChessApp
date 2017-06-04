@@ -1,4 +1,10 @@
 class GamesController < ApplicationController
+  helper_method :render_piece
+
+  def new
+    @game = Game.new
+  end
+
   def create
     @game = Game.create(game_params)
     @game.populate_board!
@@ -8,9 +14,17 @@ class GamesController < ApplicationController
 
   def show
     @board = draw_board
+    render_piece
+  end
+  def render_piece(x, y)
+    byebug
+    @piece = Piece.find_by column_coordinate: x, row_coordinate: y, game_id: 1
   end
 
+
   private
+
+
 
   def draw_board
     board = Array.new(8) { Array.new(8) }
