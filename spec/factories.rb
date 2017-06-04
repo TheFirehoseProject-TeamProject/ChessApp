@@ -6,8 +6,6 @@ FactoryGirl.define do
     end
     password 'secretPassword'
     password_confirmation 'secretPassword'
-
-    association :game
   end
 
   factory :piece do
@@ -26,6 +24,9 @@ FactoryGirl.define do
   end
 
   factory :game do
+    association :black_player, factory: :user
+    association :white_player, factory: :user
+    number_of_moves 0
+    game_status 0
   end
 end
-
