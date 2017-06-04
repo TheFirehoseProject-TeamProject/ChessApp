@@ -7,9 +7,9 @@ class Piece < ApplicationRecord
   def self.types
     %w[King Queen Rook Bishop Knight Pawn]
   end
-  
+
   def self.colors
-    %w(White Black)
+    %w[White Black]
   end
 
   def obstructed?(destination_x, destination_y)
@@ -184,4 +184,3 @@ class Piece < ApplicationRecord
     false
   end
 end
-

@@ -8,7 +8,6 @@ class Game < ApplicationRecord
 
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 
-
   def populate_board!
     # this should create all 32 pieces with their initial X/Y coordinates.
 
