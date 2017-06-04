@@ -39,8 +39,8 @@ group :development, :test do
   gem 'byebug', platform: :mri
   # rpsec for Test driven development
   gem 'rspec-rails', '~> 3.5'
-  
   gem 'factory_girl_rails'
+  gem 'rubocop', require: false
 end
 
 group :development do
@@ -70,5 +70,3 @@ gem 'simple_form'
 
 gem 'devise'
 
-# rubocop for syntax checking
-gem 'rubocop', require: false
