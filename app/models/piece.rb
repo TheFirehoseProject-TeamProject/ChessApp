@@ -64,8 +64,6 @@ class Piece < ApplicationRecord
     raise 'Error: Invalid Input'
   end
 
-  # private
-
   def horizontal_move?(destination_y)
     return true if destination_y == row_coordinate
     false
@@ -75,6 +73,9 @@ class Piece < ApplicationRecord
     return true if destination_x == column_coordinate
     false
   end
+
+  private
+
 
   def diagonal_up_and_right_move?(destination_x, destination_y)
     if destination_x > column_coordinate && destination_y > row_coordinate
