@@ -3,6 +3,7 @@ AllCops:
     - bin/**/*
     - db/**/*
     - vendor/**/*
+    - db/schema.rb
 
 Rails:
   Enabled: true
@@ -33,7 +34,7 @@ LineLength:
 
 CyclomaticComplexity:
   Enabled: false
-  
+
 PerceivedComplexity:
   Enabled: false
 
