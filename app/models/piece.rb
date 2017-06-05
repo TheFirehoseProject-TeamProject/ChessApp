@@ -15,11 +15,7 @@ class Piece < ApplicationRecord
   def obstructed?(destination_x, destination_y)
     raise 'Error: Invalid Input' if destination_y > 7 || destination_x > 7 || destination_y < 0 || destination_x < 0
     if horizontal_move?(destination_y)
-      if horizontal_obstruction_left?(destination_x) || horizontal_obstruction_right?(destination_x)
-        return true
-      else
-        return false
-      end
+      return horizontal_obstruction_left?(destination_x) || horizontal_obstruction_right?(destination_x)
     end
     if vertical_move?(destination_x)
       if vertical_obstruction_up?(destination_y) || vertical_obstruction_down?(destination_y)

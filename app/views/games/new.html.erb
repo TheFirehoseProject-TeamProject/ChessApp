@@ -2,6 +2,8 @@
   <h1>Add a game</h1>
 
   <%= simple_form_for @game do |f| %>
-    <%= f.submit 'Play' %>
+    <%= f.input :black_player_id %>
+    <%= f.input :white_player_id %>
+    <%= f.submit 'Play', class: 'btn' %>
   <% end %>
 </div>

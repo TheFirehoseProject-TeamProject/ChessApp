@@ -1,8 +1,8 @@
 <div class="chessboard">
-  <% @board.reverse.each do |row| %>
+  <% @board.each do |row| %>
       <div class = "row offset-3">
         <% row.each do |field| %>
-          <span class="chess_field <%= field %>"></span>
+          <span class="chess_field <%= field[:class] %>"><%= field[:piece] ? field[:piece].type : "" %></span>
         <%end%>
       </div>
   <%end%>
