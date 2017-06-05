@@ -1,1 +1,11 @@
-<h1>This is an inital root page</h1>
+<h1>Find a game to join</h1>
+
+<ul>
+<% @available_games.each do |game| %>
+  <% if game.white_player %>
+    <li><%= game.white_player.name + "'s game" %></li>
+  <% else %>
+    <li><%= game.black_player.name + "'s game" %></li>
+  <% end %>
+<% end %>
+</ul>
