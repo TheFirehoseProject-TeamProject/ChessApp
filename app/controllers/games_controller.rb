@@ -10,6 +10,9 @@ class GamesController < ApplicationController
     @board = draw_board
   end
 
+  def update
+  end
+
   private
 
   def draw_board
@@ -32,3 +35,7 @@ class GamesController < ApplicationController
     params.require(:game).permit(:name, :number_of_moves, :black_player_id, :white_player_id, :game_status)
   end
 end
+
+  def game
+    @game ||= Game.where(id: params[:id]).last
+  end

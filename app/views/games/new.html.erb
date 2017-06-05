@@ -1,0 +1,7 @@
+<h1>Join a Game</h1>
+<p>Click to join a game with available seats.</p>
+
+<%= simple_form_for @game, :url; => games_path do |f| %>
+    <%= f.input :black_player_id, :collection => User.all %>
+    <%= f.submit "Begin Game", :class => 'btn btn-primary' %>
+<% end %>
