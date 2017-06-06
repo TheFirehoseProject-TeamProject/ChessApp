@@ -14,18 +14,15 @@ class GamesController < ApplicationController
 
   def show
     @board = current_board
-
   end
 
   private
 
-  def render_piece(x, y)
-    piece = current_game.pieces.find_by column_coordinate: x, row_coordinate: y
-    # piece.image unless piece.image == ''
-  end
+  # def render_piece(x, y)
+  #   @piece = current_game.pieces.find_by column_coordinate: x, row_coordinate: y
+  # end
 
   def current_board
-
     pieces = current_game.pieces
 
     board = Array.new(8) { Array.new(8) { { piece: nil, image: '' } } }
