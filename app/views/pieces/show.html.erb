@@ -1,0 +1,34 @@
+
+<div class="chessboard">
+
+  <% @board.reverse.each_with_index do |row, index_row| %>
+      <div class = "row offset-3">
+        <% row.each_with_index do |field, index_field| %>
+          <span class="chess_field <%=field%>" row="<%=index_row%>" column= "<%=index_field%>">
+            <%if index_field == @piece.column_coordinate && index_row == @piece.row_coordinate %>
+              <span class="chess_piece_selected">Piece</span>
+            <%end%>
+          </span>
+        <%end%>
+      </div>
+  <%end%>
+</div>
+
+<script>
+  $(function() {
+    let url = window.location.href;
+    let pieceId = url.substring(url.lastIndexOf('/') + 1);
+    $(".chess_field").click(function(event){
+      let row = ($(event.target).attr('row'));
+      let column = ($(event.target).attr('column'));
+      $("[row=" + "'" + row + "'" + "][column=" + "'" + column + "'" + "]").css("color","yellow");
+      $.post("/pieces/" + pieceId, {
+        _method: "PUT",
+        piece: {
+        row_coordinate: row,
+        column_coordinate: column
+        }
+      });
+    });
+  });
+</script>
