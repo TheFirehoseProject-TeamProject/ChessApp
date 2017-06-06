@@ -40,8 +40,3 @@ class GamesController < ApplicationController
     params.require(:game).permit(:name, :number_of_moves, :black_player_id, :white_player_id, :game_status)
   end
 end
-
-  def black_and_white_player?
-    @game.black_player_id != game_params[:white_player_id].to_i
-  end
-end
