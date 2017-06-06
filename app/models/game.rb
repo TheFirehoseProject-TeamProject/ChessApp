@@ -21,7 +21,7 @@ class Game < ApplicationRecord
         row_coordinate: 6,
         column_coordinate: i,
         color: 'white',
-        image: '/assets/images/WhitePawn.png'
+        image: 'pieces/WhitePawn.png'
       )
     end
 
@@ -32,7 +32,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 0,
       color: 'white',
-      image: '/assets/images/WhiteRook.png'
+      image: 'pieces/WhiteRook.png'
     )
 
     Piece.create(
@@ -42,7 +42,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 7,
       color: 'white',
-      image: '/assets/images/WhiteRook.png'
+      image: 'pieces/WhiteRook.png'
     )
 
     Piece.create(
@@ -52,7 +52,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 1,
       color: 'white',
-      image: '/assets/images/WhiteKnight.png'
+      image: 'pieces/WhiteKnight.png'
     )
 
     Piece.create(
@@ -62,7 +62,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 6,
       color: 'white',
-      image: '/assets/images/WhiteKnight.png'
+      image: 'pieces/WhiteKnight.png'
     )
 
     Piece.create(
@@ -72,7 +72,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 2,
       color: 'white',
-      image: '/assets/images/WhiteBishop.png'
+      image: 'pieces/WhiteBishop.png'
     )
 
     Piece.create(
@@ -82,7 +82,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 5,
       color: 'white',
-      image: '/assets/images/WhiteBishop.png'
+      image: 'pieces/WhiteBishop.png'
     )
 
     Piece.create(
@@ -92,7 +92,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 3,
       color: 'white',
-      image: '/assets/images/WhiteQueen.png'
+      image: 'pieces/WhiteQueen.png'
     )
 
     Piece.create(
@@ -102,7 +102,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 4,
       color: 'white',
-      image: '/assets/images/WhiteKing.png'
+      image: 'pieces/WhiteKing.png'
     )
 
     # Build black Piece
@@ -114,7 +114,7 @@ class Game < ApplicationRecord
         row_coordinate: 1,
         column_coordinate: i,
         color: 'black',
-        image: '/assets/images/BlackPawn.png'
+        image: 'pieces/BlackPawn.png'
       )
     end
 
@@ -125,7 +125,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 0,
       color: 'black',
-      image: '/assets/images/BlackRook.png'
+      image: 'pieces/BlackRook.png'
     )
 
     Piece.create(
@@ -135,7 +135,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 7,
       color: 'black',
-      image: '/assets/images/BlackRook.png'
+      image: 'pieces/BlackRook.png'
     )
 
     Piece.create(
@@ -145,7 +145,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 1,
       color: 'black',
-      image: '/assets/images/BlackKnight.png'
+      image: 'pieces/BlackKnight.png'
     )
 
     Piece.create(
@@ -155,7 +155,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 6,
       color: 'black',
-      image: '/assets/images/BlackKnight.png'
+      image: 'pieces/BlackKnight.png'
     )
 
     Piece.create(
@@ -165,7 +165,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 2,
       color: 'black',
-      image: '/assets/images/BlackBishop.png'
+      image: 'pieces/BlackBishop.png'
     )
 
     Piece.create(
@@ -175,7 +175,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 5,
       color: 'black',
-      image: '/assets/images/BlackBishop.png'
+      image: 'pieces/BlackBishop.png'
     )
 
     Piece.create(
@@ -185,7 +185,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 3,
       color: 'black',
-      image: '/assets/images/BlackQueen.png'
+      image: 'pieces/BlackQueen.png'
     )
 
     Piece.create(
@@ -195,7 +195,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 4,
       color: 'black',
-      image: '/assets/images/BlackKing.png'
+      image: 'pieces/BlackKing.png'
     )
   end
 end
