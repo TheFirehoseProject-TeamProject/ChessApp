@@ -20,14 +20,15 @@ class GamesController < ApplicationController
   private
 
   def render_piece(x, y)
-    @piece = current_game.pieces.find_by column_coordinate: x, row_coordinate: y
+    piece = current_game.pieces.find_by column_coordinate: x, row_coordinate: y
+    # piece.image unless piece.image == ''
   end
 
   def current_board
 
     pieces = current_game.pieces
 
-    board = Array.new(8) { Array.new(8) { { piece: nil } } }
+    board = Array.new(8) { Array.new(8) { { piece: nil, image: '' } } }
     (0..7).each do |row_index|
       (0..7).each do |column_index|
         board[row_index][column_index][:class] = if column_index.even? && row_index.even? || row_index.odd? && column_index.odd?
@@ -45,10 +46,9 @@ class GamesController < ApplicationController
     board
   end
 
-def current_game
-  @current_game ||= Game.find(params[:id])
-end
-
+  def current_game
+    @current_game ||= Game.find(params[:id])
+  end
 
   def game_params
     params.require(:game).permit(:black_player_id, :white_player_id)

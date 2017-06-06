@@ -2,7 +2,7 @@
   <% @board.each do |row| %>
       <div class = "row offset-3">
         <% row.each do |field| %>
-          <span class="chess_field <%= field[:class] %>"><%= field[:piece] ? field[:piece].type : "" %><%= field[:piece] ? field[:piece].color : "" %></span>
+          <span class="chess_field <%= field[:class] %>"><%= image_tag field[:piece].image unless field[:piece].nil?  %></span>
         <%end%>
       </div>
   <%end%>
