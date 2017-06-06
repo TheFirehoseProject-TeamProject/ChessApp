@@ -25,7 +25,7 @@ class GamesController < ApplicationController
   def current_board
     pieces = current_game.pieces
 
-    board = Array.new(8) { Array.new(8) { { piece: nil, image: '' } } }
+    board = Array.new(8) { Array.new(8) { { piece: nil } } }
     (0..7).each do |row_index|
       (0..7).each do |column_index|
         board[row_index][column_index][:class] = if column_index.even? && row_index.even? || row_index.odd? && column_index.odd?
