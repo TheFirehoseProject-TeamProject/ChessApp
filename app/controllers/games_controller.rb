@@ -12,7 +12,6 @@ class GamesController < ApplicationController
 
   private
 
-
   def game_params
     params.require(:game).permit(:name, :number_of_moves, :black_player_id, :white_player_id, :game_status)
   end

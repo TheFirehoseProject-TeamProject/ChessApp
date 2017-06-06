@@ -3,7 +3,9 @@
       <div class = "row offset-3">
         <% row.each_with_index do |field, index_field| %>
           <span class="chess_field <%=field%>">
-              <%if index_field == Piece.find(1).column_coordinate && index_row == Piece.find(1).row_coordinate %><%= link_to 'Piece', "/pieces/1?#{Time.now.to_i}"%><%end%>
+              <%if index_field == Piece.find(1).column_coordinate && index_row == Piece.find(1).row_coordinate %>
+                <%= link_to 'Piece', "/pieces/1?#{Time.now.to_i}"%>
+              <%end%>
           </span>
         <%end%>
       </div>
