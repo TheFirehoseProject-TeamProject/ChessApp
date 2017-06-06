@@ -10,7 +10,12 @@ class GamesController < ApplicationController
     @board = draw_board
   end
 
+  def new
+    @game = Game.new
+  end
+
   def update
+    @game = Game.find(params[:id])
   end
 
   private
@@ -36,6 +41,7 @@ class GamesController < ApplicationController
   end
 end
 
-  def game
-    @game ||= Game.where(id: params[:id]).last
+  def black_and_white_player?
+    @game.black_player_id != game_params[:white_player_id].to_i
   end
+end
