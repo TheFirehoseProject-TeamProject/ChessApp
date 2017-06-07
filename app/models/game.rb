@@ -9,10 +9,6 @@ class Game < ApplicationRecord
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 
   def populate_board!
-    # this should create all 32 pieces with their initial X/Y coordinates.
-
-    # Build white pieces
-
     (0..7).each do |i|
       Piece.create(
         type: 'Pawn',
@@ -105,7 +101,6 @@ class Game < ApplicationRecord
       image: 'pieces/WhiteKing.png'
     )
 
-    # Build black Piece
     (0..7).each do |i|
       Piece.create(
         type: 'Pawn',

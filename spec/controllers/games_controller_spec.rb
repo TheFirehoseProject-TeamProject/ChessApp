@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe GamesController, type: :controller do
   let(:game) { FactoryGirl.create(:game) }
 
-  subject
+  # WIP - getting test to pass again
 
   describe 'games#show action' do
     it 'should show an empty chessboard' do
