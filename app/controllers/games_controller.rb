@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  helper_method :render_piece
+  helper_method :current_game
 
   def new
     @game = Game.new
@@ -18,21 +18,17 @@ class GamesController < ApplicationController
 
   private
 
-  # def render_piece(x, y)
-  #   @piece = current_game.pieces.find_by column_coordinate: x, row_coordinate: y
-  # end
-
   def current_board
     pieces = current_game.pieces
 
     board = Array.new(8) { Array.new(8) { { piece: nil } } }
     (0..7).each do |row_index|
       (0..7).each do |column_index|
-        board[row_index][column_index][:class] = if column_index.even? && row_index.even? || row_index.odd? && column_index.odd?
-                                                   'white_field'
-                                                 else
-                                                   'black_field'
-                                                 end
+        board[row_index][column_index] = if column_index.even? && row_index.even? || row_index.odd? && column_index.odd?
+                                           { class: 'white_field' }
+                                         else
+                                           { class: 'black_field' }
+                                         end
       end
     end
 
