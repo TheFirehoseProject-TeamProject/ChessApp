@@ -1,5 +1,3 @@
-
-
 class Piece < ApplicationRecord
   belongs_to :user
   belongs_to :game
@@ -14,51 +12,29 @@ class Piece < ApplicationRecord
 
   def obstructed?(destination_x, destination_y)
     raise 'Error: Invalid Input' if destination_y > 7 || destination_x > 7 || destination_y < 0 || destination_x < 0
+
     if horizontal_move?(destination_y)
-      if horizontal_obstruction_left?(destination_x) || horizontal_obstruction_right?(destination_x)
-        return true
-      else
-        return false
-      end
+      return horizontal_obstruction_left?(destination_x) || horizontal_obstruction_right?(destination_x)
     end
+
     if vertical_move?(destination_x)
-      if vertical_obstruction_up?(destination_y) || vertical_obstruction_down?(destination_y)
-        return true
-      else
-        return false
-      end
+      return vertical_obstruction_up?(destination_y) || vertical_obstruction_down?(destination_y)
     end
 
     if diagonal_up_and_right_move?(destination_x, destination_y)
-      if diagonal_obstruction_up_right?(destination_y)
-        return true
-      else
-        return false
-      end
+      return diagonal_obstruction_up_right?(destination_y)
     end
 
     if diagonal_down_and_left_move?(destination_x, destination_y)
-      if diagonal_obstruction_down_left?(destination_y)
-        return true
-      else
-        return false
-      end
+      return diagonal_obstruction_down_left?(destination_y)
     end
 
     if diagonal_up_and_left_move?(destination_x, destination_y)
-      if diagonal_obstruction_up_left?(destination_y)
-        return true
-      else
-        return false
-      end
+      return diagonal_obstruction_up_left?(destination_y)
     end
 
     if diagonal_down_and_right_move?(destination_x, destination_y)
-      if diagonal_obstruction_down_right?(destination_y)
-        return true
-      else
-        return false
-      end
+      return diagonal_obstruction_down_right?(destination_y)
     end
 
     raise 'Error: Invalid Input'

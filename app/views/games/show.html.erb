@@ -1,5 +1,6 @@
 <div class="chessboard">
-  <% test_piece = Piece.find(1) %>
+
+  <!-- <% test_piece = Piece.find(1) %>
   <% @board.reverse.each_with_index do |row, index_row| %>
       <div class = "row offset-3">
         <% row.each_with_index do |field, index_field| %>
@@ -7,7 +8,12 @@
               <%if index_field == test_piece.column_coordinate && index_row == test_piece.row_coordinate %>
                 <%= link_to 'Piece', "/pieces/1?#{Time.now.to_i}"%>
               <%end%>
-          </span>
+          </span> -->
+
+  <% @board.each do |row| %>
+      <div class = "row offset-3">
+        <% row.each do |field| %>
+          <span class="chess_field <%= field[:class] %>"><%= image_tag field[:piece].image unless field[:piece].nil?  %></span>
         <%end%>
       </div>
   <%end%>

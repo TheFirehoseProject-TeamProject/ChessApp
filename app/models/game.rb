@@ -12,10 +12,6 @@ class Game < ApplicationRecord
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 
   def populate_board!
-    # this should create all 32 pieces with their initial X/Y coordinates.
-
-    # Build white pieces
-
     (0..7).each do |i|
       Piece.create(
         type: 'Pawn',
@@ -23,7 +19,8 @@ class Game < ApplicationRecord
         user_id: white_player.id,
         row_coordinate: 6,
         column_coordinate: i,
-        color: 'white'
+        color: 'white',
+        image: 'pieces/WhitePawn.png'
       )
     end
 
@@ -33,7 +30,8 @@ class Game < ApplicationRecord
       user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 0,
-      color: 'white'
+      color: 'white',
+      image: 'pieces/WhiteRook.png'
     )
 
     Piece.create(
@@ -42,7 +40,8 @@ class Game < ApplicationRecord
       user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 7,
-      color: 'white'
+      color: 'white',
+      image: 'pieces/WhiteRook.png'
     )
 
     Piece.create(
@@ -51,7 +50,8 @@ class Game < ApplicationRecord
       user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 1,
-      color: 'white'
+      color: 'white',
+      image: 'pieces/WhiteKnight.png'
     )
 
     Piece.create(
@@ -60,7 +60,8 @@ class Game < ApplicationRecord
       user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 6,
-      color: 'white'
+      color: 'white',
+      image: 'pieces/WhiteKnight.png'
     )
 
     Piece.create(
@@ -69,7 +70,8 @@ class Game < ApplicationRecord
       user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 2,
-      color: 'white'
+      color: 'white',
+      image: 'pieces/WhiteBishop.png'
     )
 
     Piece.create(
@@ -78,7 +80,8 @@ class Game < ApplicationRecord
       user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 5,
-      color: 'white'
+      color: 'white',
+      image: 'pieces/WhiteBishop.png'
     )
 
     Piece.create(
@@ -87,7 +90,8 @@ class Game < ApplicationRecord
       user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 3,
-      color: 'white'
+      color: 'white',
+      image: 'pieces/WhiteQueen.png'
     )
 
     Piece.create(
@@ -96,10 +100,10 @@ class Game < ApplicationRecord
       user_id: white_player.id,
       row_coordinate: 7,
       column_coordinate: 4,
-      color: 'white'
+      color: 'white',
+      image: 'pieces/WhiteKing.png'
     )
 
-    # Build black Piece
     (0..7).each do |i|
       Piece.create(
         type: 'Pawn',
@@ -107,7 +111,8 @@ class Game < ApplicationRecord
         user_id: black_player.id,
         row_coordinate: 1,
         column_coordinate: i,
-        color: 'black'
+        color: 'black',
+        image: 'pieces/BlackPawn.png'
       )
     end
 
@@ -117,7 +122,8 @@ class Game < ApplicationRecord
       user_id: black_player.id,
       row_coordinate: 0,
       column_coordinate: 0,
-      color: 'black'
+      color: 'black',
+      image: 'pieces/BlackRook.png'
     )
 
     Piece.create(
@@ -126,7 +132,8 @@ class Game < ApplicationRecord
       user_id: black_player.id,
       row_coordinate: 0,
       column_coordinate: 7,
-      color: 'black'
+      color: 'black',
+      image: 'pieces/BlackRook.png'
     )
 
     Piece.create(
@@ -135,7 +142,8 @@ class Game < ApplicationRecord
       user_id: black_player.id,
       row_coordinate: 0,
       column_coordinate: 1,
-      color: 'black'
+      color: 'black',
+      image: 'pieces/BlackKnight.png'
     )
 
     Piece.create(
@@ -144,7 +152,8 @@ class Game < ApplicationRecord
       user_id: black_player.id,
       row_coordinate: 0,
       column_coordinate: 6,
-      color: 'black'
+      color: 'black',
+      image: 'pieces/BlackKnight.png'
     )
 
     Piece.create(
@@ -153,7 +162,8 @@ class Game < ApplicationRecord
       user_id: black_player.id,
       row_coordinate: 0,
       column_coordinate: 2,
-      color: 'black'
+      color: 'black',
+      image: 'pieces/BlackBishop.png'
     )
 
     Piece.create(
@@ -162,7 +172,8 @@ class Game < ApplicationRecord
       user_id: black_player.id,
       row_coordinate: 0,
       column_coordinate: 5,
-      color: 'black'
+      color: 'black',
+      image: 'pieces/BlackBishop.png'
     )
 
     Piece.create(
@@ -171,7 +182,8 @@ class Game < ApplicationRecord
       user_id: black_player.id,
       row_coordinate: 0,
       column_coordinate: 3,
-      color: 'black'
+      color: 'black',
+      image: 'pieces/BlackQueen.png'
     )
 
     Piece.create(
@@ -180,7 +192,8 @@ class Game < ApplicationRecord
       user_id: black_player.id,
       row_coordinate: 0,
       column_coordinate: 4,
-      color: 'black'
+      color: 'black',
+      image: 'pieces/BlackKing.png'
     )
   end
 end
