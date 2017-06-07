@@ -29,4 +29,15 @@ FactoryGirl.define do
     number_of_moves 0
     game_status 0
   end
+
+  factory :king do
+    association :game
+    association :user
+
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 4
+      row_coordinate 4
+    end
+  end
 end
