@@ -14,7 +14,7 @@ class PiecesController < ApplicationController
   private
 
   def current_game
-    @current_game ||= Game.find_by_id(Piece.find(params[:id]).game_id)
+    @current_game ||= Game.find_by_id(@piece.game_id)
   end
 
   def piece_params
