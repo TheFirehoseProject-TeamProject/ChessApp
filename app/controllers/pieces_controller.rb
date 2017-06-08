@@ -2,7 +2,7 @@ class PiecesController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: :update
   def show
     @piece = Piece.find(params[:id])
-    @board = draw_board
+    @board = current_board
   end
 
   def update
@@ -12,6 +12,10 @@ class PiecesController < ApplicationController
   end
 
   private
+
+  def current_game
+    @current_game ||= Game.find_by_id(Piece.find(params[:id]).game_id)
+  end
 
   def piece_params
     params.require(:piece).permit(:row_coordinate, :column_coordinate, :type, :color)

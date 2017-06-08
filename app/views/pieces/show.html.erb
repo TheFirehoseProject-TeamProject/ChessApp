@@ -1,11 +1,12 @@
-
 <div class="chessboard">
-  <% @board.reverse.each_with_index do |row, index_row| %>
+  <% @board.each_with_index do |row, index_row| %>
       <div class = "row offset-3">
         <% row.each_with_index do |field, index_field| %>
-          <span class="chess_field <%=field%>" row="<%=index_row%>" column= "<%=index_field%>">
+          <span class="chess_field <%=field[:class]%>" row="<%=index_row%>" column= "<%=index_field%>">
             <%if index_field == @piece.column_coordinate && index_row == @piece.row_coordinate %>
-              <span class="chess_piece_selected">Piece</span>
+              <span><%= image_tag @piece.image, class: 'chess_piece_selected'%></span>
+            <%else%>
+              <span><%= image_tag field[:piece].image unless field[:piece].nil?%></span>
             <%end%>
           </span>
         <%end%>
