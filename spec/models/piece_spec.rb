@@ -16,6 +16,7 @@ RSpec.describe Piece, type: :model do
       it 'moves to new destination coordinates' do
         piece_white = FactoryGirl.create(:piece, :is_on_board_white)
         piece.move_to!(piece, 3, 5)
+        piece_white.reload
         expect(piece).to have_attributes(column_coordinate: 3, row_coordinate: 5)
       end
       it 'the other piece is removed from the board' do
