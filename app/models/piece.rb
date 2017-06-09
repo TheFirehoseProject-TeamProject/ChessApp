@@ -6,8 +6,17 @@ class Piece < ApplicationRecord
     %w[King Queen Rook Bishop Knight Pawn]
   end
 
-  def self.colors
+  def self.color
     %w[White Black]
+  end
+
+  def move_to!(destination_x, destination_y)
+    moving_piece = Piece.find_by column_coordinate: column_coordinate, row_coordinate: row_coordinate
+    destination_piece_check = Piece.find_by column_coordinate: destination_x, row_coordinate: destination_y
+    removed_piece = remove_piece(destination_x, destination_y) if destination_piece_check.present?
+    moving_piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
+    removed_piece
+    moving_piece
   end
 
   def obstructed?(destination_x, destination_y)
@@ -41,6 +50,12 @@ class Piece < ApplicationRecord
   end
 
   private
+
+  def remove_piece(destination_x, destination_y)
+    destination_piece = Piece.find_by column_coordinate: destination_x, row_coordinate: destination_y
+    destination_piece[:is_on_board?] = false
+    destination_piece
+  end
 
   def horizontal_move?(destination_y)
     return true if destination_y == row_coordinate

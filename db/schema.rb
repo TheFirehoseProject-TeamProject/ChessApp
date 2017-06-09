@@ -10,9 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20170606013630) do
-
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,7 +39,6 @@ ActiveRecord::Schema.define(version: 20170606013630) do
     t.integer  "game_id"
     t.integer  "user_id"
     t.string   "image"
-
     t.index ["game_id"], name: "index_pieces_on_game_id", using: :btree
   end
 
