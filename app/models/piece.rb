@@ -10,13 +10,15 @@ class Piece < ApplicationRecord
     %w[White Black]
   end
 
-  def move_to!(destination_x, destination_y)
-    moving_piece = Piece.find_by column_coordinate: column_coordinate, row_coordinate: row_coordinate
+  def move_to!(piece, destination_x, destination_y)
+    # moving_piece = Piece.find_by column_coordinate: column_coordinate, row_coordinate: row_coordinate
+
     destination_piece_check = Piece.find_by column_coordinate: destination_x, row_coordinate: destination_y
-    removed_piece = remove_piece(destination_x, destination_y) if destination_piece_check.present?
-    moving_piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
-    removed_piece
-    moving_piece
+    piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
+    piece
+    # removed_piece = remove_piece(destination_x, destination_y) if destination_piece_check.present?
+    # moving_piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
+    # moving_piece
   end
 
   def obstructed?(destination_x, destination_y)

@@ -3,25 +3,24 @@ require 'rails_helper'
 RSpec.describe Piece, type: :model do
   let(:game) { FactoryGirl.create(:game) }
   let(:user) { FactoryGirl.create(:user) }
-  # let(:piece) { FactoryGirl.create(:piece, :is_on_board_black) }
-
+  let(:piece) { FactoryGirl.create(:piece, :is_on_board_black) }
 
   describe '#move_to!' do
-
     context 'when no piece is at destination coordinates' do
       it 'moves to the destination coordinates' do
-        expect(piece.move_to!(3, 5)).to have_attributes(column_coordinate: 3, row_coordinate: 5)
+        expect(piece.move_to!(piece, 3, 5)).to have_attributes(column_coordinate: 3, row_coordinate: 5)
       end
     end
 
     context 'when a piece with the opposite color is at the destination coordinates' do
       it 'moves to new destination coordinates' do
-        expect(piece.move_to!(3, 5)).to have_attributes(column_coordinate: 3, row_coordinate: 5)
+        piece_white = FactoryGirl.create(:piece, :is_on_board_white)
+        piece.move_to!(piece, 3, 5)
+        expect(piece).to have_attributes(column_coordinate: 3, row_coordinate: 5)
       end
       it 'the other piece is removed from the board' do
-        piece_black = FactoryGirl.create(:piece, :is_on_board_black)
         piece_white = FactoryGirl.create(:piece, :is_on_board_white)
-        piece_black.move_to!(3, 5)
+        piece.move_to!(piece, 3, 5)
         piece_white.reload
         expect(piece_white[:is_on_board?]).to eq false
       end
