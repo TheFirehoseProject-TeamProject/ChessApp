@@ -2,7 +2,11 @@
   <% @board.each do |row| %>
       <div class = "row offset-3">
         <% row.each do |field| %>
-          <span class="chess_field <%= field[:class] %>"><%= image_tag field[:piece].image unless field[:piece].nil?  %></span>
+          <span class="chess_field <%= field[:class] %>">
+            <% unless field[:piece].nil? %>
+              <span><%= link_to image_tag(field[:piece].image), "/pieces/#{field[:piece].id}?#{Time.now.to_i}"%></span>
+            <%end%>
+          </span>
         <%end%>
       </div>
   <%end%>
