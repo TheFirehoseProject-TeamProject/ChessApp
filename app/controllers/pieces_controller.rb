@@ -1,5 +1,5 @@
 class PiecesController < ApplicationController
-  skip_before_filter :verify_authenticity_token, only: :update
+  skip_before_action :verify_authenticity_token, only: :update
   def show
     @piece = Piece.find(params[:id])
     @board = current_board
