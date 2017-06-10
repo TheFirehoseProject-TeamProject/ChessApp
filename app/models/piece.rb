@@ -15,11 +15,12 @@ class Piece < ApplicationRecord
     destination_piece_check = destination_piece.present?
 
     raise 'Invalid Move' if destination_piece_check && destination_piece.color == piece.color
+
     if !destination_piece_check
       piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
       return piece
     else
-      remove_piece(destination_x, destination_y)
+      remove_piece(destination_piece)
       piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
       piece
     end
@@ -57,9 +58,8 @@ class Piece < ApplicationRecord
 
   private
 
-  def remove_piece(destination_x, destination_y)
-    destination_piece = Piece.find_by column_coordinate: destination_x, row_coordinate: destination_y
-    destination_piece.update_attributes(is_on_board?: false)
+  def remove_piece(piece_to_remove)
+    piece_to_remove.update_attributes(is_on_board?: false)
   end
 
   def horizontal_move?(destination_y)
