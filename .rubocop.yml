@@ -13,7 +13,7 @@ AllCops:
 Rails:
   Enabled: true
 
-Style/EndOfLine:
+Layout/EndOfLine:
   Enabled: false
 
 Metrics/LineLength:
