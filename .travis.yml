@@ -8,7 +8,7 @@ script:
 - RAILS_ENV=test bundle exec rake --trace db:migrate
 - bundle exec rake db:test:prepare
 - bundle exec rspec spec/
-- rubocop --config .rubocop.yml
+- bundle exec rubocop --config .rubocop.yml
 deploy:
   provider: heroku
   api_key:

@@ -1,8 +1,7 @@
 AllCops:
   Include:
-    - Rakefile
-    - config.ru
-    - lib/**/*.rake
+    - app/*
+    - spec/*
   Exclude:
     - db/schema.rb
     - Gemfile
@@ -21,6 +20,9 @@ Metrics/LineLength:
 
 Style/Documentation:
   Enabled: false
+
+Style/FileName:
+    Enabled: false
 
 # Disables "Use nested module/class definitions instead of compact style" warning
 ClassAndModuleChildren:
