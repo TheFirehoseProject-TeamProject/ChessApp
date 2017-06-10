@@ -11,8 +11,10 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece, destination_x, destination_y)
-    destination_piece_check = Piece.find_by(column_coordinate: destination_x, row_coordinate: destination_y).present?
+    destination_piece = game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
+    destination_piece_check = destination_piece.present?
 
+    raise 'Invalid Move' if destination_piece_check && destination_piece.color == piece.color
     if !destination_piece_check
       piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
       return piece
@@ -57,8 +59,7 @@ class Piece < ApplicationRecord
 
   def remove_piece(destination_x, destination_y)
     destination_piece = Piece.find_by column_coordinate: destination_x, row_coordinate: destination_y
-    destination_piece[:is_on_board?] = false
-    destination_piece
+    destination_piece.update_attributes(is_on_board?: false)
   end
 
   def horizontal_move?(destination_y)
