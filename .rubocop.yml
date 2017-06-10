@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - db/schema.rb
     - Gemfile
+    - vendor/*
     - config/environments/*
     - bin/*
 
