@@ -5,6 +5,7 @@ AllCops:
     - lib/**/*.rake
   Exclude:
     - db/schema.rb
+    - Gemfile
     - config/environments/*
     - bin/*
 
