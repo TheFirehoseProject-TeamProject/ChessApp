@@ -12,10 +12,18 @@ FactoryGirl.define do
     association :game
     association :user
 
-    trait :is_on_board do
+    trait :is_on_board_black do
       is_on_board? true
       column_coordinate 4
       row_coordinate 4
+      color 'black'
+    end
+
+    trait :is_on_board_white do
+      is_on_board? true
+      column_coordinate 3
+      row_coordinate 5
+      color 'white'
     end
 
     trait :is_off_board do

@@ -1,11 +1,42 @@
-
-
 require 'rails_helper'
 
 RSpec.describe Piece, type: :model do
   let(:game) { FactoryGirl.create(:game) }
   let(:user) { FactoryGirl.create(:user) }
-  let(:piece) { FactoryGirl.create(:piece, :is_on_board) }
+  let!(:piece) { FactoryGirl.create(:piece, :is_on_board_black) }
+
+  describe '#move_to!' do
+    context 'when no piece is at destination coordinates' do
+      it 'moves to the destination coordinates' do
+        expect(piece.move_to!(piece, 3, 5)).to have_attributes(column_coordinate: 3, row_coordinate: 5)
+      end
+    end
+
+    context 'when a piece exists at the destination and it is the opposite color' do
+      it 'moves to new destination coordinates' do
+        piece_black = FactoryGirl.create(:piece, :is_on_board_black, game_id: game.id)
+        piece_white = FactoryGirl.create(:piece, :is_on_board_white, game_id: game.id)
+        piece_black.move_to!(piece, 3, 5)
+        piece_white.reload
+        expect(piece).to have_attributes(column_coordinate: 3, row_coordinate: 5)
+      end
+      it 'the other piece is removed from the board' do
+        piece_black = FactoryGirl.create(:piece, :is_on_board_black, game_id: game.id)
+        piece_white = FactoryGirl.create(:piece, :is_on_board_white, game_id: game.id)
+        piece_black.move_to!(piece, 3, 5)
+        piece_white.reload
+        expect(piece_white[:is_on_board?]).to eq false
+      end
+    end
+
+    context 'when a piece exists at the destination and it is the same color' do
+      it 'returns an error: Invalid move' do
+        piece_black_orig = FactoryGirl.create(:piece, :is_on_board_black, game_id: game.id)
+        piece_black_dest = FactoryGirl.create(:piece, column_coordinate: 3, row_coordinate: 5, color: 'black', is_on_board?: true, game_id: game.id)
+        expect { piece_black_orig.move_to!(piece_black_orig, 3, 5) }.to raise_error('Invalid Move')
+      end
+    end
+  end
 
   describe 'method obstruced # checking if fields are obstructed horizontally' do
     it 'should return false if no piece exists between destination and origin when going left' do
