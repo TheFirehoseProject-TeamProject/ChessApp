@@ -1,13 +1,10 @@
 AllCops:
-  Include:
-    - app/*
-    - spec/*
   Exclude:
-    - db/schema.rb
+    - db/**/*
     - Gemfile
-    - vendor/*
+    - vendor/**/*
     - config/environments/*
-    - bin/*
+    - bin/**/*
 
 Rails:
   Enabled: true
