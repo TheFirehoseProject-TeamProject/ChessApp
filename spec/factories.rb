@@ -26,8 +26,12 @@ FactoryGirl.define do
       color 'white'
     end
 
-    trait :is_off_board do
-      is_on_board? false
+    trait :is_on_board_knight_white do
+      is_on_board? true
+      column_coordinate 2
+      row_coordinate 3
+      color 'white'
+      type 'knight'
     end
   end
 
@@ -46,6 +50,18 @@ FactoryGirl.define do
       is_on_board? true
       column_coordinate 4
       row_coordinate 4
+    end
+  end
+
+  factory :knight do
+    association :game
+    association :user
+
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 2
+      row_coordinate 3
+      color 'white'
     end
   end
 end

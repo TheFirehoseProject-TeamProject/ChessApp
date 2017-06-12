@@ -3,11 +3,11 @@ class Piece < ApplicationRecord
   belongs_to :game
 
   def self.types
-    %w[King Queen Rook Bishop Knight Pawn]
+    %w[king queen rook bishop knight pawn]
   end
 
   def self.color
-    %w[White Black]
+    %w[white black]
   end
 
   def move_to!(piece, destination_x, destination_y)
