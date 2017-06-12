@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  # before_action :authenticate_user!, only: :show
   helper_method :current_game
 
   def new

@@ -67,5 +67,5 @@ end
 
 # simple_form gem
 gem 'simple_form'
-
 gem 'devise'
+gem 'omniauth-facebook'
