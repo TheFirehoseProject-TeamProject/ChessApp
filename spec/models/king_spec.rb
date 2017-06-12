@@ -18,8 +18,11 @@ RSpec.describe King, type: :model do
     it 'should be able to move one field right' do
       expect(king.valid_move?(5, 4)).to eq true
     end
-    it 'should return false if it is a diagonal move' do
-      expect(king.valid_move?(5, 5)).to eq false
+    it 'should return true if it is a diagonal move' do
+      expect(king.valid_move?(3, 5)).to eq true
+      expect(king.valid_move?(5, 5)).to eq true
+      expect(king.valid_move?(3, 3)).to eq true
+      expect(king.valid_move?(3, 5)).to eq true
     end
     it 'should return false if it moves more than field' do
       expect(king.valid_move?(4, 6)).to eq false
