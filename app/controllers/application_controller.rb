@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
 
   def current_board
     pieces = current_game.pieces
-
     board = Array.new(8) { Array.new(8) { { piece: nil } } }
     (0..7).each do |row_index|
       (0..7).each do |column_index|

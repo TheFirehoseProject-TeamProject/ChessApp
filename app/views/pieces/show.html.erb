@@ -1,5 +1,6 @@
 <div class="chessboard">
-  <% @board.each_with_index do |row, index_row| %>
+  <% @board.reverse.each_with_index do |row, index_row| %>
+    <%index_row = @board.length - index_row - 1 %>
       <div class = "row offset-3">
         <% row.each_with_index do |field, index_field| %>
           <span class="chess_field <%=field[:class]%>" row="<%=index_row%>" column= "<%=index_field%>">

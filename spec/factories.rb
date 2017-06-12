@@ -37,7 +37,6 @@ FactoryGirl.define do
   factory :king do
     association :game
     association :user
-
     trait :is_on_board do
       is_on_board? true
       column_coordinate 4
@@ -53,6 +52,16 @@ FactoryGirl.define do
       is_on_board? true
       column_coordinate 2
       row_coordinate 3
+    end
+  end
+  
+  factory :pawn do
+    association :game
+    association :user
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 1
+      row_coordinate 6
     end
   end
 end
