@@ -25,14 +25,6 @@ FactoryGirl.define do
       row_coordinate 5
       color 'white'
     end
-
-    trait :is_on_board_knight_white do
-      is_on_board? true
-      column_coordinate 2
-      row_coordinate 3
-      color 'white'
-      type 'knight'
-    end
   end
 
   factory :game do
