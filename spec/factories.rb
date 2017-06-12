@@ -53,7 +53,6 @@ FactoryGirl.define do
       is_on_board? true
       column_coordinate 2
       row_coordinate 3
-      color 'white'
     end
   end
 end
