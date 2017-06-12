@@ -10,6 +10,8 @@ class Pawn < Piece
   end
 end
 
+private
+
 def white_pawn_one_step_move?(destination_x, destination_y)
   vertical_move?(destination_x) && (destination_y - row_coordinate) == 1 && color == 'white'
 end
