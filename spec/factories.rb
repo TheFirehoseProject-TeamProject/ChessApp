@@ -54,7 +54,7 @@ FactoryGirl.define do
       row_coordinate 3
     end
   end
-  
+
   factory :pawn do
     association :game
     association :user
