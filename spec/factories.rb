@@ -57,4 +57,14 @@ FactoryGirl.define do
       row_coordinate 6
     end
   end
+
+  factory :bishop do
+    association :game
+    association :user
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 3
+      row_coordinate 3
+    end
+  end
 end
