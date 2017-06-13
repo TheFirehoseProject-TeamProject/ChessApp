@@ -3,7 +3,7 @@ class Rook < Piece
     destination_x == x || destination_y == y
   end
 
-  def obstructed_squares(destination_x, destination_y)
+  def obstructed_squares(destination_x, _destination_y)
     rectilinear_obstruction_array(destination_x, destiantion_y)
   end
 end
