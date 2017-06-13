@@ -1,4 +1,5 @@
-<div class="chessboard">
+
+<div class="chessboard <%= "waiting" if @waiting %>">
   <% @board.reverse_each do |row| %>
       <div class = "row offset-3">
         <% row.each do |field| %>
@@ -11,3 +12,26 @@
       </div>
   <%end%>
 </div>
+<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
+
+<script>
+  let response = "false";
+  $(function() {
+    let url = window.location.href;
+    let gameId = url.substring(url.lastIndexOf('/') + 1);
+    let id = setInterval(checkGameAvailable, 2000);
+    function checkGameAvailable () {
+                    let response = $.ajax({type: "GET", url: gameId +"/game_available", async: false}).responseText;
+                    if (response === "false") {
+                            clearInterval(id);
+                    }
+    };
+    // reloading the page once to populate the board for the person who was waiting for a player
+    window.onload = function () {
+      if (! localStorage.justOnce) {
+          localStorage.setItem("justOnce", "true");
+          window.location.reload();
+      }
+    }
+  });
+</script>
