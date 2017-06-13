@@ -20,8 +20,8 @@ class GamesController < ApplicationController
   end
 
   def game_available
-    return render text: 'true' if !current_game.white_player_id || !current_game.black_player_id
-    render text: 'false'
+    return render plain: 'true' if !current_game.white_player_id || !current_game.black_player_id
+    render plain: 'false'
   end
 
   private

@@ -17,21 +17,20 @@
 <script>
   let response = "false";
   $(function() {
-    let url = window.location.href;
-    let gameId = url.substring(url.lastIndexOf('/') + 1);
-    let id = setInterval(checkGameAvailable, 2000);
-    function checkGameAvailable () {
-                    let response = $.ajax({type: "GET", url: gameId +"/game_available", async: false}).responseText;
-                    if (response === "false") {
+      let url = window.location.href;
+      let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
+      if(url.indexOf("#loaded") === -1) {
+              let id = setInterval(checkGameAvailable, 2000);
+              function checkGameAvailable () {
+                        let response = $.ajax({type: "GET", url: gameId +"/game_available", async: false}).responseText;
+                        if (response === "false") {
                             clearInterval(id);
-                    }
-    };
-    // reloading the page once to populate the board for the person who was waiting for a player
-    window.onload = function () {
-      if (! localStorage.justOnce) {
-          localStorage.setItem("justOnce", "true");
-          window.location.reload();
+                            // reloading the page once to populate the board for the person who was waiting for a player
+                            window.location = window.location + '#loaded';
+                            window.location.reload();
+                          }
+              };
       }
-    }
+
   });
 </script>
