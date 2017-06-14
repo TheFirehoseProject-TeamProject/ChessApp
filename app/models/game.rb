@@ -1,6 +1,6 @@
 class Game < ApplicationRecord
-  belongs_to :black_player, class_name: 'User'
-  belongs_to :white_player, class_name: 'User'
+  belongs_to :black_player, class_name: 'User', optional: true
+  belongs_to :white_player, class_name: 'User', optional: true
   has_many :users
   has_many :pieces
 
@@ -195,5 +195,9 @@ class Game < ApplicationRecord
       color: 'black',
       image: 'pieces/BlackKing.png'
     )
+  end
+
+  def empty_board?
+    pieces.count.zero?
   end
 end
