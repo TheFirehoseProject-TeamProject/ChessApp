@@ -5,7 +5,7 @@ RSpec.describe Queen, type: :model do
   let(:user) { FactoryGirl.create(:user) }
   let(:queen) { FactoryGirl.create(:queen, :is_on_board) }
 
-  describe 'queen#valid_move?' do
+  describe '#valid_move?' do
     it 'should return true for moves to the left' do
       expect(queen.valid_move?(3, 4)).to eq(true)
       expect(queen.valid_move?(1, 4)).to eq(true)
