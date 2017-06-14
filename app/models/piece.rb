@@ -12,18 +12,19 @@ class Piece < ApplicationRecord
 
   def move_to!(piece, destination_x, destination_y)
     destination_piece = game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
-    destination_piece_check = destination_piece.present?
 
-    raise 'Invalid Move' if destination_piece_check && destination_piece.color == piece.color
+    raise 'Invalid Move' if destination_piece.present? && !capturable?(destination_piece)
 
-    if !destination_piece_check
-      piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
-      return piece
+    if destination_piece.nil?
+      piece.move_to_empty_space(destination_x: destination_x, destination_y: destination_y)
     else
-      remove_piece(destination_piece)
-      piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
-      piece
+      capture!(destination_piece)
     end
+    piece
+  end
+
+  def move_to_empty_space(destination_x:, destination_y:)
+    update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
   end
 
   def obstructed?(destination_x, destination_y)
@@ -57,6 +58,15 @@ class Piece < ApplicationRecord
   end
 
   private
+
+  def capturable?(destination_piece)
+    destination_piece.present? && destination_piece.color != color
+  end
+
+  def capture!(destination_piece)
+    remove_piece(destination_piece)
+    move_to_empty_space(destination_x: destination_piece.column_coordinate, destination_y: destination_piece.row_coordinate)
+  end
 
   def remove_piece(piece_to_remove)
     piece_to_remove.update_attributes(is_on_board?: false)
