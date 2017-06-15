@@ -17,10 +17,10 @@ RSpec.describe Bishop, type: :model do
     end
 
     it 'should not move horizontally or vertically' do
-      expect(bishop.valid_move?(2,3)).to eq false
-      expect(bishop.valid_move?(3,4)).to eq false
-      expect(bishop.valid_move?(3,2)).to eq false
-      expect(bishop.valid_move?(3,4)).to eq false
+      expect(bishop.valid_move?(2, 3)).to eq false
+      expect(bishop.valid_move?(3, 4)).to eq false
+      expect(bishop.valid_move?(3, 2)).to eq false
+      expect(bishop.valid_move?(3, 4)).to eq false
     end
   end
 end
