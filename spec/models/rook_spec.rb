@@ -21,7 +21,7 @@ RSpec.describe Rook, type: :model do
     it 'should be invalid when moving one space diagonally' do
       expect(rook.valid_move?(2, 1)). to eq false
     end
-    it 'should be invalid when moving tree spaces diagonally' do
+    it 'should be invalid when moving three spaces diagonally' do
       expect(rook.valid_move?(4, 3)). to eq false
     end
     it 'should be invalid when a piece is obstructed' do
