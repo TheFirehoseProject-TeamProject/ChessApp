@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   root 'static_pages#index'
   resources :games, only: %i[new create show] do
-    member do # /games/40/pieces_in_use
+    member do
       get :game_available
     end
   end
