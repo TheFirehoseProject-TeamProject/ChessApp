@@ -1,9 +1,7 @@
 class Rook < Piece
   def valid_move?(destination_x, destination_y)
+    return false if obstructed?(destination_x, destination_y)
+    return false if destination_x < 0 || destination_x > 7 || destination_y < 0 || destination_y > 7
     destination_x == x || destination_y == y
-  end
-
-  def obstructed_squares(destination_x, _destination_y)
-    rectilinear_obstruction_array(destination_x, destiantion_y)
   end
 end
