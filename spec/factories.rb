@@ -58,13 +58,22 @@ FactoryGirl.define do
     end
   end
 
+<<<<<<< HEAD
   factory :bishop do
+=======
+  factory :queen do
+>>>>>>> master
     association :game
     association :user
     trait :is_on_board do
       is_on_board? true
+<<<<<<< HEAD
       column_coordinate 3
       row_coordinate 3
+=======
+      column_coordinate 4
+      row_coordinate 4
+>>>>>>> master
     end
   end
 end

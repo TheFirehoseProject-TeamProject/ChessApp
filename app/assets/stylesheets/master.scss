@@ -27,3 +27,12 @@
   height: 80px;
   width: 80px;
 }
+
+.waiting{
+  border-style: solid;
+  border-width: 1px;
+  margin: 20px;
+  padding: 30px;
+  background-image: url('waiting.png');
+  background-size: cover;
+}
