@@ -4,9 +4,6 @@ class Game < ApplicationRecord
   has_many :users
   has_many :pieces
 
-  belongs_to :white_player, class_name: 'User', optional: true
-  belongs_to :black_player, class_name: 'User', optional: true
-
   enum game_status: { in_progress: 0, checkmate: 1, stalemate: 2 }
 
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
