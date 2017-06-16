@@ -13,4 +13,3 @@ RSpec.describe Rook, type: :model do
     expect(rook.valid_move?(8,4)). to eq true
     end
   end
-end
