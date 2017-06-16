@@ -1,15 +1,18 @@
 language: ruby
 rvm:
-  - 2.3.1
+- 2.4.1
 env:
-  - DB=postgresql
+- DB=postgresql
 script:
-  - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec rake db:test:prepare
-  - bundle exec rspec spec/
-before_script:
-
+- RAILS_ENV=test bundle exec rake --trace db:create
+- RAILS_ENV=test bundle exec rake --trace db:migrate
+- bundle exec rake db:test:prepare
+- bundle exec rspec spec/
+- bundle exec rubocop --config .rubocop.yml
 deploy:
   provider: heroku
   api_key:
-    secure: "7363587c-a35e-42f9-9189-864b27f281fc"
+    secure: D01//XY2UqJnsXOdQUTmZj02kDq+eUw0WmApT5ml79QjvKuWMHFb6tuLEqJoqYT5R69kYmEjzPivGBfXgV3JB1sPiUaFwaZUV3QZFcLqCMAu6Mlv+BZ6YDzqZhoiXyMkPGJdlr03hXZYqTv5k+O7ylfAuJ+8S+1+CWH5Pm60XPYh4Mq5BOUt6DhUS0CF0v3TuXq9Y0ChuWJImeohOI00FuyKpcf0j9psihqrXBQ43ryvXTRrW3HP7+9IJrAydnM7d5d3tVq0CmrLkljSRVmbB4j3xR5ORxFf72cyQ5m7DERVZfs+zwJ3mO58zJs1pF8neACI/Lq2Yf70xL15o8PKZHMAd2yedzjC+ZYub0Qr23DB3G9J1MZZ6aa8ugpyl1acNPIgJZPU6bjqrC/+h2wvBpoixvDRxTt5r+eu/XM4JYbD4vjmcKFM7ZuNUzUbBDqNO2r8Trwps0PQ477veQrCQbM+H2k6WTlWZ2zNjeGZwmE2RzkEAFIlYPva0ah60gTRu9y6xxkkJN1gx1I62VDKGfiFpi0Q/LuiIEoVvUHCtKdR9LPf1f2Nro0pnZI2vx4D0eqEnH34K18X0nsMun/X96Nc3iOnCoHvOePOuZ2+8ApEaK9wHpCVmWPn08LR7bEmuBg982nQ+X7V1u+J4gDQwS64sfz9cmx5HZb0JnUhm/0=
+  app: chessapp-fhp-tp
+  on:
+    repo: TheFirehoseProject-TeamProject/ChessApp

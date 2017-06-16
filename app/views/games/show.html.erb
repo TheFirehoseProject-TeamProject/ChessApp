@@ -1,9 +1,36 @@
-<div class="chessboard">
-  <% @board.reverse.each do |row| %>
+
+<div class="chessboard <%= "waiting" if @waiting %>">
+  <% @board.reverse_each do |row| %>
       <div class = "row offset-3">
         <% row.each do |field| %>
-          <span class="chess_field <%=field%>"></span>
+          <span class="chess_field <%= field[:class] %>">
+            <% unless field[:piece].nil? %>
+              <span><%= link_to image_tag(field[:piece].image), "/pieces/#{field[:piece].id}?#{Time.now.to_i}"%></span>
+            <%end%>
+          </span>
         <%end%>
       </div>
   <%end%>
 </div>
+<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
+
+<script>
+  let response = "false";
+  $(function() {
+      let url = window.location.href;
+      let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
+      if(url.indexOf("#loaded") === -1) {
+              let id = setInterval(checkGameAvailable, 2000);
+              function checkGameAvailable () {
+                        let response = $.ajax({type: "GET", url: gameId +"/game_available", async: false}).responseText;
+                        if (response === "false") {
+                            clearInterval(id);
+                            // reloading the page once to populate the board for the person who was waiting for a player
+                            window.location = window.location + '#loaded';
+                            window.location.reload();
+                          }
+              };
+      }
+
+  });
+</script>

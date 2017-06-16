@@ -1,70 +1,76 @@
-
-
 class Piece < ApplicationRecord
   belongs_to :user
   belongs_to :game
 
   def self.types
-    %w[King Queen Rook Bishop Knight Pawn]
+    %w[king queen rook bishop knight pawn]
   end
 
-  def self.colors
-    %w[White Black]
+  def self.color
+    %w[white black]
+  end
+
+  def move_to!(piece, destination_x, destination_y)
+    destination_piece = game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
+
+    raise 'Invalid Move' if destination_piece.present? && !capturable?(destination_piece)
+
+    if destination_piece.nil?
+      piece.move_to_empty_space(destination_x: destination_x, destination_y: destination_y)
+    else
+      capture!(destination_piece)
+    end
+    piece
+  end
+
+  def move_to_empty_space(destination_x:, destination_y:)
+    update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
   end
 
   def obstructed?(destination_x, destination_y)
     raise 'Error: Invalid Input' if destination_y > 7 || destination_x > 7 || destination_y < 0 || destination_x < 0
+
     if horizontal_move?(destination_y)
-      if horizontal_obstruction_left?(destination_x) || horizontal_obstruction_right?(destination_x)
-        return true
-      else
-        return false
-      end
+      return horizontal_obstruction_left?(destination_x) || horizontal_obstruction_right?(destination_x)
     end
+
     if vertical_move?(destination_x)
-      if vertical_obstruction_up?(destination_y) || vertical_obstruction_down?(destination_y)
-        return true
-      else
-        return false
-      end
+      return vertical_obstruction_up?(destination_y) || vertical_obstruction_down?(destination_y)
     end
 
     if diagonal_up_and_right_move?(destination_x, destination_y)
-      if diagonal_obstruction_up_right?(destination_y)
-        return true
-      else
-        return false
-      end
+      return diagonal_obstruction_up_right?(destination_y)
     end
 
     if diagonal_down_and_left_move?(destination_x, destination_y)
-      if diagonal_obstruction_down_left?(destination_y)
-        return true
-      else
-        return false
-      end
+      return diagonal_obstruction_down_left?(destination_y)
     end
 
     if diagonal_up_and_left_move?(destination_x, destination_y)
-      if diagonal_obstruction_up_left?(destination_y)
-        return true
-      else
-        return false
-      end
+      return diagonal_obstruction_up_left?(destination_y)
     end
 
     if diagonal_down_and_right_move?(destination_x, destination_y)
-      if diagonal_obstruction_down_right?(destination_y)
-        return true
-      else
-        return false
-      end
+      return diagonal_obstruction_down_right?(destination_y)
     end
 
     raise 'Error: Invalid Input'
   end
 
   private
+
+  def capturable?(destination_piece)
+    destination_piece.present? && destination_piece.color != color
+  end
+
+  def capture!(destination_piece)
+    remove_piece(destination_piece)
+    move_to_empty_space(destination_x: destination_piece.column_coordinate, destination_y: destination_piece.row_coordinate)
+  end
+
+  def remove_piece(piece_to_remove)
+    piece_to_remove.update_attributes(is_on_board?: false)
+  end
 
   def horizontal_move?(destination_y)
     return true if destination_y == row_coordinate

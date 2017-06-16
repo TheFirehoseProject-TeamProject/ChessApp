@@ -12,14 +12,18 @@ FactoryGirl.define do
     association :game
     association :user
 
-    trait :is_on_board do
+    trait :is_on_board_black do
       is_on_board? true
       column_coordinate 4
       row_coordinate 4
+      color 'black'
     end
 
-    trait :is_off_board do
-      is_on_board? false
+    trait :is_on_board_white do
+      is_on_board? true
+      column_coordinate 3
+      row_coordinate 5
+      color 'white'
     end
   end
 
@@ -33,11 +37,51 @@ FactoryGirl.define do
   factory :king do
     association :game
     association :user
-
     trait :is_on_board do
       is_on_board? true
       column_coordinate 4
       row_coordinate 4
+    end
+  end
+
+  factory :knight do
+    association :game
+    association :user
+
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 2
+      row_coordinate 3
+    end
+  end
+
+  factory :pawn do
+    association :game
+    association :user
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 1
+      row_coordinate 6
+    end
+  end
+
+  factory :queen do
+    association :game
+    association :user
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 4
+      row_coordinate 4
+    end
+  end
+
+  factory :bishop do
+    trait :is_on_board do
+      association :game
+      association :user
+      is_on_board? true
+      column_coordinate 3
+      row_coordinate 3
     end
   end
 end
