@@ -5,30 +5,12 @@ RSpec.describe Rook, type: :model do
   let(:user) { FactoryGirl.create(:user) }
   let(:rook) { FactoryGirl.create(:rook, :is_on_board) }
 
-  describe 'moves for rook' do
-    it 'should be valid when moving up one space' do
-      expect(rook.valid_move?(1, 1)).to eq true
-    end
-    it 'should be valid when moving right two spaces right' do
-      expect(rook.valid_move?(3, 0)). to eq true
-    end
-    it 'should be valid when moving right three spaces left' do
-      expect(rook.valid_move?(1, 3)). to eq true
-    end
-    it 'should be valid when moving four spaces down' do
-      expect(rook.valid_move?(4, 0)). to eq true
-    end
-    it 'should be invalid when moving one space diagonally' do
-      expect(rook.valid_move?(2, 1)). to eq false
-    end
-    it 'should be invalid when moving three spaces diagonally' do
-      expect(rook.valid_move?(4, 3)). to eq false
-    end
-    it 'should be invalid when a piece is obstructed' do
-      expect(rook.valid_move?(6, 4)). to eq false
-    end
-    it 'should be invalid when the piece moves off the board' do
-      expect(rook.valid_move?(-1, 4)). to eq false
+  describe 'is rook.valid_move?' do
+    expect(rook.valid_move?(4,6)). to eq true
+    expect(rook.valid_move?(6,5)). to eq false
+    expect(rook.valid_move?(7,7)). to eq false
+    expect(rook.valid_move?(6,2)). to eq false
+    expect(rook.valid_move?(8,4)). to eq true
     end
   end
 end
