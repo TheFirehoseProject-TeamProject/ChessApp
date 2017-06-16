@@ -7,8 +7,8 @@ RSpec.describe Rook, type: :model do
 
   describe 'rook moves' do
     it 'should be a valid move' do
-      expect(rook.valid_move?(4, 6)). to eq true
-      expect(rook.valid_move?(8, 4)). to eq true
+      expect(rook.valid_move?(1, 5)). to eq true
+      expect(rook.valid_move?(5, 1)). to eq true
     end
 
     it 'should be an invalid move' do
