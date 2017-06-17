@@ -4,6 +4,5 @@ class Rook < Piece
     if vertical_move?(destination_x, destination_y) || horizontal_move?(destination_x, destination_y)
       return true
     end
-    false
   end
 end
