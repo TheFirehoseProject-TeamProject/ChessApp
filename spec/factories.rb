@@ -54,8 +54,8 @@ FactoryGirl.define do
       association :game
       association :user
       is_on_board? true
-      column_coordinate 1
-      row_coordinate 1
+      column_coordinate 4
+      row_coordinate 4
     end
   end
 end
