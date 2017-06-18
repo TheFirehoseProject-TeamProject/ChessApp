@@ -4,7 +4,7 @@
       <%index_row = @board.length - index_row - 1 %>
       <div class = "row offset-3">
         <% row.each_with_index do |field, index_field| %>
-          <span row="<%=index_row%>" column= "<%=index_field%>" class="chess_field ui-widget-header <%= field[:class] %>">
+          <span row = "<%=index_row%>" column = "<%=index_field%>" class="chess_field ui-widget-header <%= field[:class] %>">
             <% unless field[:piece].nil? %>
               <span id="<%= field[:piece].id %>" class="ui-widget-content piece"><%= image_tag(field[:piece].image)%></span>
             <%end%>
@@ -29,20 +29,25 @@
         drop: function(event, ui) {
           let row = $(this).attr('row');
           let column = $(this).attr('column');
-          $.post("/pieces/" + pieceId, {
-            _method: "PUT",
-            piece: {
-              row_coordinate: row,
-              column_coordinate: column,
-              id: pieceId
-            }
+          $.ajax({type: "PUT",
+                 url: "/pieces/" + pieceId,
+                 data: {
+                    piece: {
+                      row_coordinate: row,
+                      column_coordinate: column,
+                      id: pieceId
+                      }
+                 },
+                error: function(xhr, status) {
+                    if (xhr.status === 500){alert("Invalid Move");}
+                    window.location.reload();
+                  },
           });
         }
       });
-
-      let response = "false";
       let url = window.location.href;
       let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
+      let response = "false";
       if(url.indexOf("#loaded") === -1) {
               let id = setInterval(checkGameAvailable, 2000);
               function checkGameAvailable () {
