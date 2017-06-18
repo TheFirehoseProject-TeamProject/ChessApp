@@ -1,9 +1,11 @@
 class Pawn < Piece
   def valid_move?(destination_x, destination_y)
-    return true if white_pawn_one_step_move?(destination_x, destination_y) ||
-                   white_pawn_two_step_move?(destination_x, destination_y) ||
-                   black_pawn_one_step_move?(destination_x, destination_y) ||
-                   black_pawn_two_step_move?(destination_x, destination_y) ||
+    blocking_piece = game.pieces.where(row_coordinate: destination_y, column_coordinate: destination_x, is_on_board?: true).present?
+    return true if (white_pawn_one_step_move?(destination_x, destination_y) ||
+                    white_pawn_two_step_move?(destination_x, destination_y) ||
+                    black_pawn_one_step_move?(destination_x, destination_y) ||
+                    black_pawn_two_step_move?(destination_x, destination_y)
+                   ) && !blocking_piece ||
                    white_pawn_diagonal_strike?(destination_x, destination_y) ||
                    black_pawn_diagonal_strike?(destination_x, destination_y)
     false

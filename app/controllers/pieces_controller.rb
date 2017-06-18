@@ -3,6 +3,7 @@ class PiecesController < ApplicationController
   def update
     @piece = Piece.find(params[:id])
     @piece.move_to!(piece_params[:column_coordinate].to_i, piece_params[:row_coordinate].to_i)
+    redirect_to game_path(@piece.game_id)
   end
 
   private

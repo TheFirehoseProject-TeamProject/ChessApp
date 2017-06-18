@@ -38,6 +38,14 @@ RSpec.describe Pawn, type: :model do
     it 'should return false if it moves more than field and not on row 6 or 1' do
       expect(pawn_center.valid_move?(1, 1)).to eq false
     end
+    it 'should return false if it moves one field up/down and there is an opponent piece at the destination' do
+      FactoryGirl.create(:pawn, column_coordinate: 1, row_coordinate: 2, color: 'black', game: game, is_on_board?: true)
+      expect(pawn_white.valid_move?(1, 2)).to eq false
+    end
+    it 'should return false if it moves two field up/down and there is an opponent piece at the destination' do
+      FactoryGirl.create(:pawn, column_coordinate: 1, row_coordinate: 3, color: 'black', game: game, is_on_board?: true)
+      expect(pawn_white.valid_move?(1, 3)).to eq false
+    end
     it 'white pawn should be able to move diagonal up right when capturing a piece' do
       FactoryGirl.create(:pawn, column_coordinate: 2, row_coordinate: 2, game: game)
       expect(pawn_white.valid_move?(2, 2)).to eq true
