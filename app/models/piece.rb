@@ -10,16 +10,15 @@ class Piece < ApplicationRecord
     %w[white black]
   end
 
-  def move_to!(piece, destination_x, destination_y)
+  def move_to!(destination_x, destination_y)
     destination_piece = game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
-    raise 'Invalid Move' if destination_piece.present? && !capturable?(destination_piece) || !valid_move?(destination_x, destination_y)
+    raise 'Invalid Move' if destination_piece.present? && !capturable?(destination_piece)
 
     if destination_piece.nil?
-      piece.move_to_empty_space(destination_x: destination_x, destination_y: destination_y)
+      move_to_empty_space(destination_x: destination_x, destination_y: destination_y)
     else
       capture!(destination_piece)
     end
-    piece
   end
 
   def move_to_empty_space(destination_x:, destination_y:)

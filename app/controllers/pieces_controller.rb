@@ -2,7 +2,7 @@ class PiecesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :update
   def update
     @piece = Piece.find(params[:id])
-    @piece.move_to!(@piece, piece_params[:column_coordinate].to_i, piece_params[:row_coordinate].to_i)
+    @piece.move_to!(piece_params[:column_coordinate].to_i, piece_params[:row_coordinate].to_i)
   end
 
   private

@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
     end
 
     pieces.each do |piece|
-      board[piece.row_coordinate][piece.column_coordinate][:piece] = piece
+      board[piece.row_coordinate][piece.column_coordinate][:piece] = piece if piece.is_on_board?
     end
 
     board
