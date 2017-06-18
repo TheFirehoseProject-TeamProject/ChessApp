@@ -17,14 +17,16 @@
 
 <script>
   $(function() {
-      $(".chessboard .piece").draggable();
+      $(".chessboard .piece").draggable({grid: [80, 80]});
       let pieceId = 0;
       $(".piece").mousedown(function(){
-      pieceId = $(this).attr('id');
+        pieceId = $(this).attr('id');
       });
-      console.log(pieceId);
-      $(".chess_field ").droppable({
-        drop: function() {
+      $(".chess_field").droppable({
+        classes: {
+          "ui-droppable-hover": "ui-state-hover"
+        },
+        drop: function(event, ui) {
           let row = $(this).attr('row');
           let column = $(this).attr('column');
           $.post("/pieces/" + pieceId, {
