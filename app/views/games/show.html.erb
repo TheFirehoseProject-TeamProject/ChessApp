@@ -1,12 +1,12 @@
 
 <div class="chessboard <%= "waiting" if @waiting %>">
-<style>#draggable { width: 80px; height: 80px; padding: 0.5em; float: left; margin: 0; }</style>
-  <% @board.reverse_each do |row| %>
+  <% @board.reverse_each.with_index do |row, index_row| %>
+      <%index_row = @board.length - index_row - 1 %>
       <div class = "row offset-3">
-        <% row.each do |field| %>
-          <span class="chess_field <%= field[:class] %>">
+        <% row.each_with_index do |field, index_field| %>
+          <span row="<%=index_row%>" column= "<%=index_field%>" class="chess_field ui-widget-header <%= field[:class] %>">
             <% unless field[:piece].nil? %>
-              <span><%= image_tag(field[:piece].image, id: "draggable", class: "ui-widget-content")%></span>
+              <span id="<%= field[:piece].id %>" class="ui-widget-content piece"><%= image_tag(field[:piece].image)%></span>
             <%end%>
           </span>
         <%end%>
@@ -16,9 +16,29 @@
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
-  let response = "false";
   $(function() {
-      $( "#draggable" ).draggable();
+      $(".chessboard .piece").draggable();
+      let pieceId = 0;
+      $(".piece").mousedown(function(){
+      pieceId = $(this).attr('id');
+      });
+      console.log(pieceId);
+      $(".chess_field ").droppable({
+        drop: function() {
+          let row = $(this).attr('row');
+          let column = $(this).attr('column');
+          $.post("/pieces/" + pieceId, {
+            _method: "PUT",
+            piece: {
+              row_coordinate: row,
+              column_coordinate: column,
+              id: pieceId
+            }
+          });
+        }
+      });
+
+      let response = "false";
       let url = window.location.href;
       let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
       if(url.indexOf("#loaded") === -1) {

@@ -1,14 +1,8 @@
 class PiecesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :update
-  def show
-    @piece = Piece.find(params[:id])
-    @board = current_board
-  end
-
   def update
     @piece = Piece.find(params[:id])
     @piece.update(piece_params)
-    redirect_to game_path(@piece.game_id)
   end
 
   private
