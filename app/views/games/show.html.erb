@@ -1,11 +1,12 @@
 
 <div class="chessboard <%= "waiting" if @waiting %>">
+<style>#draggable { width: 80px; height: 80px; padding: 0.5em; float: left; margin: 0; }</style>
   <% @board.reverse_each do |row| %>
       <div class = "row offset-3">
         <% row.each do |field| %>
           <span class="chess_field <%= field[:class] %>">
             <% unless field[:piece].nil? %>
-              <span><%= link_to image_tag(field[:piece].image), "/pieces/#{field[:piece].id}?#{Time.now.to_i}"%></span>
+              <span><%= image_tag(field[:piece].image, id: "draggable", class: "ui-widget-content")%></span>
             <%end%>
           </span>
         <%end%>
@@ -17,6 +18,7 @@
 <script>
   let response = "false";
   $(function() {
+      $( "#draggable" ).draggable();
       let url = window.location.href;
       let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
       if(url.indexOf("#loaded") === -1) {
