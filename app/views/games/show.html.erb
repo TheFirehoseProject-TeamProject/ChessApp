@@ -13,6 +13,11 @@
       </div>
   <%end%>
 </div>
+
+<% @game.users do |user| %>
+  <%= image_tag gravatar_for(current_user.email), alt: "current_user.email" %>
+<% end %>
+
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>

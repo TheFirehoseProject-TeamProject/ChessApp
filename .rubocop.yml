@@ -5,6 +5,7 @@ AllCops:
     - vendor/**/*
     - config/environments/*
     - bin/**/*
+    - app/helpers/*
 
 Rails:
   Enabled: true
