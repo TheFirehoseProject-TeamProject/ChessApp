@@ -50,7 +50,7 @@ class Piece < ApplicationRecord
       return diagonal_obstruction_down_right?(destination_y)
     end
 
-    raise 'Error: Invalid Input'
+    raise 'Error: Invalid Input' unless type == 'Knight'
   end
 
   private
