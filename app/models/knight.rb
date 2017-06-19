@@ -15,7 +15,6 @@ class Knight < Piece
     return true if down_two_right_one?(destination_x, destination_y)
 
     return true if down_one_right_two?(destination_x, destination_y)
-
     false
   end
 
