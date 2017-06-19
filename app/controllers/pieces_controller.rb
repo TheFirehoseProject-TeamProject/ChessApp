@@ -2,7 +2,10 @@ class PiecesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :update
   def update
     @piece = Piece.find(params[:id])
-    @piece.move_to!(piece_params[:column_coordinate].to_i, piece_params[:row_coordinate].to_i)
+    destination_x = piece_params[:column_coordinate].to_i
+    destination_y = piece_params[:row_coordinate].to_i
+    @piece.move_to!(destination_x, destination_y) if !@piece.obstructed?(destination_x, destination_y) ||
+                                                     @piece.valid_move?(destination_x, destination_y)
     redirect_to game_path(@piece.game_id)
   end
 
