@@ -20,8 +20,7 @@ class Game < ApplicationRecord
         row_coordinate: 1,
         column_coordinate: i,
         color: 'white',
-        image: 'pieces/WhitePawn.png',
-        is_on_board?: true
+        image: 'pieces/WhitePawn.png'
       )
     end
 
@@ -32,8 +31,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 0,
       color: 'white',
-      image: 'pieces/WhiteRook.png',
-      is_on_board?: true
+      image: 'pieces/WhiteRook.png'
     )
 
     Piece.create(
@@ -43,8 +41,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 7,
       color: 'white',
-      image: 'pieces/WhiteRook.png',
-      is_on_board?: true
+      image: 'pieces/WhiteRook.png'
     )
 
     Piece.create(
@@ -54,8 +51,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 1,
       color: 'white',
-      image: 'pieces/WhiteKnight.png',
-      is_on_board?: true
+      image: 'pieces/WhiteKnight.png'
     )
 
     Piece.create(
@@ -65,8 +61,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 6,
       color: 'white',
-      image: 'pieces/WhiteKnight.png',
-      is_on_board?: true
+      image: 'pieces/WhiteKnight.png'
     )
 
     Piece.create(
@@ -76,8 +71,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 2,
       color: 'white',
-      image: 'pieces/WhiteBishop.png',
-      is_on_board?: true
+      image: 'pieces/WhiteBishop.png'
     )
 
     Piece.create(
@@ -87,8 +81,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 5,
       color: 'white',
-      image: 'pieces/WhiteBishop.png',
-      is_on_board?: true
+      image: 'pieces/WhiteBishop.png'
     )
 
     Piece.create(
@@ -98,8 +91,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 3,
       color: 'white',
-      image: 'pieces/WhiteQueen.png',
-      is_on_board?: true
+      image: 'pieces/WhiteQueen.png'
     )
 
     Piece.create(
@@ -109,8 +101,7 @@ class Game < ApplicationRecord
       row_coordinate: 0,
       column_coordinate: 4,
       color: 'white',
-      image: 'pieces/WhiteKing.png',
-      is_on_board?: true
+      image: 'pieces/WhiteKing.png'
     )
 
     (0..7).each do |i|
@@ -121,8 +112,7 @@ class Game < ApplicationRecord
         row_coordinate: 6,
         column_coordinate: i,
         color: 'black',
-        image: 'pieces/BlackPawn.png',
-        is_on_board?: true
+        image: 'pieces/BlackPawn.png'
       )
     end
 
@@ -133,8 +123,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 0,
       color: 'black',
-      image: 'pieces/BlackRook.png',
-      is_on_board?: true
+      image: 'pieces/BlackRook.png'
     )
 
     Piece.create(
@@ -144,8 +133,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 7,
       color: 'black',
-      image: 'pieces/BlackRook.png',
-      is_on_board?: true
+      image: 'pieces/BlackRook.png'
     )
 
     Piece.create(
@@ -155,8 +143,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 1,
       color: 'black',
-      image: 'pieces/BlackKnight.png',
-      is_on_board?: true
+      image: 'pieces/BlackKnight.png'
     )
 
     Piece.create(
@@ -166,8 +153,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 6,
       color: 'black',
-      image: 'pieces/BlackKnight.png',
-      is_on_board?: true
+      image: 'pieces/BlackKnight.png'
     )
 
     Piece.create(
@@ -177,8 +163,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 2,
       color: 'black',
-      image: 'pieces/BlackBishop.png',
-      is_on_board?: true
+      image: 'pieces/BlackBishop.png'
     )
 
     Piece.create(
@@ -188,8 +173,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 5,
       color: 'black',
-      image: 'pieces/BlackBishop.png',
-      is_on_board?: true
+      image: 'pieces/BlackBishop.png'
     )
 
     Piece.create(
@@ -199,8 +183,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 3,
       color: 'black',
-      image: 'pieces/BlackQueen.png',
-      is_on_board?: true
+      image: 'pieces/BlackQueen.png'
     )
 
     Piece.create(
@@ -210,8 +193,7 @@ class Game < ApplicationRecord
       row_coordinate: 7,
       column_coordinate: 4,
       color: 'black',
-      image: 'pieces/BlackKing.png',
-      is_on_board?: true
+      image: 'pieces/BlackKing.png'
     )
   end
 
