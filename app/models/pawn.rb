@@ -17,37 +17,32 @@ private
 
 def en_passant_situation?(destination_x, destination_y)
   if row_coordinate == 1 && color == 'white'
-    return true if en_passant_piece?(destination_x, destination_y)
+    return true if pawn_left_or_right_of_destination?(destination_x, destination_y)
   elsif row_coordinate == 6 && color == 'black'
-    return true if en_passant_piece?(destination_x, destination_y)
+    return true if pawn_left_or_right_of_destination?(destination_x, destination_y)
   end
   false
 end
 
-def en_passant_piece?(destination_x, destination_y)
-  black_en_passant_piece_left = game.pieces.find_by(row_coordinate: destination_y, column_coordinate: destination_x - 1, type: 'Pawn', color: 'black')
-  black_en_passant_piece_right = game.pieces.find_by(row_coordinate: destination_y, column_coordinate: destination_x + 1, type: 'Pawn', color: 'black')
-  white_en_passant_piece_left = game.pieces.find_by(row_coordinate: destination_y, column_coordinate: destination_x - 1, type: 'Pawn', color: 'white')
-  white_en_passant_piece_right = game.pieces.find_by(row_coordinate: destination_y, column_coordinate: destination_x + 1, type: 'Pawn', color: 'white')
+def find_en_passant_pawn_to_capture(destination_x, destination_y)
+  return game.pieces.find_by(row_coordinate: destination_y - 1, column_coordinate: destination_x) if color == 'white'
+  return game.pieces.find_by(row_coordinate: destination_y + 1, column_coordinate: destination_x) if color == 'black'
+end
 
-  if row_coordinate == 1 && color == 'white'
-    return true if black_en_passant_piece_left.present?
-    return true if black_en_passant_piece_right.present?
-  elsif row_coordinate == 6 && color == 'black'
-    return true if white_en_passant_piece_left.present?
-    return true if white_en_passant_piece_right.present?
-  end
+def pawn_left_or_right_of_destination?(destination_x, destination_y)
+  return true if game.pieces.find_by(row_coordinate: destination_y, column_coordinate: destination_x - 1, type: 'Pawn', color: 'black').present? && color == 'white'
+  return true if game.pieces.find_by(row_coordinate: destination_y, column_coordinate: destination_x + 1, type: 'Pawn', color: 'black').present? && color == 'white'
+  return true if game.pieces.find_by(row_coordinate: destination_y, column_coordinate: destination_x - 1, type: 'Pawn', color: 'white').present? && color == 'black'
+  return true if game.pieces.find_by(row_coordinate: destination_y, column_coordinate: destination_x + 1, type: 'Pawn', color: 'white').present? && color == 'black'
   false
 end
 
 def en_passant_move?(destination_x, destination_y)
-  if game.last_move_pawn_two_steps?
-    return true if color == 'white' && (diagonal_up_and_right_move?(destination_x, destination_y) ||
-                                       diagonal_up_and_left_move?(destination_x, destination_y))
-    return true if color == 'black' && (diagonal_down_and_right_move?(destination_x, destination_y) ||
-                                      diagonal_down_and_left_move?(destination_x, destination_y))
-  end
-  false
+  return false unless game.last_move_en_passant_situation?
+  return true if color == 'white' && (diagonal_up_and_right_move?(destination_x, destination_y) ||
+                                     diagonal_up_and_left_move?(destination_x, destination_y))
+  return true if color == 'black' && (diagonal_down_and_right_move?(destination_x, destination_y) ||
+                                    diagonal_down_and_left_move?(destination_x, destination_y))
 end
 
 def white_pawn_one_step_move?(destination_x, destination_y)

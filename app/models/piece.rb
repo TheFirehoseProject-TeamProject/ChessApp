@@ -11,38 +11,36 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(destination_x, destination_y)
-    return unless valid_move?(destination_x, destination_y)
-    set_last_move_flag_for_en_passant(destination_x, destination_y)
+    set_en_passant_flag(destination_x, destination_y)
     destination_piece = game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
     raise 'Invalid Move' if destination_piece.present? && !capturable?(destination_piece)
     if en_passant_move?(destination_x, destination_y)
-      pawn_to_capture = game.pieces.find_by(row_coordinate: destination_y - 1, column_coordinate: destination_x) if color == 'white'
-      pawn_to_capture = game.pieces.find_by(row_coordinate: destination_y + 1, column_coordinate: destination_x) if color == 'black'
+      pawn_to_capture = find_en_passant_pawn_to_capture(destination_x, destination_y)
       move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
-      game.update(last_move_pawn_two_steps?: false)
     elsif destination_piece.nil?
-      move_to_empty_space(destination_x: destination_x, destination_y: destination_y)
+      move_to_empty_space(destination_x, destination_y)
     else
       capture!(destination_piece)
     end
   end
 
-  def set_last_move_flag_for_en_passant(destination_x, destination_y)
-    return game.update(last_move_pawn_two_steps?: false) if type != 'Pawn'
-    return if en_passant_move?(destination_x, destination_y)
+  def set_en_passant_flag(destination_x, destination_y)
+    return game.update(last_move_en_passant_situation?: false) if type != 'Pawn'
+    return nil if en_passant_move?(destination_x, destination_y)
     if (black_pawn_two_step_move?(destination_x, destination_y) || white_pawn_two_step_move?(destination_x, destination_y)) && en_passant_situation?(destination_x, destination_y)
-      game.update(last_move_pawn_two_steps?: true)
+      game.update(last_move_en_passant_situation?: true)
     else
-      game.update(last_move_pawn_two_steps?: false)
+      game.update(last_move_en_passant_situation?: false)
     end
   end
 
   def move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
     update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
     remove_piece(pawn_to_capture)
+    game.update(last_move_en_passant_situation?: false)
   end
 
-  def move_to_empty_space(destination_x:, destination_y:)
+  def move_to_empty_space(destination_x, destination_y)
     update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
   end
 
@@ -82,7 +80,7 @@ class Piece < ApplicationRecord
   end
 
   def capture!(destination_piece)
-    move_to_empty_space(destination_x: destination_piece.column_coordinate, destination_y: destination_piece.row_coordinate)
+    move_to_empty_space(destination_piece.column_coordinate, destination_piece.row_coordinate)
     remove_piece(destination_piece)
   end
 

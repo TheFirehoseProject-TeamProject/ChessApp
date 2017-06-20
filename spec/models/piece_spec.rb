@@ -7,7 +7,7 @@ RSpec.describe Piece, type: :model do
 
   describe '#move_to_empty_space' do
     it 'moves to empty space' do
-      expect(piece_black.move_to_empty_space(destination_x: 3, destination_y: 5)).to eq true
+      expect(piece_black.move_to_empty_space(3, 5)).to eq true
     end
   end
 
