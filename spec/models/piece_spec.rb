@@ -73,7 +73,7 @@ RSpec.describe Piece, type: :model do
       expect(piece_black.obstructed?(4, 7)).to eq false
     end
     it 'should return true if piece is between destination and origin when going down' do
-      FactoryGirl.create(:piece, column_coordinate: 4, row_coordinate: 2, is_on_board?: true, game: game)
+      FactoryGirl.create(:piece, column_coordinate: 4, row_coordinate: 2, is_on_board?: true, game: game.id)
       expect(piece_black.obstructed?(4, 0)).to eq true
     end
     it 'should return true if piece is between destination and origin when going up' do

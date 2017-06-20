@@ -63,4 +63,20 @@ RSpec.describe Pawn, type: :model do
       expect(pawn_black.valid_move?(0, 5)).to eq true
     end
   end
+  describe '#move_to!' do
+    context 'when a move is invalid' do
+      it 'should raise error: Invalid Move' do
+        expect { pawn_black.move_to!(0, 5) }.to raise_error('Invalid Move')
+        expect { pawn_black.move_to!(2, 5) }.to raise_error('Invalid Move')
+        expect { pawn_black.move_to!(0, 7) }.to raise_error('Invalid Move')
+        expect { pawn_black.move_to!(2, 7) }.to raise_error('Invalid Move')
+      end
+    end
+    context 'when a move is obstructed' do
+      it 'should raise error, when obstructed horizontally/vertically' do
+        FactoryGirl.create(:pawn, :is_on_board, color: 'black', column_coordinate: 5, game: game)
+        expect { pawn_black.move_to!(1, 5) }.to raise_error('Invalid Move')
+      end
+    end
+  end
 end
