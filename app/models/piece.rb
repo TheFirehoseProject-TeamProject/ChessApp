@@ -21,6 +21,8 @@ class Piece < ApplicationRecord
   end
 
   def move_to_empty_space(destination_x:, destination_y:)
+    en_passant_pawn = en_passant_piece[0] if !en_passant_piece.nil? || en_passant_situation?
+    capture!(en_passant_pawn) if en_passant_move?(destination_x, destination_y)
     update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
   end
 

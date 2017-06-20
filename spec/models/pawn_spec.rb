@@ -62,5 +62,14 @@ RSpec.describe Pawn, type: :model do
       FactoryGirl.create(:pawn, column_coordinate: 0, row_coordinate: 5, game: game)
       expect(pawn_black.valid_move?(0, 5)).to eq true
     end
+    it 'should be able to capture a piece by en passant' do
+      pawn_en_passant = FactoryGirl.create(:pawn, column_coordinate: 2, row_coordinate: 4, game: game, color: 'white')
+      pawn_black.update(row_coordinate: 4)
+      pawn_en_passant.move_to!(1, 5)
+      pawn_black.reload
+      expect(pawn_black.is_on_board?).to eq false
+      expect(pawn_en_passant.column_coordinate).to eq 1
+      expect(pawn_en_passant.row_coordinate).to eq 5
+    end
   end
 end
