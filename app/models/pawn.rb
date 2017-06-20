@@ -17,31 +17,25 @@ private
 
 def en_passant_situation?
   if row_coordinate == 4 && color == 'white'
-    return true if en_passant_piece.present?
+    return true if en_passant_piece.present? && en_passant_piece.game.last_move_pawn_two_steps?
   elsif row_coordinate == 3 && color == 'black'
-    return true if en_passant_piece.present?
+    return true if en_passant_piece.present? && en_passant_piece.game.last_move_pawn_two_steps?
   end
   false
 end
 
 def en_passant_piece
-  white_en_passant_piece_left = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'black')
-  white_en_passant_piece_right = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'black')
-  black_en_passant_piece_left = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'white')
-  black_en_passant_piece_right = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'white')
+  black_en_passant_piece_left = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'black')
+  black_en_passant_piece_right = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'black')
+  white_en_passant_piece_left = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'white')
+  white_en_passant_piece_right = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'white')
 
   if row_coordinate == 4 && color == 'white'
-    if white_en_passant_piece_left.present?
-      return white_en_passant_piece_left
-    elsif white_en_passant_piece_right.present?
-      return white_en_passant_piece_right
-    end
+    return black_en_passant_piece_left if black_en_passant_piece_left.present?
+    return black_en_passant_piece_right if black_en_passant_piece_right.present?
   elsif row_coordinate == 3 && color == 'black'
-    if black_en_passant_piece_left.present?
-      return black_en_passant_piece_left
-    elsif black_en_passant_piece_right.present?
-      return black_en_passant_piece_right
-    end
+    return white_en_passant_piece_left if white_en_passant_piece_left.present?
+    return white_en_passant_piece_right if white_en_passant_piece_right.present?
   end
 end
 
