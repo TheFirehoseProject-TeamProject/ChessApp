@@ -25,20 +25,23 @@ def en_passant_situation?
 end
 
 def en_passant_piece
-  en_passant_piece = []
+  white_en_passant_piece_left = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'black')
+  white_en_passant_piece_right = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'black')
+  black_en_passant_piece_left = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'white')
+  black_en_passant_piece_right = game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'white')
+
   if row_coordinate == 4 && color == 'white'
-    if game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'black').present?
-      en_passant_piece << game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'black')
-    elsif game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'black').present?
-      en_passant_piece << game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'black')
+    if white_en_passant_piece_left.present?
+      return white_en_passant_piece_left
+    elsif white_en_passant_piece_right.present?
+      return white_en_passant_piece_right
     end
   elsif row_coordinate == 3 && color == 'black'
-    if game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'white').present?
-      en_passant_piece << game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate - 1, type: 'Pawn', color: 'white')
-    elsif game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'white').present?
-      en_passant_piece << game.pieces.find_by(row_coordinate: row_coordinate, column_coordinate: column_coordinate + 1, type: 'Pawn', color: 'white')
+    if black_en_passant_piece_left.present?
+      return black_en_passant_piece_left
+    elsif black_en_passant_piece_right.present?
+      return black_en_passant_piece_right
     end
-    en_passant_piece
   end
 end
 
