@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Piece, type: :model do
   let(:game) { FactoryGirl.create(:game) }
   let(:user) { FactoryGirl.create(:user, game: game) }
-  let(:piece_black) { FactoryGirl.create(:piece, :is_on_board_black, game: game) }
+  let(:piece_black) { FactoryGirl.create(:queen, color: 'black', game: game, column_coordinate: 4, row_coordinate: 4) }
 
   describe '#move_to_empty_space' do
     it 'moves to empty space' do
