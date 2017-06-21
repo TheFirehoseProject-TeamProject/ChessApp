@@ -4,6 +4,6 @@ class Rook < Piece
     if vertical_move?(destination_x) || horizontal_move?(destination_y)
       return true
     end
-    false
+    raise_error('Error: Invalid Input')
   end
 end
