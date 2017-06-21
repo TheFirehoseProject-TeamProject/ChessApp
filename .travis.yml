@@ -16,3 +16,6 @@ deploy:
   app: chessapp-fhp-tp
   on:
     repo: TheFirehoseProject-TeamProject/ChessApp
+  run:
+    - "rake db:migrate"
+    - restart
