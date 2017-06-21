@@ -82,5 +82,13 @@
               };
       }
 
+      function move(column_coordinate, row_coordinate){
+        if (pieceId.valid_move?(column_coordinate, row_coordinate)) && (!pieceId.obstructed?(column_coordinate, row_coordinate)) {
+          pieceId.move_to!(column_coordinate, row_coordinate)
+        } else {
+          raise 'Error: Invalid Input'
+        }
+      }
+
   });
 </script>
