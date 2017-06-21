@@ -12,7 +12,7 @@ RSpec.describe Rook, type: :model do
     end
 
     it 'should raise_error' do
-      expect(rook.valid_move?(2, 2)). to raise_error('Error: Invalid Input')
+      expect(rook.valid_move?(2, 3)). to raise_error('Error: Invalid Input')
       expect(rook.valid_move?(5, 3)). to raise_error('Error: Invalid Input')
       expect(rook.valid_move?(0, 5)). to raise_error('Error: Invalid Input')
     end
