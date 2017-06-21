@@ -16,4 +16,12 @@ RSpec.describe GamesController, type: :controller do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe 'games#create action' do
+    it 'should set turn to white player' do
+      white_player = FactoryGirl.create(:user)
+      post :create, params: { white_player_id: white_player.id, black_player_id: nil }
+      expect(Game.last).to eq(1)
+    end
+  end
 end

@@ -8,7 +8,7 @@ class GamesController < ApplicationController
 
   def create
     @game = Game.create(game_params)
-
+    @game.update_attributes(turn: current_user.id)
     redirect_to game_path(@game.id)
   end
 
