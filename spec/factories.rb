@@ -25,10 +25,6 @@ FactoryGirl.define do
       row_coordinate 5
       color 'white'
     end
-
-    trait :is_off_board do
-      is_on_board? false
-    end
   end
 
   factory :game do
@@ -41,7 +37,6 @@ FactoryGirl.define do
   factory :king do
     association :game
     association :user
-
     trait :is_on_board do
       is_on_board? true
       column_coordinate 4
@@ -49,8 +44,49 @@ FactoryGirl.define do
     end
   end
 
-  factory :rook do
+  factory :knight do
+    association :game
+    association :user
+
     trait :is_on_board do
+      is_on_board? true
+      column_coordinate 2
+      row_coordinate 3
+    end
+  end
+
+  factory :pawn do
+    association :game
+    association :user
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 1
+      row_coordinate 6
+    end
+  end
+
+  factory :queen do
+    association :game
+    association :user
+    trait :is_on_board do
+      is_on_board? true
+      column_coordinate 4
+      row_coordinate 4
+    end
+  end
+
+  factory :bishop do
+    trait :is_on_board do
+      association :game
+      association :user
+      is_on_board? true
+      column_coordinate 3
+      row_coordinate 3
+    end
+  end
+
+    factory :rook do
+      trait :is_on_board do
       association :game
       association :user
       is_on_board? true
@@ -58,4 +94,5 @@ FactoryGirl.define do
       row_coordinate 4
     end
   end
-end
+
+

@@ -1,5 +1,4 @@
 <h1>Find a game to join</h1>
-
 <ul>
   <% @available_games.each do |game| %>
     <% if game.white_player%>
@@ -8,5 +7,5 @@
       <li><%= link_to game.black_player.name + "'s game", "games/#{game.id}"%></li>
     <%end%>
   <% end %>
-  <li>No Game could be found ! Feel free to create a new Game: <%= link_to "click here", new_game_path %></li>
+  <li>Feel free to create a new Game: <%= link_to "click here", new_game_path %></li>
 </ul>

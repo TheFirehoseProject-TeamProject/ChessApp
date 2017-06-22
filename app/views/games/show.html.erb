@@ -1,13 +1,86 @@
-<div class="chessboard">
-  <% @board.each do |row| %>
+
+<div class="chessboard <%= "waiting" if @waiting %>">
+  <% @board.reverse_each.with_index do |row, index_row| %>
+      <%index_row = @board.length - index_row - 1 %>
       <div class = "row offset-3">
-        <% row.each do |field| %>
-          <span class="chess_field <%= field[:class] %>">
+        <% row.each_with_index do |field, index_field| %>
+          <span row = "<%=index_row%>" column = "<%=index_field%>" class="chess_field ui-widget-header <%= field[:class] %>">
             <% unless field[:piece].nil? %>
-              <span><%= link_to image_tag(field[:piece].image), "/pieces/#{field[:piece].id}?#{Time.now.to_i}"%></span>
+              <span id="<%= field[:piece].id %>" class="ui-widget-content piece"><%= image_tag(field[:piece].image)%></span>
             <%end%>
           </span>
         <%end%>
       </div>
   <%end%>
 </div>
+
+<% @game.users do |user| %>
+  <%= image_tag gravatar_for(current_user.email), alt: "current_user.email" %>
+<% end %>
+
+<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
+
+<script>
+
+  $(function() {
+      $(".chessboard .piece").draggable({
+        opacity: .4,
+        create: function(){$(this).data('position',$(this).position())},
+        cursorAt:{left:15},
+        cursor:'move',
+        start:function(){$(this).stop(true,true)}
+      });
+
+      let pieceId = 0;
+      $(".piece").mousedown(function(){
+        pieceId = $(this).attr('id');
+      });
+
+      $(".chess_field").droppable({
+        classes: {
+          "ui-droppable-hover": "ui-state-hover"
+        },
+        drop: function(event, ui) {
+          snapToMiddle(ui.draggable,$(this));
+          let row = $(this).attr('row');
+          let column = $(this).attr('column');
+          $.ajax({type: "PUT",
+                 url: "/pieces/" + pieceId,
+                 data: {
+                    piece: {
+                      row_coordinate: row,
+                      column_coordinate: column,
+                      id: pieceId
+                      }
+                 },
+                error: function(xhr, status) {
+                    if (xhr.status === 500 || xhr.status === 400){}
+                    window.location.reload();
+                    },
+                success: function(){window.location = window.location + '#loaded'; }
+          });
+        }
+      });
+      function snapToMiddle(dragger, target){
+        var topMove = target.position().top - dragger.data('position').top + (target.outerHeight(true) - dragger.outerHeight(true)) / 2;
+        var leftMove= target.position().left - dragger.data('position').left + (target.outerWidth(true) - dragger.outerWidth(true)) / 2;
+        dragger.animate({top:topMove,left:leftMove},{duration:600,easing:'easeOutBack'});
+      }
+      let response = "default";
+      let url = window.location.href;
+      let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
+      if(url.indexOf("#loaded") === -1) {
+              let id = setInterval(checkGameAvailable, 2000);
+              function checkGameAvailable () {
+                        let response = $.ajax({type: "GET", url: gameId +"/game_available", async: false}).responseText;
+                        if (response === "false") {
+                            clearInterval(id);
+                            // reloading the page once to populate the board for the person who was waiting for a player
+                            window.location = window.location + '#loaded';
+                            window.location.reload();
+                          }
+              };
+      }
+
+  });
+</script>

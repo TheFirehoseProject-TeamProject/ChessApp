@@ -1,11 +1,8 @@
 class Game < ApplicationRecord
-  belongs_to :black_player, class_name: 'User'
-  belongs_to :white_player, class_name: 'User'
+  belongs_to :black_player, class_name: 'User', optional: true
+  belongs_to :white_player, class_name: 'User', optional: true
   has_many :users
   has_many :pieces
-
-  belongs_to :white_player, class_name: 'User', optional: true
-  belongs_to :black_player, class_name: 'User', optional: true
 
   enum game_status: { in_progress: 0, checkmate: 1, stalemate: 2 }
 
@@ -17,7 +14,7 @@ class Game < ApplicationRecord
         type: 'Pawn',
         game_id: id,
         user_id: white_player.id,
-        row_coordinate: 6,
+        row_coordinate: 1,
         column_coordinate: i,
         color: 'white',
         image: 'pieces/WhitePawn.png'
@@ -28,7 +25,7 @@ class Game < ApplicationRecord
       type: 'Rook',
       game_id: id,
       user_id: white_player.id,
-      row_coordinate: 7,
+      row_coordinate: 0,
       column_coordinate: 0,
       color: 'white',
       image: 'pieces/WhiteRook.png'
@@ -38,7 +35,7 @@ class Game < ApplicationRecord
       type: 'Rook',
       game_id: id,
       user_id: white_player.id,
-      row_coordinate: 7,
+      row_coordinate: 0,
       column_coordinate: 7,
       color: 'white',
       image: 'pieces/WhiteRook.png'
@@ -48,7 +45,7 @@ class Game < ApplicationRecord
       type: 'Knight',
       game_id: id,
       user_id: white_player.id,
-      row_coordinate: 7,
+      row_coordinate: 0,
       column_coordinate: 1,
       color: 'white',
       image: 'pieces/WhiteKnight.png'
@@ -58,7 +55,7 @@ class Game < ApplicationRecord
       type: 'Knight',
       game_id: id,
       user_id: white_player.id,
-      row_coordinate: 7,
+      row_coordinate: 0,
       column_coordinate: 6,
       color: 'white',
       image: 'pieces/WhiteKnight.png'
@@ -68,7 +65,7 @@ class Game < ApplicationRecord
       type: 'Bishop',
       game_id: id,
       user_id: white_player.id,
-      row_coordinate: 7,
+      row_coordinate: 0,
       column_coordinate: 2,
       color: 'white',
       image: 'pieces/WhiteBishop.png'
@@ -78,7 +75,7 @@ class Game < ApplicationRecord
       type: 'Bishop',
       game_id: id,
       user_id: white_player.id,
-      row_coordinate: 7,
+      row_coordinate: 0,
       column_coordinate: 5,
       color: 'white',
       image: 'pieces/WhiteBishop.png'
@@ -88,7 +85,7 @@ class Game < ApplicationRecord
       type: 'Queen',
       game_id: id,
       user_id: white_player.id,
-      row_coordinate: 7,
+      row_coordinate: 0,
       column_coordinate: 3,
       color: 'white',
       image: 'pieces/WhiteQueen.png'
@@ -98,7 +95,7 @@ class Game < ApplicationRecord
       type: 'King',
       game_id: id,
       user_id: white_player.id,
-      row_coordinate: 7,
+      row_coordinate: 0,
       column_coordinate: 4,
       color: 'white',
       image: 'pieces/WhiteKing.png'
@@ -109,7 +106,7 @@ class Game < ApplicationRecord
         type: 'Pawn',
         game_id: id,
         user_id: black_player.id,
-        row_coordinate: 1,
+        row_coordinate: 6,
         column_coordinate: i,
         color: 'black',
         image: 'pieces/BlackPawn.png'
@@ -120,7 +117,7 @@ class Game < ApplicationRecord
       type: 'Rook',
       game_id: id,
       user_id: black_player.id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 0,
       color: 'black',
       image: 'pieces/BlackRook.png'
@@ -130,7 +127,7 @@ class Game < ApplicationRecord
       type: 'Rook',
       game_id: id,
       user_id: black_player.id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 7,
       color: 'black',
       image: 'pieces/BlackRook.png'
@@ -140,7 +137,7 @@ class Game < ApplicationRecord
       type: 'Knight',
       game_id: id,
       user_id: black_player.id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 1,
       color: 'black',
       image: 'pieces/BlackKnight.png'
@@ -150,7 +147,7 @@ class Game < ApplicationRecord
       type: 'Knight',
       game_id: id,
       user_id: black_player.id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 6,
       color: 'black',
       image: 'pieces/BlackKnight.png'
@@ -160,7 +157,7 @@ class Game < ApplicationRecord
       type: 'Bishop',
       game_id: id,
       user_id: black_player.id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 2,
       color: 'black',
       image: 'pieces/BlackBishop.png'
@@ -170,7 +167,7 @@ class Game < ApplicationRecord
       type: 'Bishop',
       game_id: id,
       user_id: black_player.id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 5,
       color: 'black',
       image: 'pieces/BlackBishop.png'
@@ -180,7 +177,7 @@ class Game < ApplicationRecord
       type: 'Queen',
       game_id: id,
       user_id: black_player.id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 3,
       color: 'black',
       image: 'pieces/BlackQueen.png'
@@ -190,10 +187,14 @@ class Game < ApplicationRecord
       type: 'King',
       game_id: id,
       user_id: black_player.id,
-      row_coordinate: 0,
+      row_coordinate: 7,
       column_coordinate: 4,
       color: 'black',
       image: 'pieces/BlackKing.png'
     )
+  end
+
+  def empty_board?
+    pieces.count.zero?
   end
 end

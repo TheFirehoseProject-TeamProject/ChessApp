@@ -10,5 +10,3 @@ require 'rails_helper'
 #     end
 #   end
 # end
-RSpec.describe PiecesHelper, type: :helper do
-end
