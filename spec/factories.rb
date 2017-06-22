@@ -94,5 +94,6 @@ FactoryGirl.define do
       row_coordinate 4
     end
   end
+end
 
 
