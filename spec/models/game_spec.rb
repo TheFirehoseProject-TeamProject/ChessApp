@@ -1,6 +1,32 @@
 require 'rails_helper'
 
 RSpec.describe Game, type: :model do
+  describe '#check?' do
+    it 'returns true if king is in check' do
+      white_player = FactoryGirl.create(:user)
+      black_player = FactoryGirl.create(:user)
+
+      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
+
+      king = FactoryGirl.create(:king, game: game)
+      queen = FactoryGirl.create(:queen, row_coordinate: 3, game: game)
+
+      expect(game.check?).to eq(true)
+    end
+
+    it 'returns false if king is not in check' do
+      white_player = FactoryGirl.create(:user)
+      black_player = FactoryGirl.create(:user)
+
+      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
+
+      king = FactoryGirl.create(:king, game: game)
+      queen = FactoryGirl.create(:queen, row_coordinate: 2, column_coordinate: 3, game: game)
+
+      expect(game.check?).to eq(false)
+    end
+  end
+
   describe '#populate_board!' do
     it 'places the correct number of pawns on the board' do
       white_player = FactoryGirl.create(:user)

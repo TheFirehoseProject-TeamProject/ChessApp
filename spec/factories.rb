@@ -41,6 +41,7 @@ FactoryGirl.define do
       is_on_board? true
       column_coordinate 4
       row_coordinate 4
+      color 'white'
     end
   end
 
@@ -72,6 +73,7 @@ FactoryGirl.define do
       is_on_board? true
       column_coordinate 4
       row_coordinate 4
+      color 'black'
     end
   end
 
