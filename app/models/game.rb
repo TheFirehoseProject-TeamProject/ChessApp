@@ -9,12 +9,16 @@ class Game < ApplicationRecord
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 
   def check?
+    
     self.pieces.each do |piece|
       color = piece.color
+      
       if color == 'white'
-        return true if piece.valid_move?(King.where(color: 'black').row_coordinate, King.where(color: 'black').column_coordinate)
+        other_king = self.pieces.find_by(type:'King', color: 'black')
+        return true if piece.valid_move?(other_king.row_coordinate, other_king.column_coordinate)
       elsif color == 'black'
-        return true if piece.valid_move?(King.where(color: 'white').row_coordinate, King.where(color: 'white').column_coordinate)
+        other_king = self.pieces.find_by(type:'King', color: 'white')
+        return true if piece.valid_move?(other_king.row_coordinate, other_king.column_coordinate)
       end
     end
     return false

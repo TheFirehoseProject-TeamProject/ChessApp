@@ -8,8 +8,9 @@ RSpec.describe Game, type: :model do
 
       game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
 
-      king = FactoryGirl.create(:king, game: game)
-      queen = FactoryGirl.create(:queen, row_coordinate: 3, game: game)
+      queen = FactoryGirl.create(:queen, :is_on_board, row_coordinate: 3, column_coordinate: 4, user: black_player, color: 'black', game: game)
+      king = FactoryGirl.create(:king, :is_on_board, row_coordinate: 4, column_coordinate: 4, user: white_player, color: 'white', game: game)
+      king = FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 2, user: white_player, color: 'black', game: game)
 
       expect(game.check?).to eq(true)
     end
@@ -20,8 +21,9 @@ RSpec.describe Game, type: :model do
 
       game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
 
-      king = FactoryGirl.create(:king, game: game)
-      queen = FactoryGirl.create(:queen, row_coordinate: 2, column_coordinate: 3, game: game)
+      queen = FactoryGirl.create(:queen, :is_on_board, row_coordinate: 2, column_coordinate: 3, user: black_player, color: 'black', game: game)
+      king = FactoryGirl.create(:king, :is_on_board, row_coordinate: 4, column_coordinate: 4, user: white_player, color: 'white', game: game)
+      king = FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 2, user: white_player, color: 'black', game: game)
 
       expect(game.check?).to eq(false)
     end
