@@ -85,15 +85,13 @@ FactoryGirl.define do
     end
   end
 
-    factory :rook do
-      trait :is_on_board do
+  factory :rook do
       association :game
       association :user
+      trait :is_on_board do
       is_on_board? true
       column_coordinate 4
       row_coordinate 4
     end
   end
 end
-
-
