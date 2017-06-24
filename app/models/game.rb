@@ -8,6 +8,21 @@ class Game < ApplicationRecord
 
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 
+  def check?
+    pieces.each do |piece|
+      color = piece.color
+
+      if color == 'white'
+        other_king = pieces.find_by(type: 'King', color: 'black')
+        return true if piece.valid_move?(other_king.row_coordinate, other_king.column_coordinate)
+      elsif color == 'black'
+        other_king = pieces.find_by(type: 'King', color: 'white')
+        return true if piece.valid_move?(other_king.row_coordinate, other_king.column_coordinate)
+      end
+    end
+    false
+  end
+
   def populate_board!
     (0..7).each do |i|
       Piece.create(

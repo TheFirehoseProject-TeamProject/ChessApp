@@ -1,13 +1,30 @@
 require 'rails_helper'
 
 RSpec.describe Game, type: :model do
+  let(:white_player) { FactoryGirl.create(:user) }
+  let(:black_player) { FactoryGirl.create(:user) }
+  let(:game) { FactoryGirl.create(:game, white_player: white_player, black_player: black_player) }
+
+  describe '#check?' do
+    it 'returns true if king is in check' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 3, column_coordinate: 4, user: black_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 4, column_coordinate: 4, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 2, user: white_player, color: 'black', game: game)
+
+      expect(game.check?).to eq(true)
+    end
+
+    it 'returns false if king is not in check' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 2, column_coordinate: 3, user: black_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 4, column_coordinate: 4, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 2, user: white_player, color: 'black', game: game)
+
+      expect(game.check?).to eq(false)
+    end
+  end
+
   describe '#populate_board!' do
     it 'places the correct number of pawns on the board' do
-      white_player = FactoryGirl.create(:user)
-      black_player = FactoryGirl.create(:user)
-
-      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
-
       game.populate_board!
 
       expect(game.pieces.where(type: 'Pawn', color: 'white').count).to eq 8
@@ -15,10 +32,6 @@ RSpec.describe Game, type: :model do
     end
 
     it 'places the correct number of rooks on the board' do
-      white_player = FactoryGirl.create(:user)
-      black_player = FactoryGirl.create(:user)
-
-      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
       game.populate_board!
 
       expect(game.pieces.where(type: 'Rook', color: 'white').count).to eq 2
@@ -26,10 +39,6 @@ RSpec.describe Game, type: :model do
     end
 
     it 'places the correct number of knights on the board' do
-      white_player = FactoryGirl.create(:user)
-      black_player = FactoryGirl.create(:user)
-
-      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
       game.populate_board!
 
       expect(game.pieces.where(type: 'Knight', color: 'white').count).to eq 2
@@ -37,10 +46,6 @@ RSpec.describe Game, type: :model do
     end
 
     it 'places the correct number of bishops on the board' do
-      white_player = FactoryGirl.create(:user)
-      black_player = FactoryGirl.create(:user)
-
-      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
       game.populate_board!
 
       expect(game.pieces.where(type: 'Bishop', color: 'white').count).to eq 2
@@ -48,10 +53,6 @@ RSpec.describe Game, type: :model do
     end
 
     it 'places the correct number of kings on the board' do
-      white_player = FactoryGirl.create(:user)
-      black_player = FactoryGirl.create(:user)
-
-      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
       game.populate_board!
 
       expect(game.pieces.where(type: 'King', color: 'white').count).to eq 1
@@ -59,10 +60,6 @@ RSpec.describe Game, type: :model do
     end
 
     it 'places the correct number of queens on the board' do
-      white_player = FactoryGirl.create(:user)
-      black_player = FactoryGirl.create(:user)
-
-      game = FactoryGirl.create(:game, white_player: white_player, black_player: black_player)
       game.populate_board!
 
       expect(game.pieces.where(type: 'Queen', color: 'white').count).to eq 1
