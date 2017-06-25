@@ -3,7 +3,7 @@ require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
   let(:game) { FactoryGirl.create(:game) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryGirl.create(:user, game_id: game) }
 
   describe 'games#show action' do
     it 'should ask the user to be signed in' do
@@ -14,6 +14,14 @@ RSpec.describe GamesController, type: :controller do
       sign_in user
       get :show, params: { id: game.id }
       expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'games#create action' do
+    it 'should set turn to white player' do
+      sign_in user
+      post :create, params: { game: { white_player_id: user.id } }
+      expect(Game.last.turn).to eq(user.id)
     end
   end
 end
