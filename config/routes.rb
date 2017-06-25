@@ -13,7 +13,8 @@ Rails.application.routes.draw do
       get :game_available
     end
   end
-  resources :pieces, only: %i[show update]
+
+  resources :pieces, only: %i[update]
 
 end
 
