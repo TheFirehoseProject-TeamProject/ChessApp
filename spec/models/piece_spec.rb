@@ -46,11 +46,18 @@ RSpec.describe Piece, type: :model do
       end
     end
     context 'when capturing a piece places you in check' do
+      let!(:piece_moving) { FactoryGirl.create(:bishop, game: game, column_coordinate: 4, row_coordinate: 1, color: 'white', is_on_board?: true) }
+      let!(:capture_piece) { FactoryGirl.create(:pawn, game: game, column_coordinate: 5, row_coordinate: 2, color: 'black', is_on_board?: true) }
       it 'returns error: This places you in check' do
-        FactoryGirl.create(:pawn, game: game, column_coordinate: 5, row_coordinate: 2, color: 'black', is_on_board?: true)
-        white_bishop = FactoryGirl.create(:bishop, game: game, column_coordinate: 4, row_coordinate: 1, color: 'white', is_on_board?: true)
-        # byebug
-        expect { white_bishop.move_to!(5, 2) }.to raise_error('This places you in check')
+        expect { piece_moving.move_to!(5, 2) }.to raise_error('This places you in check')
+      end
+      it 'the captured piece is on board in same position' do
+        piece_moving.move_to!(5, 2)
+        expect(capture_piece).to have_attributes(is_on_board?: true, column_coordinate: 5, row_coordinate: 2)
+      end
+      it 'the moving piece is on board in original position' do
+        piece_moving.move_to!(5, 2)
+        expect(piece_moving).to have_attributes(is_on_board?: true, column_coordinate: 5, row_coordinate: 2)
       end
     end
   end
