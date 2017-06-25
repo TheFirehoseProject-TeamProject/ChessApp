@@ -28,7 +28,7 @@ class Piece < ApplicationRecord
     else
       capture!(destination_piece)
       if game.check?
-        # byebug
+        byebug
         raise 'This places you in check'
       end
     end
