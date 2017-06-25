@@ -42,6 +42,20 @@ FactoryGirl.define do
       column_coordinate 4
       row_coordinate 4
     end
+
+    trait :white_starting do
+      is_on_board? true
+      color 'white'
+      column_coordinate 4
+      row_coordinate 0
+    end
+
+    trait :black_starting do
+      is_on_board? true
+      color 'black'
+      column_coordinate 4
+      row_coordinate 7
+    end
   end
 
   factory :knight do

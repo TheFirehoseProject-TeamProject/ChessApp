@@ -7,6 +7,8 @@ RSpec.describe Pawn, type: :model do
   let(:pawn_white) { FactoryGirl.create(:pawn, :is_on_board, color: 'white', row_coordinate: 1, game: game) }
   let(:pawn_center) { FactoryGirl.create(:pawn, :is_on_board, row_coordinate: 3, game: game) }
   let(:pawn_en_passant) { FactoryGirl.create(:pawn, column_coordinate: 2, row_coordinate: 4, game: game, color: 'white') }
+  let!(:king_white) { FactoryGirl.create(:king, :white_starting, game: game) }
+  let!(:king_black) { FactoryGirl.create(:king, :black_starting, game: game) }
   describe '#valid_move?' do
     it 'white pawn should be able to move one field up' do
       expect(pawn_white.valid_move?(1, 2)).to eq true
@@ -63,6 +65,7 @@ RSpec.describe Pawn, type: :model do
       expect(pawn_black.valid_move?(0, 5)).to eq true
     end
     it 'should be able to move en passant if en passant situation' do
+      # byebug
       pawn_black.move_to!(1, 4)
       pawn_en_passant.move_to!(1, 5)
       expect(pawn_en_passant).to have_attributes(column_coordinate: 1, row_coordinate: 5)

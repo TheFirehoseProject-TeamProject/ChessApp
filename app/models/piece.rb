@@ -11,6 +11,8 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(destination_x, destination_y)
+    orig_row = row_coordinate
+    orig_col = column_coordinate
     save_piece_capturable_by_en_passant(destination_x, destination_y)
     destination_piece = game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
     raise 'Invalid Move' if destination_piece.present? && !capturable?(destination_piece)
@@ -19,6 +21,10 @@ class Piece < ApplicationRecord
       move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
     elsif destination_piece.nil?
       move_to_empty_space(destination_x, destination_y)
+      if game.check?
+        move_to_empty_space(orig_row, orig_col)
+        raise 'This places you in check'
+      end
     else
       capture!(destination_piece)
     end

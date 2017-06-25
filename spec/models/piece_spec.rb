@@ -3,8 +3,9 @@ require 'rails_helper'
 RSpec.describe Piece, type: :model do
   let(:game) { FactoryGirl.create(:game) }
   let(:user) { FactoryGirl.create(:user, game: game) }
-  let(:piece_black) { FactoryGirl.create(:queen, color: 'black', game: game, column_coordinate: 4, row_coordinate: 4) }
-
+  let!(:piece_black) { FactoryGirl.create(:queen, color: 'black', game: game, column_coordinate: 4, row_coordinate: 4) }
+  let!(:king_white) { FactoryGirl.create(:king, :white_starting, game: game) }
+  let!(:king_black) { FactoryGirl.create(:king, :black_starting, game: game) }
   describe '#move_to_empty_space' do
     it 'moves to empty space' do
       expect(piece_black.move_to_empty_space(3, 5)).to eq true
@@ -14,6 +15,7 @@ RSpec.describe Piece, type: :model do
   describe '#move_to!' do
     context 'when no piece is at destination coordinates' do
       it 'moves to the destination coordinates' do
+        # byebug
         piece_black.move_to!(3, 5)
         expect(piece_black).to have_attributes(column_coordinate: 3, row_coordinate: 5)
       end
@@ -31,11 +33,16 @@ RSpec.describe Piece, type: :model do
         expect(piece_white[:is_on_board?]).to eq false
       end
     end
-
     context 'when a piece exists at the destination and it is the same color' do
       it 'returns an error: Invalid move' do
         FactoryGirl.create(:piece, column_coordinate: 3, row_coordinate: 5, color: 'black', is_on_board?: true, game: game)
         expect { piece_black.move_to!(3, 5) }.to raise_error('Invalid Move')
+      end
+    end
+    context 'when move places you in check' do
+      it 'returns error: This places you in check' do
+        white_king = FactoryGirl.create(:piece, game: game, type: 'King', column_coordinate: 2, row_coordinate: 5, color: 'white')
+        expect { white_king.move_to!(3, 5) }.to raise_error('This places you in check')
       end
     end
   end
