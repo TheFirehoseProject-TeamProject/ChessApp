@@ -39,12 +39,17 @@ RSpec.describe Piece, type: :model do
         expect { piece_black.move_to!(3, 5) }.to raise_error('Invalid Move')
       end
     end
-    context 'when move places you in check' do
+    context 'when moving to empty space places you in check' do
       it 'returns error: This places you in check' do
-        white_king = FactoryGirl.create(:piece, game: game, type: 'King', column_coordinate: 2, row_coordinate: 5, color: 'white')
-        expect { white_king.move_to!(3, 5) }.to raise_error('This places you in check')
+        white_bishop = FactoryGirl.create(:bishop, :white, game: game)
+        expect { white_bishop.move_to!(5, 0) }.to raise_error('This places you in check')
       end
     end
+    # context 'when capturing a piece places you in check' do
+    #   it 'returns error: This places you in check' do
+    #
+    #   end
+    # end
   end
 
   describe 'method obstruced # checking if fields are obstructed horizontally' do

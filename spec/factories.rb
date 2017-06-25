@@ -90,12 +90,20 @@ FactoryGirl.define do
   end
 
   factory :bishop do
+    association :game
+    association :user
+
     trait :is_on_board do
-      association :game
-      association :user
       is_on_board? true
       column_coordinate 3
       row_coordinate 3
+    end
+
+    trait :white do
+      is_on_board? true
+      color 'white'
+      column_coordinate 4
+      row_coordinate 1
     end
   end
 
