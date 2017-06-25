@@ -10,6 +10,7 @@ class Game < ApplicationRecord
 
   def check?
     pieces.each do |piece|
+      next unless piece.column_coordinate > -1
       color = piece.color
 
       if color == 'white'

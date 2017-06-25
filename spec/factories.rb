@@ -98,13 +98,6 @@ FactoryGirl.define do
       column_coordinate 3
       row_coordinate 3
     end
-
-    trait :white do
-      is_on_board? true
-      color 'white'
-      column_coordinate 4
-      row_coordinate 1
-    end
   end
 
   factory :rook do

@@ -27,10 +27,10 @@ class Piece < ApplicationRecord
       end
     else
       capture!(destination_piece)
-      # if game.check?
-      #   # byebug
-      #   raise 'This places you in check'
-      # end
+      if game.check?
+        # byebug
+        raise 'This places you in check'
+      end
     end
   end
 

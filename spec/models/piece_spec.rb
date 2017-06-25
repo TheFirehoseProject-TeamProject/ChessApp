@@ -41,15 +41,18 @@ RSpec.describe Piece, type: :model do
     end
     context 'when moving to empty space places you in check' do
       it 'returns error: This places you in check' do
-        white_bishop = FactoryGirl.create(:bishop, :white, game: game)
+        white_bishop = FactoryGirl.create(:bishop, game: game, column_coordinate: 4, row_coordinate: 1, color: 'white', is_on_board?: true)
         expect { white_bishop.move_to!(5, 0) }.to raise_error('This places you in check')
       end
     end
-    # context 'when capturing a piece places you in check' do
-    #   it 'returns error: This places you in check' do
-    #
-    #   end
-    # end
+    context 'when capturing a piece places you in check' do
+      it 'returns error: This places you in check' do
+        FactoryGirl.create(:pawn, game: game, column_coordinate: 5, row_coordinate: 2, color: 'black', is_on_board?: true)
+        white_bishop = FactoryGirl.create(:bishop, game: game, column_coordinate: 4, row_coordinate: 1, color: 'white', is_on_board?: true)
+        # byebug
+        expect { white_bishop.move_to!(5, 2) }.to raise_error('This places you in check')
+      end
+    end
   end
 
   describe 'method obstruced # checking if fields are obstructed horizontally' do
