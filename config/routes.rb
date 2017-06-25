@@ -5,10 +5,17 @@ Rails.application.routes.draw do
   end
 
   root 'static_pages#index'
+
+  resources :games, only: %i[create show update]
+
   resources :games, only: %i[new create show] do
     member do
       get :game_available
     end
   end
+
   resources :pieces, only: %i[update]
+
 end
+
+
