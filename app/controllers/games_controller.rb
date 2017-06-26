@@ -24,10 +24,6 @@ class GamesController < ApplicationController
     render plain: 'false'
   end
 
-  def new
-    @game = Game.new
-  end
-
   def update
     @game = Game.find(params[:id])
   end
