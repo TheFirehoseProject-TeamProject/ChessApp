@@ -27,12 +27,6 @@ class Game < ApplicationRecord
     false
   end
 
-  def turn?
-    return true if turn == black_player_id && found_valid_move_for_black?
-    return true if turn == white_player_id && found_valid_move_for_white?
-    false
-  end
-
   def found_valid_move?
     found = false
     color_current_piece = turn == black_player_id? ? 'black' : 'white'
@@ -46,13 +40,17 @@ class Game < ApplicationRecord
           destination_piece = pieces.find_by(column_coordinate: column, row_coordinate: row, is_on_board?: true)
           piece.move_to!(column, row)
           found = true unless check?
-          piece.update(row_coordinate: saved_row, column_coordinate: saved_colum)
-          destination_piece.update(is_on_board?: true, row_coordinate: row, column_coordinate: column) unless destination_piece.nil?
-          game.update(piece_capturable_by_en_passant: '') if en_passant_status == '' && check?
+          undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_colum, en_passant_status)
           return true if found == true
         end
       end
     end
+  end
+
+  def undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_colum, en_passant_status)
+    piece.update(row_coordinate: saved_row, column_coordinate: saved_colum)
+    destination_piece.update(is_on_board?: true, row_coordinate: row, column_coordinate: column) unless destination_piece.nil?
+    game.update(piece_capturable_by_en_passant: '') if en_passant_status == '' && check?
   end
 
   def populate_board!
