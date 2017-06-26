@@ -15,10 +15,10 @@ class Game < ApplicationRecord
 
       if color == 'white'
         other_king = pieces.find_by(type: 'King', color: 'black')
-        return true if piece.valid_move?(other_king.row_coordinate, other_king.column_coordinate)
+        return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate)
       elsif color == 'black'
         other_king = pieces.find_by(type: 'King', color: 'white')
-        return true if piece.valid_move?(other_king.row_coordinate, other_king.column_coordinate)
+        return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate)
       end
     end
     false

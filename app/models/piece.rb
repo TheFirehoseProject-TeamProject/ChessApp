@@ -28,12 +28,17 @@ class Piece < ApplicationRecord
     else
       capture!(destination_piece)
       if game.check?
-        begin
-          raise 'This places you in check'
-        ensure
-          destination_piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
-          update_attributes(column_coordinate: orig_col, row_coordinate: orig_row)
-        end
+        # begin
+        #   raise 'This places you in check'
+        # rescue RuntimeError => error
+        #   destination_piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
+        #   update_attributes(column_coordinate: orig_col, row_coordinate: orig_row)
+        # ensure
+        #   raise error
+        # end
+        destination_piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
+        update_attributes(column_coordinate: orig_col, row_coordinate: orig_row)
+        raise 'This places you in check'
       end
     end
   end
