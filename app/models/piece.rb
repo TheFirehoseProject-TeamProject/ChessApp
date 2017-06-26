@@ -65,7 +65,6 @@ class Piece < ApplicationRecord
     if diagonal_down_and_right_move?(destination_x, destination_y)
       return diagonal_obstruction_down_right?(destination_y)
     end
-
     raise 'Error: Invalid Input' unless type == 'Knight'
   end
 

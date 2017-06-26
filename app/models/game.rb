@@ -38,9 +38,10 @@ class Game < ApplicationRecord
           saved_row = piece.row_coordinate
           en_passant_status = piece_capturable_by_en_passant
           destination_piece = pieces.find_by(column_coordinate: column, row_coordinate: row, is_on_board?: true)
-          piece.move_to!(column, row)
+          piece.move_to!(column, row) unless destination_piece.present? && destination_piece.color != piece.color
           found = true unless check?
           undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_colum, en_passant_status)
+          color_current_piece == 'black' ? update_attributes(turn: black_player_id) : update_attributes(turn: white_player_id)
           return true if found == true
         end
       end
@@ -49,8 +50,8 @@ class Game < ApplicationRecord
 
   def undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_colum, en_passant_status)
     piece.update(row_coordinate: saved_row, column_coordinate: saved_colum)
-    destination_piece.update(is_on_board?: true, row_coordinate: row, column_coordinate: column) unless destination_piece.nil?
-    game.update(piece_capturable_by_en_passant: '') if en_passant_status == '' && check?
+    destination_piece.update(is_on_board?: true, row_coordinate: piece.row, column_coordinate: piece.column) unless destination_piece.nil?
+    game.update(piece_capturable_by_en_passant: en_passant_status)
   end
 
   def populate_board!

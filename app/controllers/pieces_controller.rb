@@ -18,9 +18,10 @@ class PiecesController < ApplicationController
   def checks_before_move
     destination_x = piece_params[:column_coordinate].to_i
     destination_y = piece_params[:row_coordinate].to_i
-    if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn
+    if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       @piece.move_to!(destination_x, destination_y)
       change_turn
+      render plain: 'Checkmate', status: :bad_request if @piece.game.checkmate?
       redirect_to game_path(@piece.game_id)
     else
       render plain: 'Invalid Move', status: :bad_request
