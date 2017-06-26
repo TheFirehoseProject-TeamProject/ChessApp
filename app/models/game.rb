@@ -24,6 +24,7 @@ class Game < ApplicationRecord
 
   def checkmate?
     return true if check? && !king_can_move? && !found_valid_move?
+    false
   end
 
   def found_valid_move?
@@ -40,6 +41,7 @@ class Game < ApplicationRecord
           new_position = create_checkmate_postion
           piece_positioncheck = find_piece(new_position, piece.row_coordinate, piece.column_coordinate)
           piece_positioncheck.move_to!(column, row)
+          Game.find(new_position.id).destroy_all if new_position.check?
           next if new_position.check?
           return true
         end
@@ -56,6 +58,7 @@ class Game < ApplicationRecord
           piece_positioncheck = find_piece(new_position, piece.row_coordinate, piece.column_coordinate)
           piece_positioncheck.move_to!(column, row)
           next if new_position.check?
+          Game.find(new_position.id).destroy_all if new_position.check?
           return true
         end
       end
