@@ -6,11 +6,11 @@ RSpec.describe Game, type: :model do
   let(:game) { FactoryGirl.create(:game, white_player: white_player, black_player: black_player) }
 
   describe '#checkmate?' do
-    it 'returns true if king is in check' do
+    it 'returns true if king is in checkmate' do
       FactoryGirl.create(:queen, :is_on_board, row_coordinate: 6, column_coordinate: 1, user: black_player, color: 'black', game: game)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
-
+      FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 6, user: white_player, color: 'white', game: game)
       expect(game.checkmate?).to eq(true)
     end
   end

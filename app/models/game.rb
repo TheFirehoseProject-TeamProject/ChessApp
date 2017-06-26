@@ -23,6 +23,7 @@ class Game < ApplicationRecord
   end
 
   def checkmate?
+    byebug
     return false unless check? && !king_can_move?
   end
 

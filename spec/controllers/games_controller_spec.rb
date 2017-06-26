@@ -19,9 +19,9 @@ RSpec.describe GamesController, type: :controller do
 
   describe 'games#create action' do
     it 'should set turn to white player' do
-      white_player = FactoryGirl.create(:user)
-      post :create, params: { white_player_id: white_player.id, black_player_id: nil }
-      expect(Game.last).to eq(1)
+      sign_in user
+      post :create, params: { game: { white_player_id: user.id } }
+      expect(Game.last.turn).to eq(user.id)
     end
   end
 end
