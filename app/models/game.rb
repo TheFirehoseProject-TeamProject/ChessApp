@@ -23,14 +23,55 @@ class Game < ApplicationRecord
   end
 
   def checkmate?
-    return false unless check? && !king_can_move?
-    game.pieces.each do |piece|
-      find_valid_move(piece)
+    return true if check? && !king_can_move? && !found_valid_move?
+  end
+
+  def found_valid_move?
+    return true if turn == black_player_id && found_valid_move_for_black?
+    return true if turn == white_player_id && found_valid_move_for_white?
+    false
+  end
+
+  def found_valid_move_for_black?
+    game.pieces.find_by(color: 'black').each do |piece|
+      0..7.each do |row|
+        0..7.each do |column|
+          next unless piece.valid_move?(column, row)
+          new_position = create_checkmate_postion
+          piece_positioncheck = find_piece(new_position, piece.row_coordinate, piece.column_coordinate)
+          piece_positioncheck.move_to!(column, row)
+          next if new_position.check?
+          return true
+        end
+      end
     end
   end
 
-  def find_valid_move(piece)
+  def found_valid_move_for_white?
+    game.pieces.find_by(color: 'white').each do |piece|
+      0..7.each do |row|
+        0..7.each do |column|
+          next unless piece.valid_move?(column, row)
+          new_position = create_checkmate_postion
+          piece_positioncheck = find_piece(new_position, piece.row_coordinate, piece.column_coordinate)
+          piece_positioncheck.move_to!(column, row)
+          next if new_position.check?
+          return true
+        end
+      end
+    end
+  end
 
+  def create_checkmate_postion
+    new_position = Game.new(white_player_id: white_player_id, black_player_id: black_player_id)
+    pieces.all.find_each do |piece|
+      Piece.create(game_id: piece.game_id, user_id: piece.user_id, color: piece.color, type: piece.type)
+    end
+    new_position
+  end
+
+  def find_piece(position, row, column)
+    position.pieces.find_by(row_coordinate: row, column_coordinate: column)
   end
 
   def king_can_move?
