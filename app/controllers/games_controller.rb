@@ -1,11 +1,15 @@
 class GamesController < ApplicationController
+
   before_action :authenticate_user!, only: %i[show new]
+
+  before_action :authenticate_user!, only: %i[show create]
+
   helper_method :current_game
 
   def new; end
 
   def create
-    @game = Game.create(white_player_id: current_user.id)
+    
     redirect_to game_path(@game.id)
   end
 
