@@ -15,7 +15,4 @@ Rails.application.routes.draw do
   end
 
   resources :pieces, only: %i[update]
-
 end
-
-
