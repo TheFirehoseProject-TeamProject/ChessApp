@@ -23,12 +23,20 @@ class Game < ApplicationRecord
   end
 
   def checkmate?
-    return false unless check?
-    king_can_move?
+    return false unless check? && !king_can_move?
   end
 
   def king_can_move?
-   
+    king = turn == black_player_id? ? pieces.find_by(type: 'King', color: 'black') : pieces.find_by(type: 'King', color: 'white')
+    return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate)
+    return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate)
+    return true if king.valid_move?(king.column_coordinate, king.row_coordinate + 1)
+    return true if king.valid_move?(king.column_coordinate, king.row_coordinate - 1)
+    return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate + 1)
+    return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate - 1)
+    return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate - 1)
+    return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate + 1)
+    false
   end
 
   def populate_board!
