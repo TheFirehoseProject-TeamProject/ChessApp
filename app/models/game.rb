@@ -23,7 +23,7 @@ class Game < ApplicationRecord
   end
 
   def checkmate?
-    return true if check? && !king_can_move? && !found_valid_move?
+    return true if check? && !found_valid_move?
     false
   end
 
@@ -34,9 +34,9 @@ class Game < ApplicationRecord
   end
 
   def found_valid_move_for_black?
-    game.pieces.find_by(color: 'black').each do |piece|
-      0..7.each do |row|
-        0..7.each do |column|
+    pieces.where(color: 'black').find_each do |piece|
+      0..7.times do |row|
+        0..7.times do |column|
           next unless piece.valid_move?(column, row)
           new_position = create_checkmate_postion
           piece_positioncheck = find_piece(new_position, piece.row_coordinate, piece.column_coordinate)
@@ -50,9 +50,9 @@ class Game < ApplicationRecord
   end
 
   def found_valid_move_for_white?
-    game.pieces.find_by(color: 'white').each do |piece|
-      0..7.each do |row|
-        0..7.each do |column|
+    pieces.where(color: 'white').find_each do |piece|
+      0..7.times do |row|
+        0..7.times do |column|
           next unless piece.valid_move?(column, row)
           new_position = create_checkmate_postion
           piece_positioncheck = find_piece(new_position, piece.row_coordinate, piece.column_coordinate)
@@ -66,9 +66,9 @@ class Game < ApplicationRecord
   end
 
   def create_checkmate_postion
-    new_position = Game.new(white_player_id: white_player_id, black_player_id: black_player_id)
-    pieces.all.find_each do |piece|
-      Piece.create(game_id: piece.game_id, user_id: piece.user_id, color: piece.color, type: piece.type)
+    new_position = Game.new(id: -1, white_player_id: white_player_id, black_player_id: black_player_id)
+    pieces.all.each do |piece|
+      Piece.create(piece.attributes.merge(game_id: -1))
     end
     new_position
   end
@@ -77,18 +77,18 @@ class Game < ApplicationRecord
     position.pieces.find_by(row_coordinate: row, column_coordinate: column)
   end
 
-  def king_can_move?
-    king = turn == black_player_id? ? pieces.find_by(type: 'King', color: 'black') : pieces.find_by(type: 'King', color: 'white')
-    return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate)
-    return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate)
-    return true if king.valid_move?(king.column_coordinate, king.row_coordinate + 1)
-    return true if king.valid_move?(king.column_coordinate, king.row_coordinate - 1)
-    return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate + 1)
-    return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate - 1)
-    return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate - 1)
-    return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate + 1)
-    false
-  end
+  # def king_can_move?
+  #   king = turn == black_player_id? ? pieces.find_by(type: 'King', color: 'black') : pieces.find_by(type: 'King', color: 'white')
+  #   return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate)
+  #   return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate)
+  #   return true if king.valid_move?(king.column_coordinate, king.row_coordinate + 1)
+  #   return true if king.valid_move?(king.column_coordinate, king.row_coordinate - 1)
+  #   return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate + 1)
+  #   return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate - 1)
+  #   return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate - 1)
+  #   return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate + 1)
+  #   false
+  # end
 
   def populate_board!
     (0..7).each do |i|
