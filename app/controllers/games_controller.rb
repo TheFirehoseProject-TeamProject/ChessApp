@@ -14,6 +14,7 @@ class GamesController < ApplicationController
 
   def show
     @game = current_game
+    @game.update(black_player_id: current_user.id) if current_user.id != @game.white_player_id
     @game.populate_board! if @game.black_player_id && @game.white_player_id && @game.empty_board?
     @waiting = true if @game.black_player_id.nil? || @game.white_player_id.nil?
     @board = current_board
