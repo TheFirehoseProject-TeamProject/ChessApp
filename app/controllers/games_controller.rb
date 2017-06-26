@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :authenticate_user!, only: :show
+  before_action :authenticate_user!, only: %i[show create]
   helper_method :current_game
 
   def new
@@ -8,7 +8,7 @@ class GamesController < ApplicationController
 
   def create
     @game = Game.create(game_params)
-    @game.update_attributes(turn: current_user.id)
+    @game.update_attributes(turn: current_user.id, white_player_id: current_user.id)
     redirect_to game_path(@game.id)
   end
 

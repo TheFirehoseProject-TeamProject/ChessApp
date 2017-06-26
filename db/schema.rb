@@ -10,6 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
+=======
+ActiveRecord::Schema.define(version: 20170621221706) do
+
+>>>>>>> master
 ActiveRecord::Schema.define(version: 20170621002252) do
 
   # These are extensions that must be enabled in order to support this database
@@ -23,6 +28,10 @@ ActiveRecord::Schema.define(version: 20170621002252) do
     t.integer  "white_player_id"
     t.integer  "black_player_id"
     t.integer  "game_status"
+<<<<<<< HEAD
+=======
+    t.integer  "piece_capturable_by_en_passant"
+>>>>>>> master
     t.integer  "turn"
     t.index ["black_player_id"], name: "index_games_on_black_player_id", using: :btree
     t.index ["name"], name: "index_games_on_name", using: :btree

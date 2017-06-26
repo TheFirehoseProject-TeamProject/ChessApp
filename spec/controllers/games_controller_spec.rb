@@ -3,7 +3,7 @@ require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
   let(:game) { FactoryGirl.create(:game) }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryGirl.create(:user, game_id: game) }
 
   describe 'games#show action' do
     it 'should ask the user to be signed in' do
