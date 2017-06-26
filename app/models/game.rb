@@ -27,68 +27,33 @@ class Game < ApplicationRecord
     false
   end
 
-  def found_valid_move?
+  def turn?
     return true if turn == black_player_id && found_valid_move_for_black?
     return true if turn == white_player_id && found_valid_move_for_white?
     false
   end
 
-  def found_valid_move_for_black?
-    pieces.where(color: 'black').find_each do |piece|
+  def found_valid_move?
+    found = false
+    color_current_piece = turn == black_player_id? ? 'black' : 'white'
+    pieces.where(color: color_current_piece).find_each do |piece|
       0..7.times do |row|
         0..7.times do |column|
-          next unless piece.valid_move?(column, row)
-          new_position = create_checkmate_postion
-          piece_positioncheck = find_piece(new_position, piece.row_coordinate, piece.column_coordinate)
-          piece_positioncheck.move_to!(column, row)
-          Game.find(new_position.id).destroy_all if new_position.check?
-          next if new_position.check?
-          return true
+          next if !piece.valid_move?(column, row) || (column == piece.column_coordinate && row == piece.row_coordinate)
+          saved_colum = piece.column_coordinate
+          saved_row = piece.row_coordinate
+          en_passant_status = piece_capturable_by_en_passant
+          destination_piece = pieces.find_by(column_coordinate: column, row_coordinate: row, is_on_board?: true)
+          piece.move_to!(column, row)
+          found = true unless check?
+          piece.update(row_coordinate: saved_row, column_coordinate: saved_colum)
+          destination_piece.update(is_on_board?: true, row_coordinate: row, column_coordinate: column) unless destination_piece.nil?
+          game.update(piece_capturable_by_en_passant: '') if en_passant_status == '' && check?
+          return true if found == true
         end
       end
     end
   end
-
-  def found_valid_move_for_white?
-    pieces.where(color: 'white').find_each do |piece|
-      0..7.times do |row|
-        0..7.times do |column|
-          next unless piece.valid_move?(column, row)
-          new_position = create_checkmate_postion
-          piece_positioncheck = find_piece(new_position, piece.row_coordinate, piece.column_coordinate)
-          piece_positioncheck.move_to!(column, row)
-          next if new_position.check?
-          Game.find(new_position.id).destroy_all if new_position.check?
-          return true
-        end
-      end
-    end
-  end
-
-  def create_checkmate_postion
-    new_position = Game.new(id: -1, white_player_id: white_player_id, black_player_id: black_player_id)
-    pieces.all.each do |piece|
-      Piece.create(piece.attributes.merge(game_id: -1))
-    end
-    new_position
-  end
-
-  def find_piece(position, row, column)
-    position.pieces.find_by(row_coordinate: row, column_coordinate: column)
-  end
-
-  # def king_can_move?
-  #   king = turn == black_player_id? ? pieces.find_by(type: 'King', color: 'black') : pieces.find_by(type: 'King', color: 'white')
-  #   return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate)
-  #   return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate)
-  #   return true if king.valid_move?(king.column_coordinate, king.row_coordinate + 1)
-  #   return true if king.valid_move?(king.column_coordinate, king.row_coordinate - 1)
-  #   return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate + 1)
-  #   return true if king.valid_move?(king.column_coordinate + 1, king.row_coordinate - 1)
-  #   return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate - 1)
-  #   return true if king.valid_move?(king.column_coordinate - 1, king.row_coordinate + 1)
-  #   false
-  # end
 
   def populate_board!
     (0..7).each do |i|
