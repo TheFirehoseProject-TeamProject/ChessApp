@@ -6,10 +6,13 @@ class GamesController < ApplicationController
 
   helper_method :current_game
 
-  def new; end
+  def new
+    @game = Game.new
+  end
 
   def create
-    
+    @game = Game.create(game_params)
+    @game.update_attributes(turn: current_user.id, white_player_id: current_user.id)
     redirect_to game_path(@game.id)
   end
 
