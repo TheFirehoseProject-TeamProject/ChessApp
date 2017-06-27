@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
- before_action :authenticate_user!, only: %i[show new]
- before_action :authenticate_user!, only: %i[show create]
+  before_action :authenticate_user!, only: %i[show new]
+  before_action :authenticate_user!, only: %i[show create]
 
   helper_method :current_game
 
