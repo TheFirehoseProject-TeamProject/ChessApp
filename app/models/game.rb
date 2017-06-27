@@ -48,7 +48,7 @@ class Game < ApplicationRecord
 
   def undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status, saved_row_destination_piece, saved_column_destination_piece)
     piece.update(row_coordinate: saved_row, column_coordinate: saved_column)
-    destination_piece.update(is_on_board?: true, row_coordinate: saved_row_destination_piece, column_coordinate: saved_column_destination_piece) unless destination_piece.nil?
+    Piece.find(destination_piece.id).update(is_on_board?: true, row_coordinate: saved_row_destination_piece, column_coordinate: saved_column_destination_piece) unless destination_piece.nil?
     update(piece_capturable_by_en_passant: en_passant_status)
   end
 

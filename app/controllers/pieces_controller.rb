@@ -18,6 +18,7 @@ class PiecesController < ApplicationController
   def checks_before_move
     destination_x = piece_params[:column_coordinate].to_i
     destination_y = piece_params[:row_coordinate].to_i
+    render plain: 'Invalid Move', status: :bad_request if not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       change_turn
       @piece.move_to!(destination_x, destination_y)
@@ -26,6 +27,11 @@ class PiecesController < ApplicationController
     else
       render plain: 'Invalid Move', status: :bad_request
     end
+  end
+
+  def not_moved?(destination_x, destination_y)
+    return true if destination_x == @piece.column_coordinate && destination_y == @piece.row_coordinate
+    false
   end
 
   def check_turn

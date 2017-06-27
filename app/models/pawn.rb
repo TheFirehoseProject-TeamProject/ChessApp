@@ -67,13 +67,15 @@ end
 def white_pawn_diagonal_strike?(destination_x, destination_y)
   return true if color == 'white' &&
                  game.pieces.where(column_coordinate: destination_x, row_coordinate: destination_y).present? &&
-                 (diagonal_up_and_right_move?(destination_x, destination_y) || diagonal_up_and_left_move?(destination_x, destination_y))
+                 (diagonal_up_and_right_move?(destination_x, destination_y) || diagonal_up_and_left_move?(destination_x, destination_y)) &&
+                 (destination_y - row_coordinate) == 1
   false
 end
 
 def black_pawn_diagonal_strike?(destination_x, destination_y)
   return true if color == 'black' &&
                  game.pieces.where(column_coordinate: destination_x, row_coordinate: destination_y).present? &&
-                 (diagonal_down_and_right_move?(destination_x, destination_y) || diagonal_down_and_left_move?(destination_x, destination_y))
+                 (diagonal_down_and_right_move?(destination_x, destination_y) || diagonal_down_and_left_move?(destination_x, destination_y)) &&
+                 (row_coordinate - destination_y) == 1
   false
 end
