@@ -43,14 +43,11 @@ RSpec.describe Game, type: :model do
     end
     it 'checkmate does not remove existing pieces' do
       game.populate_board!
-      pawn = game.pieces.find_by(type: "Pawn", color: "black", row_coordinate: 6, column_coordinate: 5 )
-      queen = game.pieces.find_by(type: "Queen", color: "white")
+      pawn = game.pieces.find_by(type: 'Pawn', color: 'black', row_coordinate: 6, column_coordinate: 5)
+      queen = game.pieces.find_by(type: 'Queen', color: 'white')
       pawn.update(row_coordinate: -1, column_coordinate: -1, is_on_board?: false)
       queen.update(row_coordinate: 6, column_coordinate: 5)
       game.update(turn: black_player.id)
-      game.reload
-      pawn.reload
-      queen.reload
       expect(game.check?).to eq(true)
       expect(game.checkmate?).to eq(false)
       game.reload
