@@ -12,7 +12,8 @@ class Game < ApplicationRecord
     pieces.where(color: color_opponent).find_each do |piece|
       color_king = color_opponent == 'white' ? 'black' : 'white'
       other_king = pieces.find_by(type: 'King', color: color_king)
-      return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate) && !piece.obstructed?(other_king.column_coordinate, other_king.row_coordinate)
+      return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate) &&
+                     !piece.obstructed?(other_king.column_coordinate, other_king.row_coordinate)
     end
     false
   end
@@ -24,7 +25,6 @@ class Game < ApplicationRecord
   end
 
   def stalemate?
-    reload
     return true if !check? && !found_valid_move
     false
   end
@@ -41,8 +41,8 @@ class Game < ApplicationRecord
           saved_column = piece.column_coordinate
           saved_row = piece.row_coordinate
           en_passant_status = piece_capturable_by_en_passant
-          destination_piece = pieces.find_by(column_coordinate: column, row_coordinate: row, is_on_board?: true)
-          piece.move_to!(column, row) if (destination_piece.present? && destination_piece.color != piece.color) || destination_piece.nil?
+          destination_piece = piece.find_destination_piece(column, row)
+          piece.move_to!(column, row) if piece.capturable?(destination_piece)
           found = check? ? false : true
           undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
           return [piece, row, column] if found
@@ -56,7 +56,9 @@ class Game < ApplicationRecord
     piece.update(row_coordinate: saved_row, column_coordinate: saved_column)
     update(piece_capturable_by_en_passant: en_passant_status)
     return if destination_piece.nil?
-    Piece.find(destination_piece.id).update(is_on_board?: true, row_coordinate: destination_piece.row_coordinate, column_coordinate: destination_piece.column_coordinate)
+    Piece.find(destination_piece.id).update(is_on_board?: true,
+                                            row_coordinate: destination_piece.row_coordinate,
+                                            column_coordinate: destination_piece.column_coordinate)
   end
 
   def populate_board!

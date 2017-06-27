@@ -12,8 +12,8 @@ class Piece < ApplicationRecord
 
   def move_to!(destination_x, destination_y)
     save_piece_capturable_by_en_passant(destination_x, destination_y)
-    destination_piece = game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
-    raise 'Invalid Move' if destination_piece.present? && !capturable?(destination_piece)
+    destination_piece = find_destination_piece(destination_x, destination_y)
+    raise 'Invalid Move' unless capturable?(destination_piece)
     if type == 'Pawn' && en_passant_move?(destination_x, destination_y)
       pawn_to_capture = find_en_passant_pawn_to_capture(destination_x, destination_y)
       move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
@@ -22,6 +22,10 @@ class Piece < ApplicationRecord
     else
       capture!(destination_piece)
     end
+  end
+
+  def find_destination_piece(destination_x, destination_y)
+    game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
   end
 
   def save_piece_capturable_by_en_passant(destination_x, destination_y)
@@ -68,11 +72,11 @@ class Piece < ApplicationRecord
     raise 'Error: Invalid Input' unless type == 'Knight'
   end
 
-  private
-
   def capturable?(destination_piece)
-    destination_piece.present? && destination_piece.color != color
+    (destination_piece.present? && destination_piece.color != color) || destination_piece.nil?
   end
+
+  private
 
   def capture!(destination_piece)
     move_to_empty_space(destination_piece.column_coordinate, destination_piece.row_coordinate)

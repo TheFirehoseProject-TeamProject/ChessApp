@@ -23,6 +23,7 @@ class PiecesController < ApplicationController
       change_turn
       @piece.move_to!(destination_x, destination_y)
       @piece.game.update(turn: -1) if @piece.game.checkmate?
+      flash[:notice] = 'Checkmate !!' if @piece.game.turn == -1
       redirect_to game_path(@piece.game_id)
     else
       render plain: 'Invalid Move', status: :bad_request
