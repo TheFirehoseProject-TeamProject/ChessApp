@@ -18,12 +18,12 @@ class Game < ApplicationRecord
   end
 
   def checkmate?
+    reload
     return true if check? && !found_valid_move?
     false
   end
 
   def found_valid_move?
-    reload
     found = false
     color_current_piece = turn == black_player_id ? 'black' : 'white'
     pieces.where(color: color_current_piece).find_each do |piece|
@@ -34,9 +34,11 @@ class Game < ApplicationRecord
           saved_row = piece.row_coordinate
           en_passant_status = piece_capturable_by_en_passant
           destination_piece = pieces.find_by(column_coordinate: column, row_coordinate: row, is_on_board?: true)
+          saved_row_destination_piece = destination_piece.row_coordinate unless destination_piece.nil?
+          saved_column_destination_piece = destination_piece.column_coordinate unless destination_piece.nil?
           piece.move_to!(column, row) if (destination_piece.present? && destination_piece.color != piece.color) || destination_piece.nil?
           found = true unless check?
-          undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
+          undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status, saved_row_destination_piece, saved_column_destination_piece)
           return true if found == true
         end
       end
@@ -44,9 +46,9 @@ class Game < ApplicationRecord
     false
   end
 
-  def undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
+  def undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status, saved_row_destination_piece, saved_column_destination_piece)
     piece.update(row_coordinate: saved_row, column_coordinate: saved_column)
-    destination_piece.update(is_on_board?: true, row_coordinate: destination_piece.row_coordinate, column_coordinate: destination_piece.column_coordinate) unless destination_piece.nil?
+    destination_piece.update(is_on_board?: true, row_coordinate: saved_row_destination_piece, column_coordinate: saved_column_destination_piece) unless destination_piece.nil?
     update(piece_capturable_by_en_passant: en_passant_status)
   end
 
