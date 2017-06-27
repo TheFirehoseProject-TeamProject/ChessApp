@@ -19,9 +19,9 @@ class PiecesController < ApplicationController
     destination_x = piece_params[:column_coordinate].to_i
     destination_y = piece_params[:row_coordinate].to_i
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
-      @piece.move_to!(destination_x, destination_y)
       change_turn
-      render plain: 'Checkmate', status: :bad_request if @piece.game.checkmate?
+      @piece.move_to!(destination_x, destination_y)
+      @piece.game.update(turn: -1) if @piece.game.checkmate?
       redirect_to game_path(@piece.game_id)
     else
       render plain: 'Invalid Move', status: :bad_request
@@ -35,7 +35,7 @@ class PiecesController < ApplicationController
   end
 
   def change_turn
-    current_game.update_attributes(turn: current_game.black_player_id) if check_turn == 'white'
-    current_game.update_attributes(turn: current_game.white_player_id) if check_turn == 'black'
+    current_game.update(turn: current_game.black_player_id) if check_turn == 'white'
+    current_game.update(turn: current_game.white_player_id) if check_turn == 'black'
   end
 end
