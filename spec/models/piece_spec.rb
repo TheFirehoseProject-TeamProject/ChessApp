@@ -15,7 +15,6 @@ RSpec.describe Piece, type: :model do
   describe '#move_to!' do
     context 'when no piece is at destination coordinates' do
       it 'moves to the destination coordinates' do
-        # byebug
         piece_black.move_to!(3, 5)
         expect(piece_black).to have_attributes(column_coordinate: 3, row_coordinate: 5)
       end
@@ -55,16 +54,32 @@ RSpec.describe Piece, type: :model do
         # expect(piece_moving).to have_attributes(is_on_board?: true, column_coordinate: 4, row_coordinate: 1)
         expect { piece_moving.move_to!(5, 2) }.to raise_error('This places you in check')
       end
-      it 'the captured piece is on board in same position' do
-        expect { piece_moving.move_to!(5, 2) }
-          .to raise_error('This places you in check')
-          .and not_to change { capture_piece.is_on_board? }
-        # expect(capture_piece).to have_attributes(is_on_board?: true, column_coordinate: 5, row_coordinate: 2)
-      end
+      # it 'the captured piece is on board in same position' do
+      #   expect { piece_moving.move_to!(5, 2) }
+      #     .to raise_error('This places you in check')
+      #     .and not_to change { capture_piece.is_on_board? }
+      #   # expect(capture_piece).to have_attributes(is_on_board?: true, column_coordinate: 5, row_coordinate: 2)
+      # end
       # it 'the moving piece is on board in original position' do
       #   piece_moving.move_to!(5, 2)
       #   expect(piece_moving).to have_attributes(is_on_board?: true, column_coordinate: 4, row_coordinate: 1)
       # end
+    end
+    context 'when capturing a piece w/ en passant places you in check' do
+      let(:game_ep) { FactoryGirl.create(:game) }
+      let!(:user_ep_w) { FactoryGirl.create(:user, game_id: game_ep) }
+      let!(:user_ep_b) { FactoryGirl.create(:user, game_id: game_ep) }
+      let!(:white_king) { FactoryGirl.create(:king, game: game_ep, column_coordinate: 7, row_coordinate: 0, color: 'white', is_on_board?: true, user: user_ep_w) }
+      let!(:white_pawn) { FactoryGirl.create(:pawn, game: game_ep, column_coordinate: 3, row_coordinate: 4, color: 'white', is_on_board?: true, user: user_ep_w) }
+      let!(:black_pawn) { FactoryGirl.create(:pawn, game: game_ep, column_coordinate: 4, row_coordinate: 6, color: 'black', is_on_board?: true, user: user_ep_b) }
+      let!(:black_bishop) { FactoryGirl.create(:bishop, game: game_ep, column_coordinate: 0, row_coordinate: 7, color: 'black', is_on_board?: true, user: user_ep_b) }
+      let!(:black_king) { FactoryGirl.create(:king, game: game_ep, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true, user: user_ep_b) }
+      it '****Testing this one*****returns error: This places you in check' do
+        # byebug
+        black_pawn.move_to!(4, 4)
+        # white_pawn.move_to!(4, 5)
+        expect(white_pawn).to have_attributes(column_coordinate: 3, row_coordinate: 4)
+      end
     end
   end
 

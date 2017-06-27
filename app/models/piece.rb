@@ -16,9 +16,18 @@ class Piece < ApplicationRecord
     save_piece_capturable_by_en_passant(destination_x, destination_y)
     destination_piece = game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
     raise 'Invalid Move' if destination_piece.present? && !capturable?(destination_piece)
+    # byebug
     if en_passant_move?(destination_x, destination_y)
       pawn_to_capture = find_en_passant_pawn_to_capture(destination_x, destination_y)
+      pawn_to_capture_orig_row = pawn_to_capture.row_coordinate
+      pawn_to_capture_orig_col = pawn_to_capture.column_coordinate
       move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
+      if game.check?
+        game.update(piece_capturable_by_en_passant: '')
+        pawn_to_capture.update(column_coordinate: pawn_to_capture_orig_col, row_coordinate: pawn_to_capture_orig_row)
+        update_attributes(column_coordinate: orig_col, row_coordinate: orig_row)
+        # byebug
+      end
     elsif destination_piece.nil?
       move_to_empty_space(destination_x, destination_y)
       if game.check?
@@ -28,14 +37,6 @@ class Piece < ApplicationRecord
     else
       capture!(destination_piece)
       if game.check?
-        # begin
-        #   raise 'This places you in check'
-        # rescue RuntimeError => error
-        #   destination_piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
-        #   update_attributes(column_coordinate: orig_col, row_coordinate: orig_row)
-        # ensure
-        #   raise error
-        # end
         destination_piece.update_attributes(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
         update_attributes(column_coordinate: orig_col, row_coordinate: orig_row)
         raise 'This places you in check'
