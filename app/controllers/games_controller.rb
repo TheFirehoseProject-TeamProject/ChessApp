@@ -1,19 +1,18 @@
 class GamesController < ApplicationController
-  before_action :authenticate_user!, only: %i[show create]
+  before_action :authenticate_user!, only: %i[show new create]
+
   helper_method :current_game
 
-  def new
-    @game = Game.new
-  end
+  def new; end
 
   def create
-    @game = Game.create(game_params)
-    @game.update_attributes(turn: current_user.id, white_player_id: current_user.id)
+    @game = Game.create(white_player_id: current_user.id, turn: current_user.id)
     redirect_to game_path(@game.id)
   end
 
   def show
     @game = current_game
+    @game.update(black_player_id: current_user.id) if current_user.id != @game.white_player_id
     @game.populate_board! if @game.black_player_id && @game.white_player_id && @game.empty_board?
     @waiting = true if @game.black_player_id.nil? || @game.white_player_id.nil?
     @board = current_board
