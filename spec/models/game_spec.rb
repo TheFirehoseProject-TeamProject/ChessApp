@@ -50,7 +50,6 @@ RSpec.describe Game, type: :model do
       game.update(turn: black_player.id)
       expect(game.check?).to eq(true)
       expect(game.checkmate?).to eq(false)
-      game.reload
       expect(game.pieces.where(is_on_board?: false).count).to eq(1)
     end
   end
