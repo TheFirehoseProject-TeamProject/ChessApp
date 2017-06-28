@@ -11,25 +11,13 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(destination_x, destination_y)
-    save_piece_capturable_by_en_passant(destination_x, destination_y)
     destination_piece = find_destination_piece(destination_x, destination_y)
     raise 'Invalid Move' unless capturable?(destination_piece)
-    if type == 'Pawn' && en_passant_move?(destination_x, destination_y)
-      pawn_to_capture = find_en_passant_pawn_to_capture(destination_x, destination_y)
-      move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
-      return
-    end
     destination_piece.nil? ? move_to_empty_space(destination_x, destination_y) : capture!(destination_piece)
   end
 
   def find_destination_piece(destination_x, destination_y)
     game.pieces.find_by(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
-  end
-
-  def save_piece_capturable_by_en_passant(destination_x, destination_y)
-    return nil if type == 'Pawn' && en_passant_move?(destination_x, destination_y)
-    return game.update(piece_capturable_by_en_passant: '') unless type == 'Pawn' && en_passant_situation?(destination_x, destination_y)
-    game.update(piece_capturable_by_en_passant: id)
   end
 
   def move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
