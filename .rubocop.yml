@@ -28,7 +28,7 @@ ClassAndModuleChildren:
 
 # Increases "Class definition is too long" warning from 100 to 200
 Metrics/ClassLength:
-  Max: 200
+  Max: 300
 
 # Increases "Module has too many lines" warning from 100 to 200
 Metrics/ModuleLength:

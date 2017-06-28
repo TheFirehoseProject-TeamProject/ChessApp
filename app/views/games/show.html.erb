@@ -1,4 +1,4 @@
-
+<h3><%= link_to "Play against yourself", play_against_yourself_path, method: :post if @waiting%></h3>
 <div class="chessboard <%= "waiting" if @waiting %>">
   <% @board.reverse_each.with_index do |row, index_row| %>
       <%index_row = @board.length - index_row - 1 %>
@@ -70,7 +70,7 @@
       let url = window.location.href;
       let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
       if(url.indexOf("#loaded") === -1) {
-              let id = setInterval(checkGameAvailable, 2000);
+              let id = setInterval(checkGameAvailable, 4000);
               function checkGameAvailable () {
                         let response = $.ajax({type: "GET", url: gameId +"/game_available", async: false}).responseText;
                         if (response === "false") {
