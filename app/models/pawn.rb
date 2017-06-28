@@ -13,6 +13,20 @@ class Pawn < Piece
   end
 end
 
+# might be implemented later in order to refactor the move_to logic in piece model
+# def move_to!(destination_x, destination_y)
+#   super
+#   byebug
+#   Piece.save_piece_capturable_by_en_passant(destination_x, destination_y)
+#   unless en_passant_move?(destination_x, destination_y)
+#   pawn_to_capture = find_en_passant_pawn_to_capture(destination_x, destination_y)
+#   move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
+#   end
+#   # destination_piece = Piece.find_destination_piece(destination_x, destination_y)
+#   # raise 'Invalid Move' unless Piece.capturable?(destination_piece)
+#   # destination_piece.nil? ? Piece.move_to_empty_space(destination_x, destination_y) : Piece.capture!(destination_piece)
+# end
+
 private
 
 def en_passant_situation?(destination_x, destination_y)

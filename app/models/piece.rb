@@ -17,11 +17,9 @@ class Piece < ApplicationRecord
     if type == 'Pawn' && en_passant_move?(destination_x, destination_y)
       pawn_to_capture = find_en_passant_pawn_to_capture(destination_x, destination_y)
       move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
-    elsif destination_piece.nil?
-      move_to_empty_space(destination_x, destination_y)
-    else
-      capture!(destination_piece)
+      return
     end
+    destination_piece.nil? ? move_to_empty_space(destination_x, destination_y) : capture!(destination_piece)
   end
 
   def find_destination_piece(destination_x, destination_y)
@@ -74,6 +72,11 @@ class Piece < ApplicationRecord
 
   def capturable?(destination_piece)
     (destination_piece.present? && destination_piece.color != color) || destination_piece.nil?
+  end
+
+  def not_moved?(destination_x, destination_y)
+    return true if destination_x == column_coordinate && destination_y == row_coordinate
+    false
   end
 
   private

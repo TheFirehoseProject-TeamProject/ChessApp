@@ -44,15 +44,39 @@ RSpec.describe Game, type: :model do
     it 'checkmate does not remove existing pieces' do
       game.populate_board!
       pawn = game.pieces.find_by(type: 'Pawn', color: 'black', row_coordinate: 6, column_coordinate: 5)
-      pawn2 = game.pieces.find_by(type: 'Pawn', color: 'black', row_coordinate: 6, column_coordinate: 0)
       queen = game.pieces.find_by(type: 'Queen', color: 'white')
       pawn.update(row_coordinate: -1, column_coordinate: -1, is_on_board?: false)
       queen.update(row_coordinate: 6, column_coordinate: 5)
       game.update(turn: black_player.id)
-      expect(pawn2.valid_move?(5, 1)).to eq false
       expect(game.check?).to eq(true)
       expect(game.checkmate?).to eq(false)
       expect(game.pieces.where(is_on_board?: false).count).to eq(1)
+    end
+  end
+
+  describe '#stalemate' do
+    it 'returns true if in stalemate for white' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 1, column_coordinate: 5, user: black_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 6, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:pawn, :is_on_board, row_coordinate: 1, column_coordinate: 6, user: white_player, color: 'white', game: game)
+
+      expect(game.stalemate?).to eq(true)
+    end
+    it 'returns true if in stalemate for black' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 2, column_coordinate: 6, user: black_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 6, user: white_player, color: 'white', game: game)
+      game.update(turn: black_player.id)
+      expect(game.stalemate?).to eq(true)
+    end
+    it 'returns false if a black piece can still move' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 2, column_coordinate: 6, user: black_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 6, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:pawn, :is_on_board, row_coordinate: 1, column_coordinate: 0, user: white_player, color: 'black', game: game)
+      game.update(turn: black_player.id)
+      expect(game.stalemate?).to eq(false)
     end
   end
 

@@ -8,7 +8,6 @@ class Game < ApplicationRecord
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 
   def check?
-    color_opponent = turn == black_player_id ? 'white' : 'black'
     pieces.where(color: color_opponent).find_each do |piece|
       color_king = color_opponent == 'white' ? 'black' : 'white'
       other_king = pieces.find_by(type: 'King', color: color_king)
@@ -20,18 +19,17 @@ class Game < ApplicationRecord
 
   def checkmate?
     reload
-    return true if check? && !found_valid_move
+    return true if check? && !valid_move_possible
     false
   end
 
   def stalemate?
-    return true if !check? && !found_valid_move
+    return true if !check? && !valid_move_possible
     false
   end
 
-  def found_valid_move
-    color_current_piece = turn == black_player_id ? 'black' : 'white'
-    pieces.where(color: color_current_piece).find_each do |piece|
+  def valid_move_possible
+    pieces.where(color: color_current_turn).find_each do |piece|
       0..8.times do |row|
         0..8.times do |column|
           next if !piece.valid_move?(column, row) ||
@@ -52,13 +50,8 @@ class Game < ApplicationRecord
     false
   end
 
-  def undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
-    piece.update(row_coordinate: saved_row, column_coordinate: saved_column)
-    update(piece_capturable_by_en_passant: en_passant_status)
-    return if destination_piece.nil?
-    Piece.find(destination_piece.id).update(is_on_board?: true,
-                                            row_coordinate: destination_piece.row_coordinate,
-                                            column_coordinate: destination_piece.column_coordinate)
+  def empty_board?
+    pieces.count.zero?
   end
 
   def populate_board!
@@ -247,7 +240,22 @@ class Game < ApplicationRecord
     )
   end
 
-  def empty_board?
-    pieces.count.zero?
+  private
+
+  def undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
+    piece.update(row_coordinate: saved_row, column_coordinate: saved_column)
+    update(piece_capturable_by_en_passant: en_passant_status)
+    return if destination_piece.nil?
+    Piece.find(destination_piece.id).update(is_on_board?: true,
+                                            row_coordinate: destination_piece.row_coordinate,
+                                            column_coordinate: destination_piece.column_coordinate)
+  end
+
+  def color_current_turn
+    turn == black_player_id ? 'black' : 'white'
+  end
+
+  def color_opponent
+    turn == black_player_id ? 'white' : 'black'
   end
 end
