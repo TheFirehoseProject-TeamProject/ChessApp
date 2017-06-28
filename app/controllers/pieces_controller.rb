@@ -16,23 +16,30 @@ class PiecesController < ApplicationController
   end
 
   def checks_before_move
+    return render plain: 'Invalid Move', status: :bad_request if flashmessages
     destination_x = piece_params[:column_coordinate].to_i
     destination_y = piece_params[:row_coordinate].to_i
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       change_turn
       @piece.move_to!(destination_x, destination_y)
+      check_game_status
       redirect_to game_path(@piece.game_id)
     else
       render plain: 'Invalid Move', status: :bad_request
     end
   end
 
-  def flash_game_status
+  def check_game_status
     @piece.game.update(turn: -1) if @piece.game.checkmate?
     @piece.game.update(turn: -2) if @piece.game.stalemate?
-    flash[:notice] = 'Checkmate !!' if @piece.game.turn == -1
-    flash[:notice] = 'Stalemate !!' if @piece.game.turn == -2
+    flashmessages
+  end
+
+  def flashmessages
+    return flash[:notice] = 'Checkmate !!' if @piece.game.turn == -1
+    return flash[:notice] = 'Stalemate !!' if @piece.game.turn == -2
+    false
   end
 
   def check_turn
