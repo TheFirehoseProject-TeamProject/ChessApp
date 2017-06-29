@@ -87,4 +87,27 @@ RSpec.describe Pawn, type: :model do
       expect(pawn_en_passant.valid_move?(1, 5)).to eq false
     end
   end
+
+  describe '#move_to!' do
+    let(:game_ep) { FactoryGirl.create(:game) }
+    let!(:user_ep_w) { FactoryGirl.create(:user, game_id: game_ep) }
+    let!(:user_ep_b) { FactoryGirl.create(:user, game_id: game_ep) }
+    let!(:white_king) { FactoryGirl.create(:king, game: game_ep, column_coordinate: 7, row_coordinate: 0, color: 'white', is_on_board?: true, user: user_ep_w) }
+    let!(:white_pawn) { FactoryGirl.create(:pawn, game: game_ep, column_coordinate: 3, row_coordinate: 4, color: 'white', is_on_board?: true, user: user_ep_w) }
+    let!(:black_pawn) { FactoryGirl.create(:pawn, game: game_ep, column_coordinate: 4, row_coordinate: 6, color: 'black', is_on_board?: true, user: user_ep_b) }
+    let!(:black_bishop) { FactoryGirl.create(:bishop, game: game_ep, column_coordinate: 0, row_coordinate: 7, color: 'black', is_on_board?: true, user: user_ep_b) }
+    let!(:black_king) { FactoryGirl.create(:king, game: game_ep, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true, user: user_ep_b) }
+    context 'when capturing a piece w/ en passant places you in check' do
+      it '****Testing this one*****returns error: This places you in check' do
+        black_pawn.move_to!(4, 4)
+        expect { white_pawn.move_to!(4, 5) }
+          .to raise_error('This places you in check')
+          .and not_change(white_pawn, :column_coordinate)
+          .and not_change(white_pawn, :row_coordinate)
+          .and not_change(black_pawn, :is_on_board?)
+          .and not_change(black_pawn, :column_coordinate)
+          .and not_change(black_pawn, :row_coordinate)
+      end
+    end
+  end
 end

@@ -13,10 +13,17 @@ class Pawn < Piece
   end
 
   def move_to!(destination_x, destination_y)
+    original_column = column_coordinate
+    original_row = row_coordinate
     save_piece_capturable_by_en_passant(destination_x, destination_y)
     if en_passant_move?(destination_x, destination_y)
       pawn_to_capture = find_en_passant_pawn_to_capture(destination_x, destination_y)
       move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
+      if game.check?
+        update(column_coordinate: original_column, row_coordinate: original_row)
+        pawn_to_capture.update(column_coordinate: destination_x, row_coordinate: destination_y)
+        raise 'This places you in check'
+      end
     else
       super
     end
