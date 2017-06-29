@@ -1,3 +1,8 @@
+<div class="text-center">
+  <% if @game.check? %>
+      <p class='alert alert-info'>Check !!!</p>
+  <% end %>
+</div>
 <div class="chessboard <%= "waiting" if @waiting %>">
   <div class='text-center'>
     <% if user_signed_in? %>
@@ -10,6 +15,7 @@
       <h3>Black Player's Turn</h3>
     <% end %>
     <h3><%= link_to "Play against yourself", play_against_yourself_path, class: 'btn btn-info',method: :post if @waiting%></h3>
+    <br />
   </div>
   <br />
 
