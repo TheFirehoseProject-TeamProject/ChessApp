@@ -1,3 +1,15 @@
+<div class='text-center'>
+  <% if user_signed_in? %>
+    <%= image_tag gravatar_for(current_user.email), alt: "current_user.email" %>
+  <% end %>
+
+  <% if @game.turn == @game.white_player.id %>
+    <h3>White Player's Turn</h3>
+  <% else %>
+    <h3>Black Player's Turn</h3>
+  <% end %>
+</div>
+
 <h3><%= link_to "Play against yourself", play_against_yourself_path, method: :post if @waiting%></h3>
 <div class="chessboard <%= "waiting" if @waiting %>">
   <% @board.reverse_each.with_index do |row, index_row| %>
