@@ -37,34 +37,50 @@ RSpec.describe King, type: :model do
     let!(:rook_clw) { FactoryGirl.create(:rook, game: game_c, is_on_board?: true, column_coordinate: 0, row_coordinate: 0, color: 'white') }
     let!(:rook_crb) { FactoryGirl.create(:rook, game: game_c, is_on_board?: true, column_coordinate: 7, row_coordinate: 7, color: 'black') }
     let!(:rook_clb) { FactoryGirl.create(:rook, game: game_c, is_on_board?: true, column_coordinate: 0, row_coordinate: 7, color: 'black') }
-    let!(:king_cb) { FactoryGirl.create(:king, game: game_c, is_on_board?: true, column_coordinate: 2, row_coordinate: 7, color: 'black') }
+    let!(:king_cb) { FactoryGirl.create(:king, game: game_c, is_on_board?: true, column_coordinate: 4, row_coordinate: 7, color: 'black') }
     context 'white castle move is successful' do
-      it 'castle king side coords update' do
+      it 'castle king side king coords update' do
         king_cw.castle!(7, 0)
         expect(king_cw).to have_attributes(column_coordinate: 6, row_coordinate: 0)
+      end
+      it 'castle king side rook coords update' do
+        king_cw.castle!(7, 0)
+        rook_crw.reload
         expect(rook_crw).to have_attributes(column_coordinate: 5, row_coordinate: 0)
       end
-      it 'castle queen side coords update' do
+      it 'castle queen side king coords update' do
         king_cw.castle!(0, 0)
         expect(king_cw).to have_attributes(column_coordinate: 2, row_coordinate: 0)
+      end
+      it 'castle queen side rook coords update' do
+        king_cw.castle!(0, 0)
+        rook_clw.reload
         expect(rook_clw).to have_attributes(column_coordinate: 3, row_coordinate: 0)
       end
     end
     context 'black castle move is successful' do
-      it 'castle king side coords update' do
+      it 'castle king side king coords update' do
         king_cb.castle!(7, 7)
         expect(king_cb).to have_attributes(column_coordinate: 6, row_coordinate: 7)
+      end
+      it 'castle king side rook coords update' do
+        king_cb.castle!(7, 7)
+        rook_crb.reload
         expect(rook_crb).to have_attributes(column_coordinate: 5, row_coordinate: 7)
       end
-      it 'castle queen side coords update' do
+      it 'castle queen side king coords update' do
         king_cb.castle!(0, 7)
         expect(king_cb).to have_attributes(column_coordinate: 2, row_coordinate: 7)
+      end
+      it 'castle queen side rook coords update' do
+        king_cb.castle!(0, 7)
+        rook_clb.reload
         expect(rook_clb).to have_attributes(column_coordinate: 3, row_coordinate: 7)
       end
     end
     context 'black castle move returns false' do
-      let!(:bishop_crb) { FactoryGirl.create(:bishop, game: game_c, column_coordinate: 5, row_coordinate: 7, is_on_board?: true, color: 'black') }
-      let!(:bishop_clb) { FactoryGirl.create(:bishop, game: game_c, column_coordinate: 2, row_coordinate: 7, is_on_board?: true, color: 'black') }
+      let!(:bishop_crb) { FactoryGirl.create(:bishop, game: game_c, user: user_w, column_coordinate: 5, row_coordinate: 7, is_on_board?: true, color: 'black') }
+      let!(:bishop_clb) { FactoryGirl.create(:bishop, game: game_c, user: user_w, column_coordinate: 2, row_coordinate: 7, is_on_board?: true, color: 'black') }
       it 'castle king side coords do not update' do
         expect { king_cb.castle!(7, 7) }.to raise_error('Invalid move')
           .and not_change(king_cb, :column_coordinate)
