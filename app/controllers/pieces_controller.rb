@@ -23,25 +23,19 @@ class PiecesController < ApplicationController
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       change_turn
       @piece.move_to!(destination_x, destination_y)
-      check_game_status
+      current_game.set_game_status
+      flashmessages
       redirect_to game_path(@piece.game_id)
     else
       render plain: 'Invalid Move', status: :bad_request
     end
   end
 
-  def check_game_status
-    @piece.game.update(turn: -1, game_status: 1) if @piece.game.checkmate?
-    @piece.game.update(turn: -1, game_status: 2) if @piece.game.stalemate?
-    @piece.game.check? ? @piece.game.update(game_status: 3) : @piece.game.update(game_status: 0)
-    flashmessages
-  end
-
   def flashmessages
-    return flash[:notice] = 'Checkmate !!' if @piece.game.game_status == 1
-    return flash[:notice] = 'Stalemate !!' if @piece.game.game_status == 2
-    # flash for check not working, remove alert from game#show page before you test
-    # return flash[:notice] = 'Check !!' if @piece.game.game_status == 3
+    return flash[:notice] = 'Checkmate !!' if current_game.game_status == 1
+    return flash[:notice] = 'Stalemate !!' if current_game.game_status == 2
+    return flash[:notice] = 'Check !!' if current_game.game_status == 3
+    return flash[:notice] = 'Draw !!' if current_game.game_status == 4
     false
   end
 
