@@ -32,14 +32,16 @@ class PiecesController < ApplicationController
 
   def check_game_status
     @piece.game.update(turn: -1, game_status: 1) if @piece.game.checkmate?
-    @piece.game.update(turn: -2, game_status: 2) if @piece.game.stalemate?
+    @piece.game.update(turn: -1, game_status: 2) if @piece.game.stalemate?
     @piece.game.check? ? @piece.game.update(game_status: 3) : @piece.game.update(game_status: 0)
     flashmessages
   end
 
   def flashmessages
-    return flash[:notice] = 'Checkmate !!' if @piece.game.turn == -1
-    return flash[:notice] = 'Stalemate !!' if @piece.game.turn == -2
+    return flash[:notice] = 'Checkmate !!' if @piece.game.game_status == 1
+    return flash[:notice] = 'Stalemate !!' if @piece.game.game_status == 2
+    # flash for check not working, remove alert from game#show page before you test
+    # return flash[:notice] = 'Check !!' if @piece.game.game_status == 3
     false
   end
 
