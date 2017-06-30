@@ -16,6 +16,7 @@ class PiecesController < ApplicationController
   end
 
   def checks_before_move
+    flashmessages
     destination_x = piece_params[:column_coordinate].to_i
     destination_y = piece_params[:row_coordinate].to_i
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
@@ -35,7 +36,7 @@ class PiecesController < ApplicationController
     return flash[:notice] = 'Stalemate !!' if current_game.game_status == 2
     return flash[:notice] = 'Check !!' if current_game.game_status == 3
     return flash[:notice] = 'Draw !!' if current_game.game_status == 4
-    false
+    flash.clear
   end
 
   def check_turn

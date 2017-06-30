@@ -7,10 +7,11 @@ class Game < ApplicationRecord
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 
   def set_game_status
+    update(game_status: 0)
+    update(turn: -1, game_status: 4) if draw?
     update(turn: -1, game_status: 1) if checkmate?
     update(turn: -1, game_status: 2) if stalemate?
     update(game_status: 3) if check?
-    update(turn: -1, game_status: 4) if draw?
   end
 
   def check?
