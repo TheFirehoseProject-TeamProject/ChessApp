@@ -33,7 +33,7 @@ $(function() {
       <%end%>
     </div>
     <div id="blackplayer" class="col-2 text-center">
-      <% if user_signed_in? && @game.turn == @game.black_player.id && !@waiting %>
+      <% if user_signed_in? && !@waiting && @game.turn == @game.black_player.id %>
         <h5>Black Player's Turn</h5>
         <%= image_tag gravatar_for(@game.black_player.email), alt: "@game.black_player.email" %>
       <% end %>
