@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+RSpec::Matchers.define_negated_matcher :not_change, :change
 RSpec.describe King, type: :model do
   let(:game) { FactoryGirl.create(:game) }
   let(:user) { FactoryGirl.create(:user, game: game) }
@@ -66,7 +66,7 @@ RSpec.describe King, type: :model do
       let!(:bishop_cb) { FactoryGirl.create(:bishop, game: game_c, column_coordinate: 5, row_coordinate: 7, is_on_board?: true, color: 'black') }
       it 'castle king side coords do not update' do
         expect { king_cb.castle!(7, 7) }.to raise_error 'Invalid move'
-          
+          .and(king_cb, )
         # expect(king_cb).to have_attributes(column_coordinate: 4, row_coordinate: 7)
         # expect(rook_crb).to have_attributes(column_coordinate: 7, row_coordinate: 7)
       end
