@@ -16,7 +16,6 @@ class PiecesController < ApplicationController
   end
 
   def checks_before_move
-    return render plain: 'Invalid Move', status: :bad_request if flashmessages
     destination_x = piece_params[:column_coordinate].to_i
     destination_y = piece_params[:row_coordinate].to_i
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
