@@ -22,6 +22,7 @@ class Piece < ApplicationRecord
     else
       capture!(destination_piece)
     end
+    update(moved?: true)
   end
 
   def save_piece_capturable_by_en_passant(destination_x, destination_y)

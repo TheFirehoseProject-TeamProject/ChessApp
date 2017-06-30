@@ -87,8 +87,6 @@ RSpec.describe King, type: :model do
           .and not_change(king_cb, :row_coordinate)
           .and not_change(rook_crb, :column_coordinate)
           .and not_change(rook_crb, :row_coordinate)
-        # expect(king_cb).to have_attributes(column_coordinate: 4, row_coordinate: 7)
-        # expect(rook_crb).to have_attributes(column_coordinate: 7, row_coordinate: 7)
       end
       it 'castle queen side coords do not update' do
         expect { king_cb.castle!(0, 7) }.to raise_error('Invalid move')
@@ -96,9 +94,6 @@ RSpec.describe King, type: :model do
           .and not_change(king_cb, :row_coordinate)
           .and not_change(rook_clb, :column_coordinate)
           .and not_change(rook_clb, :row_coordinate)
-        # king_cb.castle!(0, 7)
-        # expect(king_cb).to have_attributes(column_coordinate: 2, row_coordinate: 7)
-        # expect(rook_clb).to have_attributes(column_coordinate: 3, row_coordinate: 7)
       end
     end
   end
@@ -119,9 +114,13 @@ RSpec.describe King, type: :model do
       end
     end
     context 'king has moved' do
-      it 'returns false' do
+      it 'castle king side returns false' do
+        byebug
         king_cw.move_to!(5, 0)
         expect(king_cw.castle?(7, 0)).to eq false
+      end
+      it 'castle queen side returns false' do
+        king_cw.move_to!(5, 0)
         expect(king_cw.castle?(0, 0)).to eq false
       end
     end
