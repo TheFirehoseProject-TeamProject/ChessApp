@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session_facebook
   end
   root 'static_pages#index'
+  post 'games/:id/play_against_yourself', to: 'games#play_against_yourself', as: 'play_against_yourself'
   resources :pieces, only: %i[update]
   resources :games, only: %i[new create show update] do
     member do

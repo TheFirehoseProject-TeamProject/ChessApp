@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :authenticate_user!, only: %i[show new create]
+  before_action :authenticate_user!, only: %i[show new create play_against_yourself]
 
   helper_method :current_game
 
@@ -12,10 +12,17 @@ class GamesController < ApplicationController
 
   def show
     @game = current_game
-    @game.update(black_player_id: current_user.id) if current_user.id != @game.white_player_id
-    @game.populate_board! if @game.black_player_id && @game.white_player_id && @game.empty_board?
-    @waiting = true if @game.black_player_id.nil? || @game.white_player_id.nil?
+    current_game.update(black_player_id: current_user.id) if current_user.id != current_game.white_player_id
+    current_game.populate_board! if current_game.black_player_id && current_game.white_player_id && current_game.empty_board?
+    @waiting = true if current_game.black_player_id.nil? || current_game.white_player_id.nil?
     @board = current_board
+  end
+
+  def play_against_yourself
+    email = 'email' + Time.now.to_i.to_s + '@fake.com'
+    fake_user = User.create(email: email, password: '123456', password_confirmation: '123456')
+    current_game.update(black_player_id: fake_user.id)
+    redirect_to game_path(current_game.id)
   end
 
   def game_available
