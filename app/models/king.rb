@@ -13,11 +13,10 @@ class King < Piece
     return true if destination_x == 2 && destination_y == 0 ||
                    destination_x == 6 && destination_y == 0 ||
                    destination_x == 2 && destination_y == 7 ||
-                   destination_x == 6 && destination_y == 7 ||
+                   destination_x == 6 && destination_y == 7
     false
   end
 
-<<<<<<< HEAD
   def move_to!(destination_x, destination_y)
     if destination_x == 6 && destination_y == 0
       castle!(7, 0) if castle?(7, 0)
@@ -76,7 +75,7 @@ class King < Piece
       update(column_coordinate: 4)
     end
     true
-=======
+  end
   # can get removed once not_move_into_check method is implemented
   def next_to_other_king?(destination_x, destination_y)
     other_king = color == 'white' ? game.pieces.find_by(type: 'King', color: 'black') : game.pieces.find_by(type: 'King', color: 'white')
@@ -84,6 +83,5 @@ class King < Piece
     return true if (other_king.row_coordinate - destination_y).abs == 1 && (other_king.column_coordinate == destination_x)
     return true if (other_king.row_coordinate - destination_y).abs == 1 && (other_king.column_coordinate - destination_x).abs == 1
     false
->>>>>>> master
   end
 end
