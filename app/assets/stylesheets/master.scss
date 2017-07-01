@@ -18,6 +18,9 @@ body {
 
 .chessboard{
   background: image_url('board_background.png');
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
   background-size: cover;
 }
 
