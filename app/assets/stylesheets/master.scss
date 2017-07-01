@@ -1,11 +1,26 @@
 @import "bootstrap";
+@-ms-viewport{
+  width: device-width;
+  }
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: image_url('chess-bg.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 
 .chessboard{
-  border-style: solid;
-  border-width: 1px;
-  margin: 20px;
-  padding: 30px;
-  background-image: url('board_background.png');
+  background: image_url('board_background.png');
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
   background-size: cover;
 }
 
@@ -17,13 +32,13 @@
 }
 
 .white_field{
-  background-image: url('white_field.png');
+  background: image_url('white_field.png');
   height: 80px;
   width: 80px;
 }
 
 .black_field{
-  background-image: url('black_field.png');
+  background: image_url('black_field.png');
   height: 80px;
   width: 80px;
 }
@@ -33,6 +48,32 @@
   border-width: 1px;
   margin: 20px;
   padding: 30px;
-  background-image: url('waiting.png');
+  background: image_url('waiting.png');
   background-size: cover;
+}
+
+.box {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+}
+
+.booyah-box {
+  -webkit-box-shadow: 1px 1px 2px 0 #d0d0d0;
+  -moz-box-shadow: 1px 1px 2px 0 #d0d0d0;
+  box-shadow: 1px 1px 2px 0 #d0d0d0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  padding: 20px;
+}
+
+.scroll {
+  overflow-x: scroll;
+  height: 100%;
+}
+
+.clear {
+  clear: both;
 }

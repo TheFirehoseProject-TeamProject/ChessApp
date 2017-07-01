@@ -3,7 +3,7 @@
   <head>
     <title>ChessApp</title>
     <%= csrf_meta_tags %>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -13,11 +13,13 @@
   </head>
 
   <body>
-    <% if notice.present? %>
-      <p class="notice"><%= notice %></p>
-    <% elsif alert.present? %>
-      <p class="alert"><%= alert %></p>
-    <% end %>
+    <div class='text-center'>
+      <% if notice.present? %>
+        <p class="alert alert-info"><%= notice %></p>
+      <% elsif alert.present? %>
+        <p class="alert alert-danger"><%= alert %></p>
+      <% end %>
+    </div>
     <%= yield %>
   </body>
 </html>

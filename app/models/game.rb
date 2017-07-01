@@ -3,9 +3,16 @@ class Game < ApplicationRecord
   belongs_to :white_player, class_name: 'User', optional: true
   has_many :users
   has_many :pieces
-  enum game_status: { in_progress: 0, checkmate: 1, stalemate: 2 }
 
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
+
+  def set_game_status
+    update(game_status: 0)
+    update(turn: -1, game_status: 4) if draw?
+    update(turn: -1, game_status: 1) if checkmate?
+    update(turn: -1, game_status: 2) if stalemate?
+    update(game_status: 3) if check?
+  end
 
   def check?
     pieces.where(color: color_opponent).find_each do |piece|
@@ -14,6 +21,13 @@ class Game < ApplicationRecord
       return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate) &&
                      !piece.obstructed?(other_king.column_coordinate, other_king.row_coordinate)
     end
+    false
+  end
+
+  def draw?
+    return true if pieces.count == 2
+    return true if pieces.count == 3 && (pieces.where(type: 'Knight').present? || pieces.where(type: 'Bishop').present?)
+    return true if pieces.count == 4 && (pieces.where(type: 'Knight').count == 1 || pieces.where(type: 'Bishop').count == 1)
     false
   end
 

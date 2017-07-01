@@ -1,11 +1,18 @@
-<h1>Find a game to join</h1>
-<ul>
-  <% @available_games.each do |game| %>
-    <% if game.white_player%>
-      <li><%= link_to game.white_player.name + "'s game", "games/#{game.id}"%></li>
-    <% elsif game.black_player %>
-      <li><%= link_to game.black_player.name + "'s game", "games/#{game.id}"%></li>
-    <%end%>
-  <% end %>
-  <li>Feel free to create a new Game: <%= link_to "click here",  games_path, method: :post %></li>
-</ul>
+<br />
+<br />
+<div class='jumbotron col-10 offset-1 box'>
+  <h1 class='text-center'>Find a game to join</h1>
+
+    <% @available_games.each do |game| %>
+      <div class='booyah-box col-10 offset-1'>
+        <% if game.white_player%>
+          <li><%= link_to game.white_player.name + "'s game", "games/#{game.id}"%></li>
+        <% elsif game.black_player %>
+          <li><%= link_to game.black_player.name + "'s game", "games/#{game.id}"%></li>
+        <%end%>
+      </div>
+    <% end %>
+
+    <h3 class='text-center'>Feel free to create a new Game: <%= link_to "Create Game",  games_path, method: :post, class: 'btn btn-primary' %></h3>
+
+</div>
