@@ -54,7 +54,6 @@ RSpec.describe King, type: :model do
     let!(:king_cb) { FactoryGirl.create(:king, game: game_c, user: user_b, is_on_board?: true, column_coordinate: 4, row_coordinate: 7, color: 'black') }
     context 'white castle move is successful' do
       it 'castle king side king coords update' do
-        # byebug
         king_cw.castle!(7, 0)
         expect(king_cw).to have_attributes(column_coordinate: 6, row_coordinate: 0)
       end

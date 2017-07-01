@@ -19,14 +19,14 @@ class PiecesController < ApplicationController
     return render plain: 'Invalid Move', status: :bad_request if flashmessages
     destination_x = piece_params[:column_coordinate].to_i
     destination_y = piece_params[:row_coordinate].to_i
-    render plain: 'Invalid Move', status: :forbidden if @piece.not_moved?(destination_x, destination_y)
+    render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       change_turn
       @piece.move_to!(destination_x, destination_y)
       check_game_status
       redirect_to game_path(@piece.game_id)
     else
-      render plain: 'Invalid Move', status: :unprocessable_entity
+      render plain: 'Invalid Move', status: :bad_request
     end
   end
 

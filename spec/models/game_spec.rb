@@ -18,7 +18,6 @@ RSpec.describe Game, type: :model do
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, moved?: true, user: white_player, color: 'white', game: game)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, moved?: true, user: white_player, color: 'black', game: game)
       FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 0, moved?: true, user: white_player, color: 'white', game: game)
-      byebug
       expect(game.checkmate?).to eq(false)
     end
     it 'should return false if king can capture attacker' do
