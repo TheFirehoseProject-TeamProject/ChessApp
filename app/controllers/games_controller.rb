@@ -42,9 +42,9 @@ class GamesController < ApplicationController
     (0..7).each do |row_index|
       (0..7).each do |column_index|
         board[row_index][column_index] = if column_index.even? && row_index.even? || row_index.odd? && column_index.odd?
-                                           { class: 'white_field' }
-                                         else
                                            { class: 'black_field' }
+                                         else
+                                           { class: 'white_field' }
                                          end
       end
     end
