@@ -41,7 +41,12 @@ class Piece < ApplicationRecord
   def move_to!(destination_x, destination_y)
     destination_piece = find_destination_piece(destination_x, destination_y)
     raise 'Invalid Move' unless capturable?(destination_piece)
-    destination_piece.nil? ? move_to_empty_space(destination_x, destination_y) : capture!(destination_piece)
+    if destination_piece.nil?
+      move_to_empty_space(destination_x, destination_y)
+    else
+      capture!(destination_piece)
+    end
+    update(moved?: true)
   end
 
   def find_destination_piece(destination_x, destination_y)

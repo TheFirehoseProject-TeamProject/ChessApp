@@ -18,8 +18,11 @@ class Game < ApplicationRecord
     pieces.where(color: color_opponent).find_each do |piece|
       color_king = color_opponent == 'white' ? 'black' : 'white'
       other_king = pieces.find_by(type: 'King', color: color_king)
-      return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate) &&
-                     !piece.obstructed?(other_king.column_coordinate, other_king.row_coordinate)
+      if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate)
+        if !piece.obstructed?(other_king.column_coordinate, other_king.row_coordinate)
+          return true
+        end
+      end
     end
     false
   end
