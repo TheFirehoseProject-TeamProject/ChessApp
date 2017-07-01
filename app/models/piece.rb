@@ -25,7 +25,7 @@ class Piece < ApplicationRecord
         end
       end
     end
-    if rook_column_coordinate == 0
+    if rook_column_coordinate.zero?
       while column_coordinate > rook_column_coordinate + 1
         update_attributes(column_coordinate: column_coordinate - 1)
         if game.check?

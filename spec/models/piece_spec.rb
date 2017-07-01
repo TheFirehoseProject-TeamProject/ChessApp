@@ -6,7 +6,7 @@ RSpec.describe Piece, type: :model do
   let!(:piece_black) { FactoryGirl.create(:queen, color: 'black', game: game, column_coordinate: 4, row_coordinate: 4) }
   let!(:black_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
   let!(:white_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 0, color: 'white', is_on_board?: true) }
-  
+
   describe '#move_to_empty_space' do
     it 'moves to empty space' do
       expect(piece_black.move_to_empty_space(3, 5)).to eq true
