@@ -16,6 +16,7 @@ class Game < ApplicationRecord
 
   def check?
     pieces.where(color: color_opponent).find_each do |piece|
+      # byebug
       color_king = color_opponent == 'white' ? 'black' : 'white'
       other_king = pieces.find_by(type: 'King', color: color_king)
       return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate) &&
@@ -33,6 +34,7 @@ class Game < ApplicationRecord
 
   def checkmate?
     reload
+    # byebug
     return true if check? && !valid_move_possible
     false
   end
@@ -49,15 +51,20 @@ class Game < ApplicationRecord
           next if !piece.valid_move?(column, row) ||
                   (column == piece.column_coordinate && row == piece.row_coordinate) ||
                   piece.obstructed?(column, row)
-
+          # byebug
           saved_column = piece.column_coordinate
           saved_row = piece.row_coordinate
           en_passant_status = piece_capturable_by_en_passant
           destination_piece = piece.find_destination_piece(column, row)
-          piece.move_to!(column, row) if piece.capturable?(destination_piece)
-          found = check? ? false : true
-          undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
-          return [piece, row, column] if found
+          begin
+            piece.move_to!(column, row) if piece.capturable?(destination_piece)
+          rescue
+            # found = !check?
+            undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
+            # return [piece, column, row] if found
+          else
+            return true
+          end
         end
       end
     end

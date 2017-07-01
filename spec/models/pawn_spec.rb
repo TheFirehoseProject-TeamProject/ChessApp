@@ -7,6 +7,8 @@ RSpec.describe Pawn, type: :model do
   let(:pawn_white) { FactoryGirl.create(:pawn, :is_on_board, color: 'white', row_coordinate: 1, game: game) }
   let(:pawn_center) { FactoryGirl.create(:pawn, :is_on_board, row_coordinate: 3, game: game) }
   let(:pawn_en_passant) { FactoryGirl.create(:pawn, column_coordinate: 2, row_coordinate: 4, game: game, color: 'white') }
+  let!(:black_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
+  let!(:white_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 0, color: 'white', is_on_board?: true) }
   describe '#valid_move?' do
     it 'white pawn should be able to move one field up' do
       expect(pawn_white.valid_move?(1, 2)).to eq true
@@ -98,7 +100,7 @@ RSpec.describe Pawn, type: :model do
     let!(:black_bishop) { FactoryGirl.create(:bishop, game: game_ep, column_coordinate: 0, row_coordinate: 7, color: 'black', is_on_board?: true, user: user_ep_b) }
     let!(:black_king) { FactoryGirl.create(:king, game: game_ep, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true, user: user_ep_b) }
     context 'when capturing a piece w/ en passant places you in check' do
-      it '****Testing this one*****returns error: This places you in check' do
+      it 'returns error: This places you in check' do
         black_pawn.move_to!(4, 4)
         expect { white_pawn.move_to!(4, 5) }
           .to raise_error('This places you in check')

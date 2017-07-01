@@ -11,6 +11,7 @@ RSpec.describe Game, type: :model do
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
       FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 6, user: white_player, color: 'white', game: game)
+      # byebug
       expect(game.checkmate?).to eq(true)
     end
     it 'should return false if the king can move out of the check' do
