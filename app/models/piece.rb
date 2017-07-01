@@ -14,7 +14,6 @@ class Piece < ApplicationRecord
     rook = game.pieces.find_by(column_coordinate: rook_column_coordinate, row_coordinate: rook_row_coordinate)
     return false if updated_at != created_at
     return false if rook.updated_at != rook.created_at
-    # byebug
     return false if obstructed?(rook_column_coordinate, rook_row_coordinate)
     return false if game.check?
     if rook_column_coordinate == 7
@@ -39,12 +38,23 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(destination_x, destination_y)
+    original_column = column_coordinate
+    original_row = row_coordinate
     destination_piece = find_destination_piece(destination_x, destination_y)
     raise 'Invalid Move' unless capturable?(destination_piece)
     if destination_piece.nil?
       move_to_empty_space(destination_x, destination_y)
+      if game.check?
+        update(column_coordinate: original_column, row_coordinate: original_row)
+        raise 'This places you in check'
+      end
     else
       capture!(destination_piece)
+      if game.check?
+        update(column_coordinate: original_column, row_coordinate: original_row)
+        destination_piece.update(column_coordinate: destination_x, row_coordinate: destination_y)
+        raise 'This places you in check'
+      end
     end
     update(moved?: true)
   end

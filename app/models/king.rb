@@ -18,13 +18,13 @@ class King < Piece
   end
 
   def move_to!(destination_x, destination_y)
-    if destination_x == 6 && destination_y == 0
+    if destination_x == 6 && destination_y == 0 && moved? == false
       castle!(7, 0) if castle?(7, 0)
-    elsif destination_x == 2 && destination_y == 0
+    elsif destination_x == 2 && destination_y == 0 && moved? == false
       castle!(0, 0) if castle?(0, 0)
-    elsif destination_x == 6 && destination_y == 7
+    elsif destination_x == 6 && destination_y == 7 && moved? == false
       castle!(7, 7) if castle?(7, 7)
-    elsif destination_x == 2 && destination_y == 7
+    elsif destination_x == 2 && destination_y == 7 && moved? == false
       castle!(0, 7) if castle?(0, 7)
     else
       super
