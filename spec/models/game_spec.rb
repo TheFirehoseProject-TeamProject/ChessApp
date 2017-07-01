@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+RSpec::Matchers.define_negated_matcher :not_change, :change
 RSpec.describe Game, type: :model do
   let(:white_player) { FactoryGirl.create(:user) }
   let(:black_player) { FactoryGirl.create(:user) }
@@ -9,30 +9,29 @@ RSpec.describe Game, type: :model do
     it 'returns true if king is in checkmate' do
       FactoryGirl.create(:queen, :is_on_board, row_coordinate: 6, column_coordinate: 1, user: black_player, color: 'black', game: game)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
-      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: black_player, color: 'black', game: game)
       FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 6, user: white_player, color: 'white', game: game)
-      # byebug
       expect(game.checkmate?).to eq(true)
     end
     it 'should return false if the king can move out of the check' do
       FactoryGirl.create(:queen, :is_on_board, row_coordinate: 5, column_coordinate: 2, user: black_player, color: 'black', game: game)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
-      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: black_player, color: 'black', game: game)
       FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 0, user: white_player, color: 'white', game: game)
       expect(game.checkmate?).to eq(false)
     end
     it 'should return false if king can capture attacker' do
       FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 6, user: black_player, color: 'black', game: game)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
-      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: black_player, color: 'black', game: game)
       FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 0, user: white_player, color: 'white', game: game)
       expect(game.checkmate?).to eq(false)
     end
     it 'should return false if another piece can capture attacker' do
-      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 4, user: black_player, color: 'white', game: game)
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 4, user: white_player, color: 'white', game: game)
       FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 5, user: black_player, color: 'black', game: game)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
-      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: black_player, color: 'black', game: game)
       expect(game.checkmate?).to eq(false)
     end
     it 'should return false if another piece can move inbetween attacker' do

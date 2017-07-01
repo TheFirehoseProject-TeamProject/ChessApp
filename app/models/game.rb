@@ -16,7 +16,6 @@ class Game < ApplicationRecord
 
   def check?
     pieces.where(color: color_opponent).find_each do |piece|
-      # byebug
       color_king = color_opponent == 'white' ? 'black' : 'white'
       other_king = pieces.find_by(type: 'King', color: color_king)
       return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate) &&
@@ -51,18 +50,20 @@ class Game < ApplicationRecord
           next if !piece.valid_move?(column, row) ||
                   (column == piece.column_coordinate && row == piece.row_coordinate) ||
                   piece.obstructed?(column, row)
-          # byebug
-          saved_column = piece.column_coordinate
-          saved_row = piece.row_coordinate
-          en_passant_status = piece_capturable_by_en_passant
-          destination_piece = piece.find_destination_piece(column, row)
+          original_column = piece.column_coordinate
+          original_row = piece.row_coordinate
+          # en_passant_status = piece_capturable_by_en_passant
+          # destination_piece = piece.find_destination_piece(column, row)
+          byebug
           begin
-            piece.move_to!(column, row) if piece.capturable?(destination_piece)
+            piece.move_to!(column, row)
           rescue
             # found = !check?
-            undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
+            # undo_move_after_checkmate_test(destination_piece)
             # return [piece, column, row] if found
+            false
           else
+            piece.update(column_coordinate: original_column, row_coordinate: original_row)
             return true
           end
         end
@@ -263,9 +264,9 @@ class Game < ApplicationRecord
 
   private
 
-  def undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
-    piece.update(row_coordinate: saved_row, column_coordinate: saved_column)
-    update(piece_capturable_by_en_passant: en_passant_status)
+  def undo_move_after_checkmate_test(destination_piece)
+    # piece.update(row_coordinate: saved_row, column_coordinate: saved_column)
+    # update(piece_capturable_by_en_passant: en_passant_status)
     return if destination_piece.nil?
     Piece.find(destination_piece.id).update(is_on_board?: true,
                                             row_coordinate: destination_piece.row_coordinate,
