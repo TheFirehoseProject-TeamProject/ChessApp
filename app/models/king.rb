@@ -10,10 +10,10 @@ class King < Piece
                    diagonal_down_and_left_move?(destination_x, destination_y) && (column_coordinate - destination_x).abs == 1 ||
                    diagonal_up_and_right_move?(destination_x, destination_y) && (column_coordinate - destination_x).abs == 1 ||
                    diagonal_down_and_right_move?(destination_x, destination_y) && (column_coordinate - destination_x).abs == 1
-    return true if destination_x == 2 && destination_y == 0 ||
-                   destination_x == 6 && destination_y == 0 ||
-                   destination_x == 2 && destination_y == 7 ||
-                   destination_x == 6 && destination_y == 7
+    return true if destination_x == 2 && destination_y == 0 && color == 'white' && moved? == false ||
+                   destination_x == 6 && destination_y == 0 && color == 'white' && moved? == false ||
+                   destination_x == 2 && destination_y == 7 && color == 'black' && moved? == false ||
+                   destination_x == 6 && destination_y == 7 && color == 'black' && moved? == false
     false
   end
 
@@ -57,6 +57,7 @@ class King < Piece
     if rook_column_coordinate == 7
       while column_coordinate < rook_column_coordinate - 1
         update(column_coordinate: column_coordinate + 1)
+        reload
         if game.check?
           update(column_coordinate: 4)
           return false

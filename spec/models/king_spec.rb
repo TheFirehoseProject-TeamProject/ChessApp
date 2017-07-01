@@ -43,16 +43,18 @@ RSpec.describe King, type: :model do
   end
 
   describe '#castle!' do
-    let!(:game_c) { FactoryGirl.create(:game) }
     let!(:user_w) { FactoryGirl.create(:user) }
-    let!(:king_cw) { FactoryGirl.create(:king, game: game_c, is_on_board?: true, column_coordinate: 4, row_coordinate: 0, color: 'white') }
-    let!(:rook_crw) { FactoryGirl.create(:rook, game: game_c, is_on_board?: true, column_coordinate: 7, row_coordinate: 0, color: 'white') }
-    let!(:rook_clw) { FactoryGirl.create(:rook, game: game_c, is_on_board?: true, column_coordinate: 0, row_coordinate: 0, color: 'white') }
-    let!(:rook_crb) { FactoryGirl.create(:rook, game: game_c, is_on_board?: true, column_coordinate: 7, row_coordinate: 7, color: 'black') }
-    let!(:rook_clb) { FactoryGirl.create(:rook, game: game_c, is_on_board?: true, column_coordinate: 0, row_coordinate: 7, color: 'black') }
-    let!(:king_cb) { FactoryGirl.create(:king, game: game_c, is_on_board?: true, column_coordinate: 4, row_coordinate: 7, color: 'black') }
+    let!(:user_b) { FactoryGirl.create(:user) }
+    let!(:game_c) { FactoryGirl.create(:game, turn: user_w.id, white_player: user_w, black_player: user_b) }
+    let!(:king_cw) { FactoryGirl.create(:king, game: game_c, user: user_w, is_on_board?: true, column_coordinate: 4, row_coordinate: 0, color: 'white') }
+    let!(:rook_crw) { FactoryGirl.create(:rook, game: game_c, user: user_w, is_on_board?: true, column_coordinate: 7, row_coordinate: 0, color: 'white') }
+    let!(:rook_clw) { FactoryGirl.create(:rook, game: game_c, user: user_w, is_on_board?: true, column_coordinate: 0, row_coordinate: 0, color: 'white') }
+    let!(:rook_crb) { FactoryGirl.create(:rook, game: game_c, user: user_b, is_on_board?: true, column_coordinate: 7, row_coordinate: 7, color: 'black') }
+    let!(:rook_clb) { FactoryGirl.create(:rook, game: game_c, user: user_b, is_on_board?: true, column_coordinate: 0, row_coordinate: 7, color: 'black') }
+    let!(:king_cb) { FactoryGirl.create(:king, game: game_c, user: user_b, is_on_board?: true, column_coordinate: 4, row_coordinate: 7, color: 'black') }
     context 'white castle move is successful' do
       it 'castle king side king coords update' do
+        # byebug
         king_cw.castle!(7, 0)
         expect(king_cw).to have_attributes(column_coordinate: 6, row_coordinate: 0)
       end
@@ -128,7 +130,6 @@ RSpec.describe King, type: :model do
     end
     context 'king has moved' do
       it 'castle king side returns false' do
-        byebug
         king_cw.move_to!(5, 0)
         expect(king_cw.castle?(7, 0)).to eq false
       end
