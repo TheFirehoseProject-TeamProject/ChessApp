@@ -8,17 +8,6 @@ class Game < ApplicationRecord
   scope :available, -> { where('black_player_id IS NULL OR white_player_id IS NULL') }
 
   def check?
-<<<<<<< HEAD
-    pieces.each do |piece|
-      color = piece.color
-      # byebug
-      if color == 'white'
-        other_king = pieces.find_by(type: 'King', color: 'black')
-        return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate)
-      elsif color == 'black'
-        other_king = pieces.find_by(type: 'King', color: 'white')
-        return true if piece.valid_move?(other_king.column_coordinate, other_king.row_coordinate)
-=======
     pieces.where(color: color_opponent).find_each do |piece|
       color_king = color_opponent == 'white' ? 'black' : 'white'
       other_king = pieces.find_by(type: 'King', color: color_king)
@@ -56,7 +45,6 @@ class Game < ApplicationRecord
           undo_move_after_checkmate_test(piece, destination_piece, saved_row, saved_column, en_passant_status)
           return [piece, row, column] if found
         end
->>>>>>> master
       end
     end
     false
