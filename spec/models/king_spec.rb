@@ -42,8 +42,6 @@ RSpec.describe King, type: :model do
     end
   end
 
-<<<<<<< HEAD
-=======
   describe '#castle!' do
     let!(:user_w) { FactoryGirl.create(:user) }
     let!(:user_b) { FactoryGirl.create(:user) }
@@ -114,7 +112,6 @@ RSpec.describe King, type: :model do
     end
   end
 
->>>>>>> 91653c11711f36ac5bec58b1d8dbd5a4c352bb27
   describe '#castle?' do
     let!(:game_c) { FactoryGirl.create(:game) }
     let!(:user_w) { FactoryGirl.create(:user) }
@@ -131,18 +128,12 @@ RSpec.describe King, type: :model do
       end
     end
     context 'king has moved' do
-<<<<<<< HEAD
-      it 'returns false' do
-        king_cw.move_to!(5, 0)
-        expect(king_cw.castle?(7, 0)).to eq false
-=======
       it 'castle king side returns false' do
         king_cw.move_to!(5, 0)
         expect(king_cw.castle?(7, 0)).to eq false
       end
       it 'castle queen side returns false' do
         king_cw.move_to!(5, 0)
->>>>>>> 91653c11711f36ac5bec58b1d8dbd5a4c352bb27
         expect(king_cw.castle?(0, 0)).to eq false
       end
     end
