@@ -53,8 +53,8 @@ class Game < ApplicationRecord
           original_column = piece.column_coordinate
           original_row = piece.row_coordinate
           # en_passant_status = piece_capturable_by_en_passant
-          # destination_piece = piece.find_destination_piece(column, row)
-          byebug
+          destination_piece = piece.find_destination_piece(column, row)
+          # byebug
           begin
             piece.move_to!(column, row)
           rescue
@@ -64,6 +64,7 @@ class Game < ApplicationRecord
             false
           else
             piece.update(column_coordinate: original_column, row_coordinate: original_row)
+            destination_piece.update(column_coordinate: original_column, row_coordinate: original_row, is_on_board?: true) if destination_piece.present?
             return true
           end
         end

@@ -25,7 +25,7 @@ class Piece < ApplicationRecord
       capture!(destination_piece)
       if game.check?
         update(column_coordinate: original_column, row_coordinate: original_row)
-        destination_piece.update(column_coordinate: destination_x, row_coordinate: destination_y)
+        destination_piece.update(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
         raise 'This places you in check'
       end
     end
