@@ -6,41 +6,41 @@ RSpec.describe Game, type: :model do
   let(:game) { FactoryGirl.create(:game, white_player: white_player, black_player: black_player, turn: white_player.id) }
 
   describe '#checkmate?' do
-    # it 'returns true if king is in checkmate' do
-    #   FactoryGirl.create(:queen, :is_on_board, row_coordinate: 6, column_coordinate: 1, user: black_player, color: 'black', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
-    #   FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 6, user: white_player, color: 'white', game: game)
-    #   expect(game.checkmate?).to eq(true)
-    # end
-    # it 'should return false if the king can move out of the check' do
-    #   FactoryGirl.create(:queen, :is_on_board, row_coordinate: 5, column_coordinate: 2, moved?: true, user: black_player, color: 'black', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, moved?: true, user: white_player, color: 'white', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, moved?: true, user: white_player, color: 'black', game: game)
-    #   FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 0, moved?: true, user: white_player, color: 'white', game: game)
-    #   expect(game.checkmate?).to eq(false)
-    # end
-    # it 'should return false if king can capture attacker' do
-    #   FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 6, user: black_player, color: 'black', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
-    #   FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 0, user: white_player, color: 'white', game: game)
-    #   expect(game.checkmate?).to eq(false)
-    # end
-    # it 'should return false if another piece can capture attacker' do
-    #   FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 4, user: black_player, color: 'white', game: game)
-    #   FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 5, user: black_player, color: 'black', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
-    #   expect(game.checkmate?).to eq(false)
-    # end
-    # it 'should return false if another piece can move inbetween attacker' do
-    #   FactoryGirl.create(:queen, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: black_player, color: 'black', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
-    #   FactoryGirl.create(:king, :is_on_board, row_coordinate: 1, column_coordinate: 5, user: white_player, color: 'black', game: game)
-    #   FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 3, column_coordinate: 5, user: white_player, color: 'white', game: game)
-    #   expect(game.checkmate?).to eq(false)
-    # end
+    it 'returns true if king is in checkmate' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 6, column_coordinate: 1, user: black_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 6, user: white_player, color: 'white', game: game)
+      expect(game.checkmate?).to eq(true)
+    end
+    it 'should return false if the king can move out of the check' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 5, column_coordinate: 2, moved?: true, user: black_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, moved?: true, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, moved?: true, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 0, moved?: true, user: white_player, color: 'white', game: game)
+      expect(game.checkmate?).to eq(false)
+    end
+    it 'should return false if king can capture attacker' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 6, user: black_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 0, column_coordinate: 0, user: white_player, color: 'white', game: game)
+      expect(game.checkmate?).to eq(false)
+    end
+    it 'should return false if another piece can capture attacker' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 4, user: black_player, color: 'white', game: game)
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 0, column_coordinate: 5, user: black_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: white_player, color: 'black', game: game)
+      expect(game.checkmate?).to eq(false)
+    end
+    it 'should return false if another piece can move inbetween attacker' do
+      FactoryGirl.create(:queen, :is_on_board, row_coordinate: 2, column_coordinate: 7, user: black_player, color: 'black', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game)
+      FactoryGirl.create(:king, :is_on_board, row_coordinate: 1, column_coordinate: 5, user: white_player, color: 'black', game: game)
+      FactoryGirl.create(:bishop, :is_on_board, row_coordinate: 3, column_coordinate: 5, user: white_player, color: 'white', game: game)
+      expect(game.checkmate?).to eq(false)
+    end
     it 'checkmate does not remove existing pieces' do
       game.populate_board!
       pawn = game.pieces.find_by(type: 'Pawn', color: 'black', row_coordinate: 6, column_coordinate: 5)
@@ -48,10 +48,8 @@ RSpec.describe Game, type: :model do
       pawn.update(row_coordinate: -1, column_coordinate: -1, is_on_board?: false)
       queen.update(row_coordinate: 6, column_coordinate: 5)
       game.update(turn: black_player.id)
-      # byebug
       expect(game.check?).to eq(true)
       expect(game.checkmate?).to eq(false)
-      queen.reload
       expect(game.pieces.where(is_on_board?: false).count).to eq(1)
     end
   end
@@ -62,7 +60,6 @@ RSpec.describe Game, type: :model do
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 0, column_coordinate: 7, user: white_player, color: 'white', game: game, moved?: true)
       FactoryGirl.create(:king, :is_on_board, row_coordinate: 2, column_coordinate: 6, user: white_player, color: 'black', game: game, moved?: true)
       FactoryGirl.create(:pawn, :is_on_board, row_coordinate: 1, column_coordinate: 6, user: white_player, color: 'white', game: game)
-      # byebug
       expect(game.stalemate?).to eq(true)
     end
     it 'returns true if in stalemate for black' do

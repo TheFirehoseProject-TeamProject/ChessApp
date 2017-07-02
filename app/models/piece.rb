@@ -12,24 +12,24 @@ class Piece < ApplicationRecord
 
   def castle?(rook_column_coordinate, rook_row_coordinate)
     rook = game.pieces.find_by(column_coordinate: rook_column_coordinate, row_coordinate: rook_row_coordinate)
-    return false if updated_at != created_at
-    return false if rook.updated_at != rook.created_at
+    return false if moved?
+    return false if rook.moved?
     return false if obstructed?(rook_column_coordinate, rook_row_coordinate)
     return false if game.check?
     if rook_column_coordinate == 7
       while column_coordinate < rook_column_coordinate
-        update_attributes(column_coordinate: column_coordinate + 1)
+        update(column_coordinate: column_coordinate + 1)
         if game.check?
-          update_attributes(column_coordinate: 4)
+          update(column_coordinate: 4)
           return false
         end
       end
     end
     if rook_column_coordinate.zero?
       while column_coordinate > rook_column_coordinate + 1
-        update_attributes(column_coordinate: column_coordinate - 1)
+        update(column_coordinate: column_coordinate - 1)
         if game.check?
-          update_attributes(column_coordinate: 4)
+          update(column_coordinate: 4)
           return false
         end
       end
@@ -52,7 +52,7 @@ class Piece < ApplicationRecord
       capture!(destination_piece)
       if game.check?
         update(column_coordinate: original_column, row_coordinate: original_row)
-        destination_piece.update(column_coordinate: destination_x, row_coordinate: destination_y)
+        destination_piece.update(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
         raise 'This places you in check'
       end
     end
