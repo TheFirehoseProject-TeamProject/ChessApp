@@ -22,10 +22,16 @@ class PiecesController < ApplicationController
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       change_turn
+      Pusher.trigger('my-channel2', 'piece_moved', row_origin: @piece.row_coordinate,
+                                                   column_origin: @piece.column_coordinate,
+                                                   row_destination: destination_y,
+                                                   column_destination: destination_x,
+                                                   piece_id: @piece.id)
+
       @piece.move_to!(destination_x, destination_y)
       current_game.set_game_status
       flashmessages
-      redirect_to game_path(@piece.game_id)
+      # redirect_to game_path(@piece.game_id)
     else
       render plain: 'Invalid Move', status: :bad_request
     end

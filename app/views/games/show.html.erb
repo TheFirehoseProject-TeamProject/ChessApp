@@ -1,9 +1,10 @@
 
 <script>
 $(function() {
-    $("body").css("background", "url('/assets/board_background.png')");
-  });
+  $("body").css("background", "url('/assets/board_background.png')");
+});
 </script>
+
 
 <div class="chessboard <%= "waiting" if @waiting %>">
   <div class='text-center'>
@@ -45,9 +46,22 @@ $(function() {
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
+  Pusher.logToConsole = true;
+  var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
+    cluster: 'ap1',
+    encrypted: true
+  });
+  var channel = pusher.subscribe('my-channel');
+  channel.bind('second_player_joined', function(data) {
+    console.log('second player joined');
+    if (!window.location.href.substring(window.location.href).match('loaded')) {
+      window.location = window.location + '#loaded';
+      window.location.reload();
+    }
+  });
+  var channel2 = pusher.subscribe('my-channel2');
 
   $(function() {
-      // $("body").css("background","white" );
       $(".chessboard .piece").draggable({
         opacity: .4,
         create: function(){$(this).data('position',$(this).position())},
@@ -78,34 +92,25 @@ $(function() {
                       id: pieceId
                       }
                  },
-                error: function(xhr, status) {
-                    if (xhr.status === 500 || xhr.status === 400){}
-                    window.location.reload();
-                    },
-                success: function(){window.location = window.location + '#loaded'; }
           });
         }
       });
+      channel2.bind('piece_moved', function(data) {
+        window.location.reload();
+        // console.log(data.row_origin, data.column_origin, data.row_destination, data.column_destination);
+        // let piece = $('span[id^='+data.piece_id+']');
+        // piece.remove();
+        // console.log(piece);
+        // console.log(data.row_origin, data.column_origin, data.row_destination, data.column_destination);
+        //  $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
+        //  piece.css('position', '');
+        //  piece.draggable();
+      });
+
       function snapToMiddle(dragger, target){
         var topMove = target.position().top - dragger.data('position').top + (target.outerHeight(true) - dragger.outerHeight(true)) / 2;
         var leftMove= target.position().left - dragger.data('position').left + (target.outerWidth(true) - dragger.outerWidth(true)) / 2;
         dragger.animate({top:topMove,left:leftMove},{duration:100,easing:'easeOutBack'});
       }
-      let response = "default";
-      let url = window.location.href;
-      let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
-      if(url.indexOf("#loaded") === -1) {
-              let id = setInterval(checkGameAvailable, 4000);
-              function checkGameAvailable () {
-                        let response = $.ajax({type: "GET", url: gameId +"/game_available", async: false}).responseText;
-                        if (response === "false") {
-                            clearInterval(id);
-                            // reloading the page once to populate the board for the person who was waiting for a player
-                            window.location = window.location + '#loaded';
-                            window.location.reload();
-                          }
-              };
-      }
-
   });
 </script>
