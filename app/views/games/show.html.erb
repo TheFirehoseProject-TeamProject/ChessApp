@@ -1,11 +1,10 @@
+<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
 $(function() {
   $("body").css("background", "url('/assets/board_background.png')");
 });
 </script>
-
-
 <div class="chessboard <%= "waiting" if @waiting %>">
   <div class='text-center'>
     <h3><%= link_to "Play against yourself", play_against_yourself_path, class: 'btn btn-info',method: :post if @waiting%></h3>
@@ -13,11 +12,9 @@ $(function() {
   </div>
   <br />
   <div class="row">
-    <div id="whiteplayer" class="col-2 text-center">
-      <% if user_signed_in? && @game.turn == @game.white_player.id && !@waiting %>
-        <h5>White Player's Turn</h5>
-        <%= image_tag gravatar_for(@game.white_player.email), alt: "@game.white_player.email" %>
-      <% end %>
+    <div id="turn" class="col-2 text-center">
+        <h5 class='white_turn'>Current turn's color</h5>
+        <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )%>
     </div>
     <div class="col-8">
       <% @board.reverse_each.with_index do |row, index_row| %>
@@ -33,17 +30,10 @@ $(function() {
           </div>
       <%end%>
     </div>
-    <div id="blackplayer" class="col-2 text-center">
-      <% if user_signed_in? && !@waiting && @game.turn == @game.black_player.id %>
-        <h5>Black Player's Turn</h5>
-        <%= image_tag gravatar_for(@game.black_player.email), alt: "@game.black_player.email" %>
-      <% end %>
-    </div>
     <br class="clear"/>
   </div>
 </div>
 
-<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
   Pusher.logToConsole = true;
@@ -59,27 +49,32 @@ $(function() {
       window.location.reload();
     }
   });
+
   var channel2 = pusher.subscribe('my-channel2');
 
-  $(function() {
-      $(".chessboard .piece").draggable({
-        opacity: .4,
-        create: function(){$(this).data('position',$(this).position())},
-        cursorAt:{left:15},
-        cursor:'move',
-        start:function(){$(this).stop(true,true)}
-      });
+  function makePiecesDraggable(){
+    $(".chessboard .piece").draggable({
+      opacity: .4,
+      create: function(){$(this).data('position',$(this).position())},
+      cursorAt:{left:15},
+      cursor:'move',
+      start:function(){$(this).stop(true,true)}
+    });
+  };
 
+  $(function() {
+
+      makePiecesDraggable();
       let pieceId = 0;
       $(".piece").mousedown(function(){
         pieceId = $(this).attr('id');
       });
-
       $(".chess_field").droppable({
         classes: {
           "ui-droppable-hover": "ui-state-hover"
         },
         drop: function(event, ui) {
+          event.preventDefault();
           snapToMiddle(ui.draggable,$(this));
           let row = $(this).attr('row');
           let column = $(this).attr('column');
@@ -92,19 +87,11 @@ $(function() {
                       id: pieceId
                       }
                  },
+                 error: function(){
+                   window.location.reload();
+                 }
           });
         }
-      });
-      channel2.bind('piece_moved', function(data) {
-        window.location.reload();
-        // console.log(data.row_origin, data.column_origin, data.row_destination, data.column_destination);
-        // let piece = $('span[id^='+data.piece_id+']');
-        // piece.remove();
-        // console.log(piece);
-        // console.log(data.row_origin, data.column_origin, data.row_destination, data.column_destination);
-        //  $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
-        //  piece.css('position', '');
-        //  piece.draggable();
       });
 
       function snapToMiddle(dragger, target){
@@ -112,5 +99,15 @@ $(function() {
         var leftMove= target.position().left - dragger.data('position').left + (target.outerWidth(true) - dragger.outerWidth(true)) / 2;
         dragger.animate({top:topMove,left:leftMove},{duration:100,easing:'easeOutBack'});
       }
+  });
+  channel2.bind('piece_moved', function(data) {
+    //window.location.reload();
+    let piece = $('span[id^='+data.piece_id+']');
+    $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
+    $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
+    $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find(piece).remove();
+    makePiecesDraggable();
+    piece.css('position', '');
+    $('#turn h5').toggleClass("black_turn");
   });
 </script>
