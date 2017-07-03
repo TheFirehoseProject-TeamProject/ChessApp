@@ -1,9 +1,8 @@
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
-
 <script>
-$(function() {
-  $("body").css("background", "url('/assets/board_background.png')");
-});
+  $(function() {
+    $("body").css("background", "url('/assets/board_background.png')");
+  });
 </script>
 <div class="chessboard <%= "waiting" if @waiting %>">
   <div class='text-center'>
@@ -13,7 +12,7 @@ $(function() {
   <br />
   <div class="row">
     <div id="turn" class="col-2 text-center">
-        <h5 class='white_turn'>Current turn's color</h5>
+        <h5 class='white_turn'>Turn</h5>
         <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )%>
     </div>
     <div class="col-8">
@@ -34,7 +33,6 @@ $(function() {
   </div>
 </div>
 
-
 <script>
   Pusher.logToConsole = true;
   var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
@@ -49,21 +47,8 @@ $(function() {
       window.location.reload();
     }
   });
-
   var channel2 = pusher.subscribe('my-channel2');
-
-  function makePiecesDraggable(){
-    $(".chessboard .piece").draggable({
-      opacity: .4,
-      create: function(){$(this).data('position',$(this).position())},
-      cursorAt:{left:15},
-      cursor:'move',
-      start:function(){$(this).stop(true,true)}
-    });
-  };
-
   $(function() {
-
       makePiecesDraggable();
       let pieceId = 0;
       $(".piece").mousedown(function(){
@@ -74,7 +59,6 @@ $(function() {
           "ui-droppable-hover": "ui-state-hover"
         },
         drop: function(event, ui) {
-          event.preventDefault();
           snapToMiddle(ui.draggable,$(this));
           let row = $(this).attr('row');
           let column = $(this).attr('column');
@@ -94,20 +78,35 @@ $(function() {
         }
       });
 
-      function snapToMiddle(dragger, target){
-        var topMove = target.position().top - dragger.data('position').top + (target.outerHeight(true) - dragger.outerHeight(true)) / 2;
-        var leftMove= target.position().left - dragger.data('position').left + (target.outerWidth(true) - dragger.outerWidth(true)) / 2;
-        dragger.animate({top:topMove,left:leftMove},{duration:100,easing:'easeOutBack'});
-      }
   });
   channel2.bind('piece_moved', function(data) {
-    //window.location.reload();
-    let piece = $('span[id^='+data.piece_id+']');
+    // window.location.reload();
+    if (data.message) {alert(data.message);};
+    let opponent_color = 'black'
+    if (data.turn === 'black') { opponent_color = 'white';};
+    let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
+    piece.css('position', '');
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
-    $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find(piece).remove();
-    makePiecesDraggable();
-    piece.css('position', '');
-    $('#turn h5').toggleClass("black_turn");
+    $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
+    makePiecesDraggable()
+    $('#turn h5').removeClass("black_turn white_turn");
+    $('#turn h5').addClass(opponent_color +"_turn");
   });
+
+  function snapToMiddle(dragger, target){
+    var topMove = target.position().top - dragger.data('position').top + (target.outerHeight(true) - dragger.outerHeight(true)) / 2;
+    var leftMove= target.position().left - dragger.data('position').left + (target.outerWidth(true) - dragger.outerWidth(true)) / 2;
+    dragger.animate({top:topMove,left:leftMove},{duration:100,easing:'easeOutBack'});
+  }
+
+  function makePiecesDraggable(){
+    $(".chessboard .piece").draggable({
+      opacity: .4,
+      create: function(){$(this).data('position',$(this).position())},
+      cursorAt:{left:15},
+      cursor:'move',
+      start:function(){$(this).stop(true,true)}
+    });
+  };
 </script>
