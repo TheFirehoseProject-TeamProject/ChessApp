@@ -77,3 +77,27 @@ body {
 .clear {
   clear: both;
 }
+
+.login{
+  background-color: rgba(101, 171, 255, 0.39);
+  color: white;
+  border-radius: 3px;
+  }
+
+  label{
+    display: block;
+  }
+
+  a:hover {
+    color: #03182a;
+  }
+
+  a {
+    color: #ffffff;
+  }
+
+
+.btn {
+    color: rgba(4, 111, 239, 1);
+    background-color: white;
+}
