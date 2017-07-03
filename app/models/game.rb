@@ -32,8 +32,6 @@ class Game < ApplicationRecord
   end
 
   def checkmate?
-    reload
-    # byebug
     return true if check? && !valid_move_possible
     false
   end
@@ -52,19 +50,14 @@ class Game < ApplicationRecord
                   piece.obstructed?(column, row)
           original_column = piece.column_coordinate
           original_row = piece.row_coordinate
-          # en_passant_status = piece_capturable_by_en_passant
+          en_passant_status = piece_capturable_by_en_passant
           destination_piece = piece.find_destination_piece(column, row)
-          # byebug
           begin
             piece.move_to!(column, row)
           rescue
-            # found = !check?
-            # undo_move_after_checkmate_test(destination_piece)
-            # return [piece, column, row] if found
             false
           else
-            piece.update(column_coordinate: original_column, row_coordinate: original_row)
-            destination_piece.update(column_coordinate: original_column, row_coordinate: original_row, is_on_board?: true) if destination_piece.present?
+            undo_move_after_checkmate_test(piece, destination_piece, original_row, original_column, en_passant_status)
             return true
           end
         end
@@ -265,9 +258,9 @@ class Game < ApplicationRecord
 
   private
 
-  def undo_move_after_checkmate_test(destination_piece)
-    # piece.update(row_coordinate: saved_row, column_coordinate: saved_column)
-    # update(piece_capturable_by_en_passant: en_passant_status)
+  def undo_move_after_checkmate_test(piece, destination_piece, original_row, original_column, en_passant_status)
+    piece.update(row_coordinate: original_row, column_coordinate: original_column)
+    update(piece_capturable_by_en_passant: en_passant_status)
     return if destination_piece.nil?
     Piece.find(destination_piece.id).update(is_on_board?: true,
                                             row_coordinate: destination_piece.row_coordinate,
