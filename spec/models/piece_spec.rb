@@ -14,6 +14,34 @@ RSpec.describe Piece, type: :model do
   end
 
   describe '#move_to!' do
+    context 'when moving to empty space places you in check' do
+      it 'returns error: This places you in check' do
+        white_bishop = FactoryGirl.create(:bishop, game: game, user: user, column_coordinate: 4, row_coordinate: 1, color: 'white', is_on_board?: true)
+        expect { white_bishop.move_to!(5, 0) }.to raise_error('This places you in check')
+      end
+    end
+    context 'when capturing a piece places you in check' do
+      let!(:piece_moving) { FactoryGirl.create(:bishop, game: game, user: user, column_coordinate: 4, row_coordinate: 1, color: 'white', is_on_board?: true) }
+      let!(:capture_piece) { FactoryGirl.create(:pawn, game: game, user: user, column_coordinate: 5, row_coordinate: 2, color: 'black', is_on_board?: true) }
+      it 'returns error: This places you in check' do
+        expect { piece_moving.move_to!(5, 2) }
+          .to raise_error('This places you in check')
+      end
+      it 'the captured piece is on board in same position' do
+        expect { piece_moving.move_to!(5, 2) }
+          .to raise_error('This places you in check')
+          .and not_change(capture_piece, :is_on_board?)
+          .and not_change(capture_piece, :column_coordinate)
+          .and not_change(capture_piece, :row_coordinate)
+      end
+      it 'the moving piece is on board in original position' do
+        expect { piece_moving.move_to!(5, 2) }
+          .to raise_error('This places you in check')
+          .and not_change(piece_moving, :is_on_board?)
+          .and not_change(piece_moving, :column_coordinate)
+          .and not_change(piece_moving, :row_coordinate)
+      end
+    end
     context 'when no piece is at destination coordinates' do
       it 'moves to the destination coordinates' do
         piece_black.move_to!(3, 5)
