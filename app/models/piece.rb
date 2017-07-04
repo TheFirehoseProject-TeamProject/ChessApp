@@ -11,9 +11,24 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(destination_x, destination_y)
+    original_column = column_coordinate
+    original_row = row_coordinate
     destination_piece = find_destination_piece(destination_x, destination_y)
     raise 'Invalid Move' unless capturable?(destination_piece)
-    destination_piece.nil? ? move_to_empty_space(destination_x, destination_y) : capture!(destination_piece)
+    if destination_piece.nil?
+      move_to_empty_space(destination_x, destination_y)
+      if game.check?
+        update(column_coordinate: original_column, row_coordinate: original_row)
+        raise 'This places you in check'
+      end
+    else
+      capture!(destination_piece)
+      if game.check?
+        update(column_coordinate: original_column, row_coordinate: original_row)
+        destination_piece.update(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
+        raise 'This places you in check'
+      end
+    end
   end
 
   def find_destination_piece(destination_x, destination_y)
