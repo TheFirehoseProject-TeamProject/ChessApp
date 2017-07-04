@@ -11,18 +11,33 @@ RSpec.describe Pawn, type: :model do
   let!(:black_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
   let!(:white_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 0, color: 'white', is_on_board?: true) }
   
-  describe '#promotion!' do
+  describe '#promote!' do
     context 'pawn reaches opposite side of the board' do
+      let(:game_pp) { FactoryGirl.create(:game) }
+      let!(:queen) { FactoryGirl.create(:queen, game: game_pp, column_coordinate: 0, row_coordinate: 7, is_on_board?: true, color: 'black') }
+      let(:pawn) { FactoryGirl.create(:pawn, game: game_pp, column_coordinate: 1, row_coordinate: 6, is_on_board?: true, color: 'white') }
+      let!(:king_w) { FactoryGirl.create(:king, game: game_pp, column_coordinate: 7, row_coordinate: 0, is_on_board?: true, color: 'white') }
+      let!(:black_king) { FactoryGirl.create(:king, game: game_pp, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
+      
       it 'pawn promotes' do
+        
         pawn_black.update(row_coordinate: 1)
-        expect(pawn_black.move_to!(1, 0)).to change { pawn_black.type }
+        expect{ pawn_black.move_to!(1, 0) }.to change { pawn_black.type }
+        byebug
+      end
+
+      it 'pawn cannot move because of check' do
+        expect{ pawn.move_to!(1, 7) }.to raise_error('This places you in check')
+          .and not_change(pawn, :column_coordinate)
+          .and not_change(pawn, :row_coordinate)
+          .and not_change(pawn, :type)
       end
     end
 
     context 'pawn has not reached the opposite side' do
       it 'should not promote the pawn' do
         pawn_black.update(row_coordinate: 2)
-        expect(pawn_black.move_to!(1, 1)).to not_change { pawn_black.type }
+        expect{ pawn_black.move_to!(1, 1) }.to not_change { pawn_black.type }
       end
     end
   end

@@ -42,6 +42,29 @@ $(function() {
   </div>
 </div>
 
+<!-- Modal for pawn promotion-->
+<% if @game.game_status == 0 %>
+  <div class="modal fade" id="pawnPromotion" tabindex="-1" role="dialog" aria-labelledby="pawnPromotionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="pawnPromotionLabel">Choose a Piece</h4>
+        </div>
+        <%= simple_form_for current_piece, url: piece_path(current_piece.id) do |f| %>
+          <div class="modal-body">
+            <%= f.input :type %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <%= f.submit "Choose your piece", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
@@ -82,7 +105,12 @@ $(function() {
                     if (xhr.status === 500 || xhr.status === 400){}
                     window.location.reload();
                     },
-                success: function(){window.location = window.location + '#loaded'; }
+                success: function(data) {
+                  if (data.piece.type === 'Pawn' && (data.piece.row_coordinate === 7 || data.piece.row_coordinate === 0)) {
+                      $("#pawnPromotion").html(data);
+                      jQuery("#pawnPromotion").modal('show');
+                    }
+                  window.location = window.location + '#loaded'; }
           });
         }
       });
