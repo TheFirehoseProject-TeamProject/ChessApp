@@ -5,6 +5,17 @@
     $("body").css("background", "url('/assets/board_background.png')");
     change_turn("<%= @game.turn == @game.white_player_id ? 'black' : 'white' %>");
   });
+  function change_turn(turn) {
+    if (turn === 'white') {
+      $('#white_player_id').hide();
+      $('#black_player_id').show();
+     }
+    else
+    {
+      $('#black_player_id').hide();
+      $('#white_player_id').show();
+    }
+  }
 </script>
 <div id="flashmessages"></div>
 <div class="chessboard <%= "waiting" if @waiting %>">
@@ -97,18 +108,6 @@
     makePiecesDraggable();
     change_turn(data.turn);
   });
-
-  function change_turn(turn) {
-    if (turn === 'white') {
-      $('#white_player_id').hide();
-      $('#black_player_id').show();
-     }
-    else
-    {
-      $('#black_player_id').hide();
-      $('#white_player_id').show();
-    }
-  }
 
   function makePiecesDraggable(){
     $(".chessboard .piece").draggable({
