@@ -1,9 +1,12 @@
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 <script>
   $(function() {
+    $("#flashmessages").hide();
     $("body").css("background", "url('/assets/board_background.png')");
+    change_turn("<%= @game.turn == @game.white_player_id ? 'black' : 'white' %>");
   });
 </script>
+<div id="flashmessages"></div>
 <div class="chessboard <%= "waiting" if @waiting %>">
   <div class='text-center'>
     <h3><%= link_to "Play against yourself", play_against_yourself_path, class: 'btn btn-info',method: :post if @waiting%></h3>
@@ -11,8 +14,10 @@
   </div>
   <br />
   <div class="row">
-    <div id="turn" class="col-2 text-center">
-        <h5 class='white_turn'>Turn</h5>
+    <div id="turn" class="col-1 offset-1">
+        <h4>Turn:</h4>
+        <h5 id= "white_player_id" class="white_turn"><%= ("White: " + @game.white_player.email)%></h5></br>
+        <h5 id= "black_player_id" class="black_turn"><%= ("Black: " + @game.black_player.email)%></h5></br>
         <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )%>
     </div>
     <div class="col-8">
@@ -81,18 +86,33 @@
   });
   channel2.bind('piece_moved', function(data) {
     // window.location.reload();
-    if (data.message) {alert(data.message);};
-    let opponent_color = 'black'
-    if (data.turn === 'black') { opponent_color = 'white';};
+    let flashmessage = "<b><p class='text-center alert alert-info'>"+data.message+"</p></b>";
+    $("#flashmessages").hide();
+    $("#flashmessages").find("p").remove();
+    if (data.message) {
+      $("#flashmessages").show();
+      $("#flashmessages").append(flashmessage);
+     };
     let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
     piece.css('position', '');
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
-    makePiecesDraggable()
-    $('#turn h5').removeClass("black_turn white_turn");
-    $('#turn h5').addClass(opponent_color +"_turn");
+    makePiecesDraggable();
+    change_turn(data.turn);
   });
+
+  function change_turn(turn) {
+    if (turn === 'white') {
+      $('#white_player_id').hide();
+      $('#black_player_id').show();
+     }
+    else
+    {
+      $('#black_player_id').hide();
+      $('#white_player_id').show();
+    }
+  }
 
   function snapToMiddle(dragger, target){
     var topMove = target.position().top - dragger.data('position').top + (target.outerHeight(true) - dragger.outerHeight(true)) / 2;
