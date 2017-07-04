@@ -1,4 +1,5 @@
 require 'rails_helper'
+RSpec::Matchers.define_negated_matcher :not_change, :change
 
 RSpec.describe Pawn, type: :model do
   let(:game) { FactoryGirl.create(:game) }
@@ -9,6 +10,23 @@ RSpec.describe Pawn, type: :model do
   let(:pawn_en_passant) { FactoryGirl.create(:pawn, column_coordinate: 2, row_coordinate: 4, game: game, color: 'white') }
   let!(:black_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
   let!(:white_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 0, color: 'white', is_on_board?: true) }
+  
+  describe '#promotion!' do
+    context 'pawn reaches opposite side of the board' do
+      it 'pawn promotes' do
+        pawn_black.update(row_coordinate: 1)
+        expect(pawn_black.move_to!(1, 0)).to change { pawn_black.type }
+      end
+    end
+
+    context 'pawn has not reached the opposite side' do
+      it 'should not promote the pawn' do
+        pawn_black.update(row_coordinate: 2)
+        expect(pawn_black.move_to!(1, 1)).to not_change { pawn_black.type }
+      end
+    end
+  end
+
   describe '#valid_move?' do
     it 'white pawn should be able to move one field up' do
       expect(pawn_white.valid_move?(1, 2)).to eq true
