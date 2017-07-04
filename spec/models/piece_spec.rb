@@ -1,10 +1,11 @@
 require 'rails_helper'
-
+RSpec::Matchers.define_negated_matcher :not_change, :change
 RSpec.describe Piece, type: :model do
   let(:game) { FactoryGirl.create(:game) }
-  let(:user) { FactoryGirl.create(:user, game: game) }
-  let(:piece_black) { FactoryGirl.create(:queen, color: 'black', game: game, column_coordinate: 4, row_coordinate: 4) }
-
+  let(:user) { FactoryGirl.create(:user) }
+  let!(:piece_black) { FactoryGirl.create(:queen, color: 'black', game: game, column_coordinate: 4, row_coordinate: 4) }
+  let!(:black_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
+  let!(:white_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 0, color: 'white', is_on_board?: true) }
   describe '#move_to_empty_space' do
     it 'moves to empty space' do
       expect(piece_black.move_to_empty_space(3, 5)).to eq true
@@ -12,6 +13,34 @@ RSpec.describe Piece, type: :model do
   end
 
   describe '#move_to!' do
+    context 'when moving to empty space places you in check' do
+      it 'returns error: This places you in check' do
+        white_bishop = FactoryGirl.create(:bishop, game: game, user: user, column_coordinate: 4, row_coordinate: 1, color: 'white', is_on_board?: true)
+        expect { white_bishop.move_to!(5, 0) }.to raise_error('This places you in check')
+      end
+    end
+    context 'when capturing a piece places you in check' do
+      let!(:piece_moving) { FactoryGirl.create(:bishop, game: game, user: user, column_coordinate: 4, row_coordinate: 1, color: 'white', is_on_board?: true) }
+      let!(:capture_piece) { FactoryGirl.create(:pawn, game: game, user: user, column_coordinate: 5, row_coordinate: 2, color: 'black', is_on_board?: true) }
+      it 'returns error: This places you in check' do
+        expect { piece_moving.move_to!(5, 2) }
+          .to raise_error('This places you in check')
+      end
+      it 'the captured piece is on board in same position' do
+        expect { piece_moving.move_to!(5, 2) }
+          .to raise_error('This places you in check')
+          .and not_change(capture_piece, :is_on_board?)
+          .and not_change(capture_piece, :column_coordinate)
+          .and not_change(capture_piece, :row_coordinate)
+      end
+      it 'the moving piece is on board in original position' do
+        expect { piece_moving.move_to!(5, 2) }
+          .to raise_error('This places you in check')
+          .and not_change(piece_moving, :is_on_board?)
+          .and not_change(piece_moving, :column_coordinate)
+          .and not_change(piece_moving, :row_coordinate)
+      end
+    end
     context 'when no piece is at destination coordinates' do
       it 'moves to the destination coordinates' do
         piece_black.move_to!(3, 5)
