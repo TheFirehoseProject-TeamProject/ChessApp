@@ -16,9 +16,9 @@
   <div class="row">
     <div id="turn" class="col-1 offset-1">
         <h4>Turn:</h4>
-        <h5 id= "white_player_id" class="white_turn"><%= ("White: " + @game.white_player.email)%></h5></br>
-        <h5 id= "black_player_id" class="black_turn"><%= ("Black: " + @game.black_player.email)%></h5></br>
-        <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )%>
+        <h5 id= "white_player_id" class="white_turn"><%= ("White: " + @game.white_player.email) unless @waiting%></h5></br>
+        <h5 id= "black_player_id" class="black_turn"><%= ("Black: " + @game.black_player.email) unless @waiting%></h5></br>
+        <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )unless @waiting%>
     </div>
     <div class="col-8">
       <% @board.reverse_each.with_index do |row, index_row| %>
@@ -46,7 +46,6 @@
   });
   var channel = pusher.subscribe('my-channel');
   channel.bind('second_player_joined', function(data) {
-    console.log('second player joined');
     if (!window.location.href.substring(window.location.href).match('loaded')) {
       window.location = window.location + '#loaded';
       window.location.reload();

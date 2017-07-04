@@ -32,7 +32,6 @@ class Game < ApplicationRecord
   end
 
   def checkmate?
-    reload
     return true if check? && !valid_move_possible
     false
   end
