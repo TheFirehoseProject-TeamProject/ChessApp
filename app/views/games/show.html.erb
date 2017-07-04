@@ -59,13 +59,9 @@
         pieceId = $(this).attr('id');
       });
       $(".chess_field").droppable({
-        classes: {
-          "ui-droppable-hover": "ui-state-hover"
-        },
         drop: function(event, ui) {
           let row = $(this).attr('row');
           let column = $(this).attr('column');
-          snapToMiddle(ui.draggable,$(this));
           $.ajax({type: "PUT",
                  url: "/pieces/" + pieceId,
                  data: {
