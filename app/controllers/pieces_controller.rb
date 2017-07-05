@@ -26,12 +26,12 @@ class PiecesController < ApplicationController
       change_turn
       @piece.move_to!(destination_x, destination_y)
       current_game.set_game_status
-      Pusher.trigger('my-channel2', 'piece_moved', message: flashmessages,
-                                                   turn: check_turn,
-                                                   row_destination: destination_y,
-                                                   column_destination: destination_x,
-                                                   row_origin: current_row,
-                                                   column_origin: current_column)
+      Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
+                                                                              turn: check_turn,
+                                                                              row_destination: destination_y,
+                                                                              column_destination: destination_x,
+                                                                              row_origin: current_row,
+                                                                              column_origin: current_column)
     else
       render plain: 'Invalid Move', status: :bad_request
     end

@@ -55,14 +55,15 @@
     cluster: 'ap1',
     encrypted: true
   });
-  var channel = pusher.subscribe('my-channel');
-  channel.bind('second_player_joined', function(data) {
+  var game = pusher.subscribe('game_<%="#{@game.id}"%>');
+  game.bind('second_player_joined', function(data) {
     if (!window.location.href.substring(window.location.href).match('loaded')) {
       window.location = window.location + '#loaded';
       window.location.reload();
     }
   });
-  var channel2 = pusher.subscribe('my-channel2');
+  var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>); 
+
   $(function() {
       makePiecesDraggable();
       let pieceId = 0;
@@ -90,7 +91,7 @@
       });
 
   });
-  channel2.bind('piece_moved', function(data) {
+  piece_moved_channel.bind('piece_moved', function(data) {
     // window.location.reload();
     let flashmessage = "<b><p class='text-center alert alert-info'>"+data.message+"</p></b>";
     $("#flashmessages").hide();

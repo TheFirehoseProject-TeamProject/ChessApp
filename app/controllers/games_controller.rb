@@ -19,7 +19,7 @@ class GamesController < ApplicationController
     current_game.update(black_player_id: current_user.id) if current_user.id != current_game.white_player_id
     current_game.populate_board! if current_game.black_player_id && current_game.white_player_id && current_game.empty_board?
     @waiting = current_game.black_player_id.nil? || current_game.white_player_id.nil? ? true : false
-    Pusher.trigger('my-channel', 'second_player_joined', message: 'second_player_joined') if @waiting == false
+    Pusher.trigger('game_' + @game.id.to_s, 'second_player_joined', message: 'second_player_joined') if @waiting == false
     @board = current_board
   end
 
