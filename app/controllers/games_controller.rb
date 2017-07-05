@@ -5,9 +5,13 @@ class GamesController < ApplicationController
 
   def new; end
 
+  def index
+    @available_games = Game.available
+  end
+
   def create
     @game = Game.create(white_player_id: current_user.id, turn: current_user.id)
-    redirect_to game_path(@game.id)
+    Pusher.trigger('static_page_channel', 'new_game_created', message: 'new_game_created')
   end
 
   def show

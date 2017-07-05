@@ -3,10 +3,10 @@ Rails.application.routes.draw do
   devise_scope :user do
     delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session_facebook
   end
-  root 'static_pages#index'
+  root 'games#index'
   post 'games/:id/play_against_yourself', to: 'games#play_against_yourself', as: 'play_against_yourself'
   resources :pieces, only: %i[update]
-  resources :games, only: %i[new create show update] do
+  resources :games, only: %i[new index create show update] do
     member do
       get :game_available
     end

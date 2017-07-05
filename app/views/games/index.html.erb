@@ -12,7 +12,17 @@
         <%end%>
       </div>
     <% end %>
-
     <h3 class='text-center'>Feel free to create a new Game: <%= link_to "Create Game",  games_path, method: :post, class: 'btn btn-primary' %></h3>
-
 </div>
+
+<script>
+  Pusher.logToConsole = true;
+  var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
+    cluster: 'ap1',
+    encrypted: true
+  });
+  var static_page_channel = pusher.subscribe('static_page_channel');
+  static_page_channel.bind('new_game_created',function(data) {
+      window.location.reload();
+  });
+</script>
