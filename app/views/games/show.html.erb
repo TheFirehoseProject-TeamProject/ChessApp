@@ -62,7 +62,7 @@
       window.location.reload();
     }
   });
-  var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>); 
+  var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
 
   $(function() {
       makePiecesDraggable();
@@ -92,7 +92,6 @@
 
   });
   piece_moved_channel.bind('piece_moved', function(data) {
-    // window.location.reload();
     let flashmessage = "<b><p class='text-center alert alert-info'>"+data.message+"</p></b>";
     $("#flashmessages").hide();
     $("#flashmessages").find("p").remove();
