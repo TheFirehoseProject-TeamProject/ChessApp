@@ -1,20 +1,25 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!, only: %i[show new create play_against_yourself]
-
+  skip_before_action :verify_authenticity_token, only: :show
   helper_method :current_game
 
   def new; end
 
+  def index
+    @available_games = Game.available
+  end
+
   def create
     @game = Game.create(white_player_id: current_user.id, turn: current_user.id)
-    redirect_to game_path(@game.id)
+    Pusher.trigger('static_page_channel', 'new_game_created', message: 'new_game_created')
   end
 
   def show
     @game = current_game
     current_game.update(black_player_id: current_user.id) if current_user.id != current_game.white_player_id
     current_game.populate_board! if current_game.black_player_id && current_game.white_player_id && current_game.empty_board?
-    @waiting = true if current_game.black_player_id.nil? || current_game.white_player_id.nil?
+    @waiting = current_game.black_player_id.nil? || current_game.white_player_id.nil? ? true : false
+    Pusher.trigger('game_' + @game.id.to_s, 'second_player_joined', message: 'second_player_joined') if @waiting == false
     @board = current_board
   end
 
