@@ -7,19 +7,22 @@ class GamesController < ApplicationController
 
   def index
     @available_games = Game.available
+    @games_started = Game.where(game_status: 0)
   end
 
   def create
     @game = Game.create(white_player_id: current_user.id, turn: current_user.id)
+    @game.update(game_status: -1)
     Pusher.trigger('static_page_channel', 'new_game_created', message: 'new_game_created')
   end
 
   def show
     @game = current_game
-    current_game.update(black_player_id: current_user.id) if current_user.id != current_game.white_player_id
+    current_game.update(black_player_id: current_user.id) if current_user.id != current_game.white_player_id && current_game.black_player_id.nil?
     current_game.populate_board! if current_game.black_player_id && current_game.white_player_id && current_game.empty_board?
     @waiting = current_game.black_player_id.nil? || current_game.white_player_id.nil? ? true : false
-    Pusher.trigger('game_' + @game.id.to_s, 'second_player_joined', message: 'second_player_joined') if @waiting == false
+    Pusher.trigger('game_' + @game.id.to_s, 'second_player_joined', message: 'second_player_joined') unless @waiting
+    current_game.set_game_status unless @waiting
     @board = current_board
   end
 

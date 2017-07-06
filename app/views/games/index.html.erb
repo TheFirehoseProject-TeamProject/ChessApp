@@ -1,21 +1,35 @@
 <br />
 <br />
 <div class='jumbotron col-10 offset-1 box'>
-  <h1 class='text-center'>Find a game to join</h1>
-
-    <% @available_games.each do |game| %>
-      <div class='booyah-box col-10 offset-1'>
-        <% if game.white_player%>
-          <li><%= link_to game.white_player.name + "'s game", "games/#{game.id}"%></li>
-        <% elsif game.black_player %>
-          <li><%= link_to game.black_player.name + "'s game", "games/#{game.id}"%></li>
-        <%end%>
-      </div>
-    <% end %>
+  <div id="available_games" style="overflow-y: scroll; height:200px;">
+    <h1 class='text-center'>Find a game to join</h1><br/>
+      <% if @available_games.present? %>
+        <h4 class="text-center"> Available Games to join: </h4>
+        <% @available_games.each do |game| %>
+          <div class='booyah-box col-10 offset-1'>
+            <% if game.white_player%>
+              <li><%= link_to game.white_player.name + "'s game", "games/#{game.id}"%></li>
+            <%end%>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <div id= "started_games" style="overflow-y: scroll; height:200px;">
+      <% if @games_started.present? %>
+        <h4 class="text-center"> Games that have started (you can join as a guest): </h4>
+        <% @games_started.each do |game| %>
+          <div class='booyah-box col-10 offset-1'>
+            <li><%= link_to game.white_player.name + " vs. " + game.black_player.name, "games/#{game.id}"%></li>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
     <h3 class='text-center'>Feel free to create a new Game: <%= link_to "Create Game",  games_path, method: :post, class: 'btn btn-primary' %></h3>
 </div>
 
 <script>
+$("#available_games").animate({ scrollTop: $(this).height() }, "slow");
+$("#started_games").animate({ scrollTop: $(this).height() }, "slow");
   Pusher.logToConsole = true;
   var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
     cluster: 'ap1',
