@@ -1,10 +1,10 @@
 <br />
 <br />
 <div class='jumbotron col-10 offset-1 box'>
-  <div id="available_games" style="overflow-y: scroll; height:200px;">
-    <h1 class='text-center'>Find a game to join</h1><br/>
-      <% if @available_games.present? %>
-        <h4 class="text-center"> Available Games to join: </h4>
+  <% if @available_games.present? %>
+      <h1 class='text-center'>Find a game to join</h1><br/>
+      <h4 class="text-center"> Available Games to join: </h4>
+      <div id="available_games" style="overflow-y: scroll; height:200px;">
         <% @available_games.each do |game| %>
           <div class='booyah-box col-10 offset-1'>
             <% if game.white_player%>
@@ -12,18 +12,18 @@
             <%end%>
           </div>
         <% end %>
-      <% end %>
-    </div>
-    <div id= "started_games" style="overflow-y: scroll; height:200px;">
+      </div>
+    <% end %>
       <% if @games_started.present? %>
         <h4 class="text-center"> Games that have started (you can join as a guest): </h4>
-        <% @games_started.each do |game| %>
-          <div class='booyah-box col-10 offset-1'>
-            <li><%= link_to game.white_player.name + " vs. " + game.black_player.name, "games/#{game.id}"%></li>
-          </div>
-        <% end %>
+        <div id= "started_games" style="overflow-y: scroll; height:200px;">
+          <% @games_started.each do |game| %>
+            <div class='booyah-box col-10 offset-1'>
+              <li><%= link_to game.white_player.name + " vs. " + game.black_player.name, "games/#{game.id}"%></li>
+            </div>
+          <% end %>
+        </div>
       <% end %>
-    </div>
     <h3 class='text-center'>Feel free to create a new Game: <%= link_to "Create Game",  games_path, method: :post, class: 'btn btn-primary' %></h3>
 </div>
 
