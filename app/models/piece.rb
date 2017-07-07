@@ -212,7 +212,8 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_down_left?(destination_y)
-    ((destination_y + 1)..(row_coordinate - 1)).each.with_index(1) do |row, index|
+    ((destination_y + 1)..(row_coordinate - 1)).to_a.reverse.each_with_index do |row, index|
+      index += 1
       present_pieces_check = game.pieces.where(row_coordinate: row, column_coordinate: column_coordinate - index).present?
       return true if present_pieces_check
     end
