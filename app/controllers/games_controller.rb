@@ -38,7 +38,7 @@ class GamesController < ApplicationController
 
   helper_method :current_piece
   def current_piece
-    @piece = Piece.find(params[:piece_id])
+    @piece ||= @game.pieces.find(params[:piece_id])
   end
 
   def current_board
