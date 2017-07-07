@@ -1,10 +1,23 @@
-
+<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 <script>
-$(function() {
+  $(function() {
+    $("#flashmessages").hide();
     $("body").css("background", "url('/assets/board_background.png')");
+    change_turn("<%= @game.turn == @game.white_player_id ? 'black' : 'white' %>");
   });
+  function change_turn(turn) {
+    if (turn === 'white') {
+      $('#white_player_id').hide();
+      $('#black_player_id').show();
+     }
+    else
+    {
+      $('#black_player_id').hide();
+      $('#white_player_id').show();
+    }
+  }
 </script>
-
+<div id="flashmessages"></div>
 <div class="chessboard <%= "waiting" if @waiting %>">
   <div class='text-center'>
     <h3><%= link_to "Play against yourself", play_against_yourself_path, class: 'btn btn-info',method: :post if @waiting%></h3>
@@ -12,11 +25,11 @@ $(function() {
   </div>
   <br />
   <div class="row">
-    <div id="whiteplayer" class="col-2 text-center">
-      <% if user_signed_in? && @game.turn == @game.white_player.id && !@waiting %>
-        <h5>White Player's Turn</h5>
-        <%= image_tag gravatar_for(@game.white_player.email), alt: "@game.white_player.email" %>
-      <% end %>
+    <div id="turn" class="col-1 offset-1">
+        <h4>Turn:</h4>
+        <h5 id= "white_player_id" class="white_turn"><%= ("White: " + @game.white_player.name) unless @waiting%></h5></br>
+        <h5 id= "black_player_id" class="black_turn"><%= ("Black: " + @game.black_player.name) unless @waiting%></h5></br>
+        <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )unless @waiting%>
     </div>
     <div class="col-8">
       <% @board.reverse_each.with_index do |row, index_row| %>
@@ -31,12 +44,6 @@ $(function() {
             <%end%>
           </div>
       <%end%>
-    </div>
-    <div id="blackplayer" class="col-2 text-center">
-      <% if user_signed_in? && !@waiting && @game.turn == @game.black_player.id %>
-        <h5>Black Player's Turn</h5>
-        <%= image_tag gravatar_for(@game.black_player.email), alt: "@game.black_player.email" %>
-      <% end %>
     </div>
     <br class="clear"/>
   </div>
@@ -68,28 +75,28 @@ $(function() {
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
+  Pusher.logToConsole = true;
+  var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
+    cluster: 'ap1',
+    encrypted: true
+  });
+  var game = pusher.subscribe('game_<%="#{@game.id}"%>');
+  game.bind('second_player_joined', function(data) {
+    if (!window.location.href.substring(window.location.href).match('loaded')) {
+      window.location = window.location + '#loaded';
+      window.location.reload();
+    }
+  });
+  var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
 
   $(function() {
-      // $("body").css("background","white" );
-      $(".chessboard .piece").draggable({
-        opacity: .4,
-        create: function(){$(this).data('position',$(this).position())},
-        cursorAt:{left:15},
-        cursor:'move',
-        start:function(){$(this).stop(true,true)}
-      });
-
+      makePiecesDraggable();
       let pieceId = 0;
       $(".piece").mousedown(function(){
         pieceId = $(this).attr('id');
       });
-
       $(".chess_field").droppable({
-        classes: {
-          "ui-droppable-hover": "ui-state-hover"
-        },
         drop: function(event, ui) {
-          snapToMiddle(ui.draggable,$(this));
           let row = $(this).attr('row');
           let column = $(this).attr('column');
           $.ajax({type: "PUT",
@@ -101,6 +108,7 @@ $(function() {
                       id: pieceId
                       }
                  },
+<<<<<<< HEAD
                 error: function(xhr, status) {
                     if (xhr.status === 500 || xhr.status === 400){}
                     window.location.reload();
@@ -111,29 +119,41 @@ $(function() {
                       jQuery("#pawnPromotion").modal('show');
                     }
                   window.location = window.location + '#loaded'; }
+=======
+                 error: function(){
+                   window.location.reload();
+                 }
+>>>>>>> restrict_piece_movement
           });
         }
       });
-      function snapToMiddle(dragger, target){
-        var topMove = target.position().top - dragger.data('position').top + (target.outerHeight(true) - dragger.outerHeight(true)) / 2;
-        var leftMove= target.position().left - dragger.data('position').left + (target.outerWidth(true) - dragger.outerWidth(true)) / 2;
-        dragger.animate({top:topMove,left:leftMove},{duration:100,easing:'easeOutBack'});
-      }
-      let response = "default";
-      let url = window.location.href;
-      let gameId = Number(url.substring(url.lastIndexOf('/') + 1).match(/\d+/)[0]);
-      if(url.indexOf("#loaded") === -1) {
-              let id = setInterval(checkGameAvailable, 4000);
-              function checkGameAvailable () {
-                        let response = $.ajax({type: "GET", url: gameId +"/game_available", async: false}).responseText;
-                        if (response === "false") {
-                            clearInterval(id);
-                            // reloading the page once to populate the board for the person who was waiting for a player
-                            window.location = window.location + '#loaded';
-                            window.location.reload();
-                          }
-              };
-      }
 
   });
+  piece_moved_channel.bind('piece_moved', function(data) {
+    let flashmessage = "<b><p class='text-center alert alert-info'>"+data.message+"</p></b>";
+    $("#flashmessages").hide();
+    $("#flashmessages").find("p").remove();
+    if (data.message) {
+      $("#flashmessages").show();
+      $("#flashmessages").append(flashmessage);
+     };
+    let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
+    $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
+    $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
+    $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
+    piece.css('top', '');
+    piece.css('left', '');
+    makePiecesDraggable();
+    change_turn(data.turn);
+  });
+
+  function makePiecesDraggable(){
+    $(".chessboard .piece").draggable({
+      opacity: .4,
+      create: function(){$(this).data('position',$(this).position())},
+      cursorAt:{left:15},
+      cursor:'move',
+      start:function(){$(this).stop(true,true)}
+    });
+  };
 </script>

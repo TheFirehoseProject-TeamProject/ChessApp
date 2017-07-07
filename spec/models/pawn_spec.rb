@@ -10,7 +10,7 @@ RSpec.describe Pawn, type: :model do
   let(:pawn_en_passant) { FactoryGirl.create(:pawn, column_coordinate: 2, row_coordinate: 4, game: game, color: 'white') }
   let!(:black_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
   let!(:white_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 0, color: 'white', is_on_board?: true) }
-  
+
   describe '#promote!' do
     context 'pawn reaches opposite side of the board' do
       let(:game_pp) { FactoryGirl.create(:game) }
@@ -18,9 +18,9 @@ RSpec.describe Pawn, type: :model do
       let(:pawn) { FactoryGirl.create(:pawn, game: game_pp, column_coordinate: 1, row_coordinate: 6, is_on_board?: true, color: 'white') }
       let!(:king_w) { FactoryGirl.create(:king, game: game_pp, column_coordinate: 7, row_coordinate: 0, is_on_board?: true, color: 'white') }
       let!(:black_king) { FactoryGirl.create(:king, game: game_pp, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
-      
+
       it 'pawn promotes' do
-        
+
         pawn_black.update(row_coordinate: 1)
         expect{ pawn_black.move_to!(1, 0) }.to change { pawn_black.type }
         byebug
