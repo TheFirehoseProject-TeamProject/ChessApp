@@ -228,11 +228,7 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_down_right?(destination_y)
-<<<<<<< Updated upstream
     ((destination_y + 1)..(row_coordinate - 1)).each.with_index(1) do |_row, index|
-=======
-    ((destination_y + 1)..(row_coordinate - 1)).each.with_index(1) do |row, index|
->>>>>>> Stashed changes
       present_pieces_check = game.pieces.where(row_coordinate: row_coordinate - index, column_coordinate: column_coordinate + index).present?
       return true if present_pieces_check
     end

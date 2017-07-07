@@ -105,16 +105,28 @@
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
-    if (data.type === 'King' && data.column_destination === '6' && data.row_destination === data.row_origin && data.column_origin === '4'){
-      let rock = $("[row = 0][column = 7]").find("span");
-      $("[row = 0][column = 5]").append(rock);
-      $("[row = 0][column = 7]").find("span").remove();
-      rock.css('top', '');
-      rock.css('left', '');
-    }
+    castling(data);
     makePiecesDraggable();
     change_turn(data.turn);
   });
+
+  function castling(data){
+    let rook_row = 0;
+    let rook_column = 0;
+    (data.color === "white") ?  rook_row = 0 : rook_row = 7;
+    (data.column_destination === 6) ? rook_column = 7 : rook_column = 0;
+    let rook = $("[row =" + rook_row + "][column =" + rook_column + "]").find("span");
+    if (data.type === "King" && data.column_destination === 6 && data.row_destination === data.row_origin && data.column_origin === 4){
+      $("[row =" + rook_row + "][column = 5]").append(rook);
+      $("[row =" + rook_row + "][column =" + rook_column + "]").find("span").remove();
+    }
+    if (data.type === "King" && data.column_destination === 2 && data.row_destination === data.row_origin && data.column_origin === 4){
+      $("[row =" + rook_row + "][column = 3]").append(rook);
+      $("[row =" + rook_row + "][column =" + rook_column + "]").find("span").remove();
+    }
+    rook.css('top', '');
+    rook.css('left', '');
+  };
 
   function makePiecesDraggable(){
     $(".chessboard .piece").draggable({
