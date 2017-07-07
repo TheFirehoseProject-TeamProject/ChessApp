@@ -44,11 +44,6 @@ class GamesController < ApplicationController
 
   private
 
-  helper_method :current_piece
-  def current_piece
-    @piece = Piece.find(params[:piece_id])
-  end
-
   def current_board
     pieces = current_game.pieces
     board = Array.new(8) { Array.new(8) { { piece: nil } } }

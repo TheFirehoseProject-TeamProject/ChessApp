@@ -58,15 +58,6 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="pawnPromotionLabel">Choose a Piece</h4>
         </div>
-        <%= simple_form_for current_piece, url: piece_path(current_piece.id) do |f| %>
-          <div class="modal-body">
-            <%= f.input :type %>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <%= f.submit "Choose your piece", class: "btn btn-primary" %>
-          </div>
-        <% end %>
       </div>
     </div>
   </div>

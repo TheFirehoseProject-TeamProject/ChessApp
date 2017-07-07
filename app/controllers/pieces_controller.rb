@@ -1,16 +1,12 @@
 class PiecesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :update
-  
-  
+
   def update
     @piece = Piece.find(params[:id])
     checks_before_move
   end
 
   private
-
-  
-  
 
   def current_game
     @current_game ||= Game.find(@piece.game_id)
