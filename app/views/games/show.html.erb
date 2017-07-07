@@ -105,6 +105,13 @@
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
+    if (data.type === 'King' && data.column_destination === '6' && data.row_destination === data.row_origin && data.column_origin === '4'){
+      let rock = $("[row = 0][column = 7]").find("span");
+      $("[row = 0][column = 5]").append(rock);
+      $("[row = 0][column = 7]").find("span").remove();
+      rock.css('top', '');
+      rock.css('left', '');
+    }
     makePiecesDraggable();
     change_turn(data.turn);
   });
