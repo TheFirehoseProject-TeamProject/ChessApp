@@ -28,6 +28,7 @@ class PiecesController < ApplicationController
       current_game.set_game_status
       Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
                                                                               turn: check_turn,
+                                                                              type: @piece.type,
                                                                               row_destination: destination_y,
                                                                               column_destination: destination_x,
                                                                               row_origin: current_row,
