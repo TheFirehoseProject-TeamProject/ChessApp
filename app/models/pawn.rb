@@ -24,7 +24,7 @@ class Pawn < Piece
         pawn_to_capture.update(column_coordinate: destination_x, row_coordinate: destination_y)
         raise 'This places you in check'
       end
-    elsif destination_y == 0 || destination_y == 7
+    elsif destination_y.zero? || destination_y == 7
       if find_destination_piece(destination_x, destination_y)
         destination_piece = find_destination_piece(destination_x, destination_y)
         move_to_destination_and_capture!(destination_piece, destination_x, destination_y)
@@ -44,7 +44,7 @@ class Pawn < Piece
           promote!
         end
       end
-    else  
+    else
       super
     end
   end
@@ -52,7 +52,7 @@ class Pawn < Piece
   private
 
   def promote!
-    byebug
+    # byebug
     update(type: 'Queen')
   end
 

@@ -22,19 +22,30 @@ class PiecesController < ApplicationController
     destination_y = piece_params[:row_coordinate].to_i
     current_row = @piece.row_coordinate
     current_column = @piece.column_coordinate
+    current_piece_type = @piece.type
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       change_turn
       @piece.move_to!(destination_x, destination_y)
+      if (@piece.row_coordinate.zero? && @piece.type == 'Pawn') || (@piece.row_coordinate == 7 && @piece.type == 'Pawn')
+        pawn_promotion
+      end
       current_game.set_game_status
       Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
                                                                               turn: check_turn,
                                                                               row_destination: destination_y,
                                                                               column_destination: destination_x,
                                                                               row_origin: current_row,
-                                                                              column_origin: current_column)
+                                                                              column_origin: current_column,
+                                                                              type: current_piece_type)
     else
       render plain: 'Invalid Move', status: :bad_request
+    end
+  end
+
+  def pawn_promotion
+    respond_to do |format|
+      format.gameShow.js { render :partial => 'app/assets/javascripts/gameShow.js' }
     end
   end
 

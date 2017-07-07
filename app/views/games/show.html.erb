@@ -50,7 +50,7 @@
 </div>
 
 <!-- Modal for pawn promotion-->
-<% if @game.game_status == 0 %>
+<!-- <% if @game.game_status == 0 %> -->
   <div class="modal fade" id="pawnPromotion" tabindex="-1" role="dialog" aria-labelledby="pawnPromotionLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -61,8 +61,9 @@
       </div>
     </div>
   </div>
-<% end %>
+<!-- <% end %> -->
 
+<!-- <button data-toggle="modal" data-target="#pawnPromotion">Test</button> -->
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
@@ -99,22 +100,19 @@
                       id: pieceId
                       }
                  },
-<<<<<<< HEAD
-                error: function(xhr, status) {
-                    if (xhr.status === 500 || xhr.status === 400){}
-                    window.location.reload();
-                    },
-                success: function(data) {
-                  if (data.piece.type === 'Pawn' && (data.piece.row_coordinate === 7 || data.piece.row_coordinate === 0)) {
-                      $("#pawnPromotion").html(data);
-                      jQuery("#pawnPromotion").modal('show');
-                    }
-                  window.location = window.location + '#loaded'; }
-=======
+                // error: function(xhr, status) {
+                //     if (xhr.status === 500 || xhr.status === 400){}
+                //     window.location.reload();
+                //     },
+                // success: function(data) {
+                //   if (data.piece.type === 'Pawn' && (data.piece.row_coordinate === 7 || data.piece.row_coordinate === 0)) {
+                //       $("#pawnPromotion").html(data);
+                //       jQuery("#pawnPromotion").modal('show');
+                //     }
+                //   window.location = window.location + '#loaded'; }
                  error: function(){
                    window.location.reload();
                  }
->>>>>>> restrict_piece_movement
           });
         }
       });
@@ -128,12 +126,16 @@
       $("#flashmessages").show();
       $("#flashmessages").append(flashmessage);
      };
+     $('#pawnPromotion').modal('toggle');
     let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
+    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
+      $('#pawnPromotion').modal('toggle');
+    };
     makePiecesDraggable();
     change_turn(data.turn);
   });
@@ -142,7 +144,6 @@
     $(".chessboard .piece").draggable({
       opacity: .4,
       create: function(){$(this).data('position',$(this).position())},
-      cursorAt:{left:15},
       cursor:'move',
       start:function(){$(this).stop(true,true)}
     });
