@@ -27,7 +27,9 @@ class GamesController < ApplicationController
   end
 
   def play_against_yourself
-    current_game.update(black_player_id: current_user.id)
+    email = 'email' + Time.now.to_i.to_s + '@fake.com'
+    @fake_user = User.create(name: current_user.name, email: email, password: '123456', password_confirmation: '123456')
+    current_game.update(black_player_id: @fake_user.id)
     redirect_to game_path(current_game.id)
   end
 

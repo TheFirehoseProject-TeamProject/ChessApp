@@ -46,7 +46,7 @@ class PiecesController < ApplicationController
   end
 
   def check_turn
-    return false unless @piece.user_id == current_user.id
+    return false unless @piece.user_id == current_user.id || @piece.game.playing_against_yourself?
     return 'white' if @piece.game.turn == current_game.white_player.id && @piece.color == 'white'
     return 'black' if @piece.game.turn == current_game.black_player.id && @piece.color == 'black'
     false
