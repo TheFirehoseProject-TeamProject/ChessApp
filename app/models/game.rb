@@ -14,6 +14,11 @@ class Game < ApplicationRecord
     update(game_status: 3) if check?
   end
 
+  def playing_against_yourself?
+    return true if black_player.email.include?('@fake.com') && black_player.name == white_player.name
+    false
+  end
+
   def check?
     pieces.where(color: color_opponent).find_each do |piece|
       color_king = color_opponent == 'white' ? 'black' : 'white'
