@@ -27,17 +27,25 @@ class PiecesController < ApplicationController
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       change_turn
       @piece.move_to!(destination_x, destination_y)
-      if (@piece.row_coordinate.zero? && @piece.type == 'Pawn') || (@piece.row_coordinate == 7 && @piece.type == 'Pawn')
-        pawn_promotion
-      end
       current_game.set_game_status
-      Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
-                                                                              turn: check_turn,
-                                                                              row_destination: destination_y,
-                                                                              column_destination: destination_x,
-                                                                              row_origin: current_row,
-                                                                              column_origin: current_column,
-                                                                              type: current_piece_type)
+      if (@piece.destination_y.zero? && current_piece_type == 'Pawn') || (@piece.destination_y == 7 && current_piece_type == 'Pawn')
+        # Pusher.trigger('pawn_promote_game' + @piece.game.id.to_s, 'pawn_promoted', message: flashmessages,
+        #                                                                            turn: check_turn,
+        #                                                                            row_destination: destination_y,
+        #                                                                            column_destination: destination_x,
+        #                                                                            row_origin: current_row,
+        #                                                                            column_origin: current_column,
+        #                                                                            type: current_piece_type)
+        pawn_promotion
+      else
+        Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
+                                                                                turn: check_turn,
+                                                                                row_destination: destination_y,
+                                                                                column_destination: destination_x,
+                                                                                row_origin: current_row,
+                                                                                column_origin: current_column,
+                                                                                type: current_piece_type)
+      end
     else
       render plain: 'Invalid Move', status: :bad_request
     end
@@ -45,7 +53,7 @@ class PiecesController < ApplicationController
 
   def pawn_promotion
     respond_to do |format|
-      format.gameShow.js { render :partial => 'app/assets/javascripts/gameShow.js' }
+      format.gameShow.js { render :js => 'app/assets/javascripts/gameShow.js' }
     end
   end
 

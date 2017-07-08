@@ -68,6 +68,9 @@
 
 <script>
   Pusher.logToConsole = true;
+  Pusher.log = function(msg) {
+  console.log(msg);
+};
   var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
     cluster: 'ap1',
     encrypted: true
@@ -79,6 +82,7 @@
       window.location.reload();
     }
   });
+  // var pawn_promote_channel = pusher.subscribe('pawn_promote_game' + <%= @game.id.to_s %>);
   var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
 
   $(function() {
@@ -126,19 +130,23 @@
       $("#flashmessages").show();
       $("#flashmessages").append(flashmessage);
      };
-     $('#pawnPromotion').modal('toggle');
+    //  $('#pawnPromotion').modal('toggle');
     let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
+    console.log(piece);
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
-    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
+    if (data.row_destination == 0 && piece.type == 'Pawn' || data.row_destination == 7 && piece.type == 'Pawn') {
       $('#pawnPromotion').modal('toggle');
     };
     makePiecesDraggable();
     change_turn(data.turn);
   });
+  // pawn_promote_channel.bind('pawn_promoted', function(data) {
+  //   console.log('test');
+  // });
 
   function makePiecesDraggable(){
     $(".chessboard .piece").draggable({
