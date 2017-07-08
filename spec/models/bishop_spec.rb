@@ -4,6 +4,7 @@ RSpec.describe Bishop, type: :model do
   let(:game) { FactoryGirl.create(:game) }
   let(:user) { FactoryGirl.create(:user) }
   let(:bishop) { FactoryGirl.create(:bishop, :is_on_board) }
+  let(:pawn) { FactoryGirl.create(:pawn, :is_on_board) }
   describe 'movement of bishop' do
     it 'should move diagonally up and left' do
       expect(bishop.valid_move?(2, 4)).to eq true
