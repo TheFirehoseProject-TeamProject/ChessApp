@@ -25,13 +25,15 @@
   </div>
   <br />
   <div class="row">
-    <div id="turn" class="col-1 offset-1">
+    <div id="turn" class="col-lg-1 col-md-12 text-center offset-1">
         <h4>Turn:</h4>
         <h5 id= "white_player_id" class="white_turn"><%= ("White: " + @game.white_player.name) unless @waiting%></h5></br>
         <h5 id= "black_player_id" class="black_turn"><%= ("Black: " + @game.black_player.name) unless @waiting%></h5></br>
         <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )unless @waiting%>
     </div>
-    <div class="col-8">
+    <br class="clear"/>
+    <br class="clear"/>
+    <div class="col-lg-8 col-md-12 table">
       <% @board.reverse_each.with_index do |row, index_row| %>
           <%index_row = @board.length - index_row - 1 %>
           <div class = "row offset-2">
