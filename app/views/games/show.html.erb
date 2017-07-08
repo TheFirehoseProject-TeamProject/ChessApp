@@ -123,6 +123,9 @@
     piece.css('top', '');
     piece.css('left', '');
     castling(data);
+    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
+      $("#promo_button").click();
+    };
     makePiecesDraggable();
     change_turn(data.turn);
   });
@@ -141,9 +144,6 @@
       $("[row =" + rook_row + "][column = 3]").append(rook);
       $("[row =" + rook_row + "][column =" + rook_column + "]").find("span").remove();
     }
-    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
-      $("#promo_button").click();
-    };
     rook.css('top', '');
     rook.css('left', '');
   };
