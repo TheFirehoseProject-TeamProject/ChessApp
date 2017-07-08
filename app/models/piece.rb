@@ -204,8 +204,7 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_up_right?(destination_y)
-    ((row_coordinate + 1)..(destination_y - 1)).each_with_index do |row, index|
-      index += 1
+    ((row_coordinate + 1)..(destination_y - 1)).each.with_index(1) do |row, index|
       present_pieces_check = game.pieces.where(row_coordinate: row, column_coordinate: column_coordinate + index).present?
       return true if present_pieces_check
     end
@@ -222,8 +221,7 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_up_left?(destination_y)
-    ((row_coordinate + 1)..(destination_y - 1)).each_with_index do |row, index|
-      index += 1
+    ((row_coordinate + 1)..(destination_y - 1)).each.with_index(1) do |row, index|
       present_pieces_check = game.pieces.where(row_coordinate: row, column_coordinate: column_coordinate - index).present?
       return true if present_pieces_check
     end
@@ -231,9 +229,8 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_down_right?(destination_y)
-    ((destination_y + 1)..(row_coordinate - 1)).to_a.reverse.each_with_index do |row, index|
-      index += 1
-      present_pieces_check = game.pieces.where(row_coordinate: row, column_coordinate: column_coordinate + index).present?
+    ((destination_y + 1)..(row_coordinate - 1)).each.with_index(1) do |_row, index|
+      present_pieces_check = game.pieces.where(row_coordinate: row_coordinate - index, column_coordinate: column_coordinate + index).present?
       return true if present_pieces_check
     end
     false
