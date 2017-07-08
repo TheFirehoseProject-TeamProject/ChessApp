@@ -66,7 +66,6 @@ class Piece < ApplicationRecord
   def move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
     update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
     remove_piece(pawn_to_capture)
-    game.update(piece_capturable_by_en_passant: '')
   end
 
   def move_to_empty_space(destination_x, destination_y)

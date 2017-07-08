@@ -47,6 +47,7 @@ class Game < ApplicationRecord
   end
 
   def valid_move_possible
+    reload
     pieces.where(color: color_current_turn).find_each do |piece|
       0..8.times do |row|
         0..8.times do |column|

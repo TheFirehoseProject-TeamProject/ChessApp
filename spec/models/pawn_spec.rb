@@ -77,6 +77,14 @@ RSpec.describe Pawn, type: :model do
       pawn_black.reload
       expect(pawn_black).to have_attributes(column_coordinate: -1, row_coordinate: -1, is_on_board?: false)
     end
+    it 'should reset en_passant flag after en_passant move' do
+      pawn_en_passant
+      pawn_black.move_to!(1, 4)
+      pawn_en_passant.move_to!(1, 5)
+      pawn_black.reload
+      expect(pawn_black).to have_attributes(column_coordinate: -1, row_coordinate: -1, is_on_board?: false)
+      expect(game.piece_capturable_by_en_passant).to eq nil
+    end
     it 'should not move if no en passant situation and trying to move en passant' do
       pawn_en_passant.move_to!(1, 5)
       expect(pawn_en_passant.valid_move?(1, 5)).to eq false

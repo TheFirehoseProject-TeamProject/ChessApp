@@ -64,8 +64,6 @@
 <!-- <% end %> -->
 
 <button id="promo_button" style="display: none;" data-toggle="modal" data-target="#pawnPromotion">Test</button>
-<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
-
 <script>
   Pusher.logToConsole = true;
   var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
@@ -123,10 +121,19 @@
     piece.css('top', '');
     piece.css('left', '');
     castling(data);
+    en_passant(data);
+    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
+      $("#promo_button").click();
+    };
     makePiecesDraggable();
     change_turn(data.turn);
   });
 
+  function en_passant(data) {
+    if (data.type === 'Pawn' && data.column_destination != data.column_origin && !data.destiantion_piece) {
+      $(".chessboard").find($("span #" + data.en_passant_id)).remove();
+    }
+  }
   function castling(data){
     let rook_row = 0;
     let rook_column = 0;
@@ -141,9 +148,6 @@
       $("[row =" + rook_row + "][column = 3]").append(rook);
       $("[row =" + rook_row + "][column =" + rook_column + "]").find("span").remove();
     }
-    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
-      $("#promo_button").click();
-    };
     rook.css('top', '');
     rook.css('left', '');
   };
