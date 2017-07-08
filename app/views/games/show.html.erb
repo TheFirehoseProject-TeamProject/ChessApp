@@ -1,4 +1,5 @@
 <h3><%= link_to "Play against yourself", play_against_yourself_path, method: :post if @waiting%></h3>
+<h3><%= link_to "My Dashboard", dashboard_path, method: :post %></h3>
 <div class="chessboard <%= "waiting" if @waiting %>">
   <% @board.reverse_each.with_index do |row, index_row| %>
       <%index_row = @board.length - index_row - 1 %>

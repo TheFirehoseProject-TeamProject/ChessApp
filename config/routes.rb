@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   root 'static_pages#index'
   post 'games/:id/play_against_yourself', to: 'games#play_against_yourself', as: 'play_against_yourself'
   resources :pieces, only: %i[update]
+  resources :dashboard, only: :show
   resources :games, only: %i[new create show update] do
     member do
       get :game_available

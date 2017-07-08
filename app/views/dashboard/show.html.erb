@@ -1,0 +1,70 @@
+<div class='dashboard-container'>
+  <div class='dashboard-display'>
+    <group>
+      <h2>Dashboard</h2>
+      <h4 class = 'subheader'><%= current_user.id %></h4>
+    </group>
+    <section class = 'games-display'>
+      </hr>
+      <% if player_signed_in? %>
+        <section class = 'my-games'>
+          <% if @current_matches.present? %>
+            <h3>Current Matches</h3>
+          <% end %>
+          <ul class='game-list'>
+            <%if @current_matches.present? %>
+              <h4>My move</h4>
+            <% end %>
+            <% @current_matches.each do |game| %>
+            <% if game.turn == current_user.id %>
+            <li class = 'game-list-item'>
+              <%= render partial: 'shared/game_info',
+                locals: {
+                  game: game
+                } %>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+        <ul class = 'game-list'>
+          <%if @current_matches.present? %>
+            <h4>Opponents turn</h4>
+          <% end %>
+          <% @current_matches.each do |game| %>
+            <% if game.turn != current_user.id && game.turn != nil %>
+              <li class = 'game-list-item'>
+                <%= renger partial: 'shared/game_info',
+                  locals: {
+                    game: game
+                  } %>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </section>
+        <section class = 'open-matches'>
+          <% if @open_matches.present? %>
+            <h4>Open Matches</h4>
+          <% end %>
+          <ul class = 'game-list' >
+          <% @open_matches.each do |game| %>
+            <li class = 'game-list-item'>
+              <h5>
+                <%= link_to game.name, game_path(game) %>
+              </h5>
+              <p>
+                <%= current_user.email(game.white_player_id) %> 
+                vs. 
+                <%= simple_form_for game, :method => :put do |f| %>
+                  <%= f.input :black_player_id, :as => hidden, :input_html => { :value => current_player.id } %>
+                  <%= f.submit 'Join Game' %>
+                  <% end %>
+                </p>
+              </li>
+            <% end %>
+          </ul>
+        </section>
+      <% end %>
+    </section>
+  </div>
+</div>
