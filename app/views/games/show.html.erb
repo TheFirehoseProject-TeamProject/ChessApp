@@ -49,6 +49,23 @@
   </div>
 </div>
 
+<!-- Modal for pawn promotion-->
+<!-- <% if @game.game_status == 0 %> -->
+  <div class="modal fade" id="pawnPromotion" tabindex="-1" role="dialog" aria-labelledby="pawnPromotionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="pawnPromotionLabel">Choose a Piece</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- <% end %> -->
+
+<button id="promo_button" style="display: none;" data-toggle="modal" data-target="#pawnPromotion">Test</button>
+<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
+
 <script>
   Pusher.logToConsole = true;
   var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
@@ -124,6 +141,9 @@
       $("[row =" + rook_row + "][column = 3]").append(rook);
       $("[row =" + rook_row + "][column =" + rook_column + "]").find("span").remove();
     }
+    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
+      $("#promo_button").click();
+    };
     rook.css('top', '');
     rook.css('left', '');
   };
