@@ -23,8 +23,8 @@ class PiecesController < ApplicationController
     current_column = @piece.column_coordinate
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
-      change_turn
       @piece.move_to!(destination_x, destination_y)
+      change_turn
       current_game.set_game_status
       Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
                                                                               turn: check_turn,
