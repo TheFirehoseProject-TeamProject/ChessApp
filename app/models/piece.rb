@@ -10,6 +10,33 @@ class Piece < ApplicationRecord
     %w[white black]
   end
 
+  def castle?(rook_column_coordinate, rook_row_coordinate)
+    rook = game.pieces.find_by(column_coordinate: rook_column_coordinate, row_coordinate: rook_row_coordinate)
+    return false if moved?
+    return false if rook.moved?
+    return false if obstructed?(rook_column_coordinate, rook_row_coordinate)
+    return false if game.check?
+    if rook_column_coordinate == 7
+      while column_coordinate < rook_column_coordinate
+        update(column_coordinate: column_coordinate + 1)
+        if game.check?
+          update(column_coordinate: 4)
+          return false
+        end
+      end
+    end
+    if rook_column_coordinate.zero?
+      while column_coordinate > rook_column_coordinate + 1
+        update(column_coordinate: column_coordinate - 1)
+        if game.check?
+          update(column_coordinate: 4)
+          return false
+        end
+      end
+    end
+    true
+  end
+
   def move_to!(destination_x, destination_y)
     original_column = column_coordinate
     original_row = row_coordinate
@@ -29,6 +56,7 @@ class Piece < ApplicationRecord
         raise 'This places you in check'
       end
     end
+    update(moved?: true)
   end
 
   def find_destination_piece(destination_x, destination_y)

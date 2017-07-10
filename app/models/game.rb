@@ -14,6 +14,11 @@ class Game < ApplicationRecord
     update(game_status: 3) if check?
   end
 
+  def playing_against_yourself?
+    return true if black_player.email.include?('@fake.com') && black_player.name == white_player.name
+    false
+  end
+
   def check?
     pieces.where(color: color_opponent).find_each do |piece|
       color_king = color_opponent == 'white' ? 'black' : 'white'
@@ -48,10 +53,12 @@ class Game < ApplicationRecord
           next if !piece.valid_move?(column, row) ||
                   (column == piece.column_coordinate && row == piece.row_coordinate) ||
                   piece.obstructed?(column, row)
+
           original_column = piece.column_coordinate
           original_row = piece.row_coordinate
           en_passant_status = piece_capturable_by_en_passant
           destination_piece = piece.find_destination_piece(column, row)
+
           begin
             piece.move_to!(column, row)
           rescue
