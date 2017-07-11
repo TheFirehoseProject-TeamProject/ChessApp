@@ -111,13 +111,9 @@ RSpec.describe Pawn, type: :model do
     context 'when capturing a piece w/ en passant places you in check' do
       it 'returns error: This places you in check' do
         black_pawn.move_to!(4, 4)
-        expect { white_pawn.move_to!(4, 5) }
-          .to raise_error('This places you in check')
-          .and not_change(white_pawn, :column_coordinate)
-          .and not_change(white_pawn, :row_coordinate)
-          .and not_change(black_pawn, :is_on_board?)
-          .and not_change(black_pawn, :column_coordinate)
-          .and not_change(black_pawn, :row_coordinate)
+        expect { white_pawn.move_to!(4, 5) }.to raise_error('This places you in check')
+        expect(white_pawn).to have_attributes(column_coordinate: 3, row_coordinate: 4)
+        expect(black_pawn).to have_attributes(column_coordinate: 4, row_coordinate: 4, is_on_board?: true)
       end
     end
   end

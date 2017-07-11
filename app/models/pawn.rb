@@ -16,15 +16,17 @@ class Pawn < Piece
     original_column = column_coordinate
     original_row = row_coordinate
     save_piece_capturable_by_en_passant(destination_x, destination_y)
-    en_passant_flag = game.piece_capturable_by_en_passant
+    en_passant_id = game.piece_capturable_by_en_passant
     if en_passant_move?(destination_x, destination_y)
       pawn_to_capture = find_en_passant_pawn_to_capture(destination_x, destination_y)
+      en_passant_piece_row = pawn_to_capture.row_coordinate if en_passant_id.present?
+      en_passant_piece_column = pawn_to_capture.column_coordinate if en_passant_id.present?
       move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
       game.update(piece_capturable_by_en_passant: '')
       if game.check?
         update(column_coordinate: original_column, row_coordinate: original_row)
-        pawn_to_capture.update(column_coordinate: destination_x, row_coordinate: destination_y)
-        game.update(piece_capturable_by_en_passant: en_passant_flag)
+        game.restore_en_passant_piece(en_passant_piece_row, en_passant_piece_column, en_passant_id) if en_passant_id.present?
+        game.update(piece_capturable_by_en_passant: en_passant_id)
         raise 'This places you in check'
       end
     else
@@ -65,6 +67,7 @@ class Pawn < Piece
   def en_passant_move?(destination_x, destination_y)
     return false if game.piece_capturable_by_en_passant.blank?
     return false if Piece.find(game.piece_capturable_by_en_passant).column_coordinate != destination_x
+    return false if (destination_x - column_coordinate).abs > 1
     return true if color == 'white' && (diagonal_up_and_right_move?(destination_x, destination_y) ||
                                         diagonal_up_and_left_move?(destination_x, destination_y))
     return true if color == 'black' && (diagonal_down_and_right_move?(destination_x, destination_y) ||
