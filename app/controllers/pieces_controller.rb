@@ -26,36 +26,48 @@ class PiecesController < ApplicationController
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
       change_turn
+
+      if @piece.pawn_promotion?(destination_y)
+        # pawn_promotion_choice = piece_params[:pawn_promotion]
+
+        # pawn_promotion_choice = piece_params[:type]
+        # @piece.type = pawn_promotion_choice
+        # @piece.image = @piece.color.capitalize + pawn_promotion_choice + '.png'
+      end
+
       @piece.move_to!(destination_x, destination_y)
       current_game.set_game_status
-      if (@piece.destination_y.zero? && current_piece_type == 'Pawn') || (@piece.destination_y == 7 && current_piece_type == 'Pawn')
-        # Pusher.trigger('pawn_promote_game' + @piece.game.id.to_s, 'pawn_promoted', message: flashmessages,
-        #                                                                            turn: check_turn,
-        #                                                                            row_destination: destination_y,
-        #                                                                            column_destination: destination_x,
-        #                                                                            row_origin: current_row,
-        #                                                                            column_origin: current_column,
-        #                                                                            type: current_piece_type)
-        pawn_promotion
-      else
-        Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
-                                                                                turn: check_turn,
-                                                                                row_destination: destination_y,
-                                                                                column_destination: destination_x,
-                                                                                row_origin: current_row,
-                                                                                column_origin: current_column,
-                                                                                type: current_piece_type)
-      end
+
+
+
+      # if (@piece.destination_y.zero? && current_piece_type == 'Pawn') || (@piece.destination_y == 7 && current_piece_type == 'Pawn')
+      #   Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
+      #                                                                              turn: check_turn,
+      #                                                                              row_destination: destination_y,
+      #                                                                              column_destination: destination_x,
+      #                                                                              row_origin: current_row,
+      #                                                                              column_origin: current_column,
+      #                                                                              type: current_piece_type)
+      # pawn_promotion
+      # else
+      Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
+                                                                              turn: check_turn,
+                                                                              row_destination: destination_y,
+                                                                              column_destination: destination_x,
+                                                                              row_origin: current_row,
+                                                                              column_origin: current_column,
+                                                                              type: current_piece_type)
+      # end
     else
       render plain: 'Invalid Move', status: :bad_request
     end
   end
 
-  def pawn_promotion
-    respond_to do |format|
-      format.gameShow.js { render :js => 'app/assets/javascripts/gameShow.js' }
-    end
-  end
+  # def pawn_promotion
+  #   respond_to do |format|
+  #     format.gameShow.js { render :js => 'app/assets/javascripts/gameShow.js' }
+  #   end
+  # end
 
   def flashmessages
     return 'Checkmate !!' if current_game.game_status == 1
