@@ -33,14 +33,18 @@ body {
 
 .white_field{
   background: image_url('white_field.png');
-  height: 80px;
-  width: 80px;
+  max-height: 90px;
+  min-height: 12.5%;
+  max-width: 90px;
+  min-width: 12.5%;
 }
 
 .black_field{
   background: image_url('black_field.png');
-  height: 80px;
-  width: 80px;
+  max-height: 90px;
+  min-height: 12.5%;
+  max-width: 90px;
+  min-width: 12.5%;
 }
 
 .waiting{
