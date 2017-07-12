@@ -77,6 +77,14 @@ RSpec.describe Pawn, type: :model do
       pawn_black.reload
       expect(pawn_black).to have_attributes(column_coordinate: -1, row_coordinate: -1, is_on_board?: false)
     end
+    it 'should reset en_passant flag after en_passant move' do
+      pawn_en_passant
+      pawn_black.move_to!(1, 4)
+      pawn_en_passant.move_to!(1, 5)
+      pawn_black.reload
+      expect(pawn_black).to have_attributes(column_coordinate: -1, row_coordinate: -1, is_on_board?: false)
+      expect(game.piece_capturable_by_en_passant).to eq nil
+    end
     it 'should not move if no en passant situation and trying to move en passant' do
       pawn_en_passant.move_to!(1, 5)
       expect(pawn_en_passant.valid_move?(1, 5)).to eq false
@@ -103,13 +111,9 @@ RSpec.describe Pawn, type: :model do
     context 'when capturing a piece w/ en passant places you in check' do
       it 'returns error: This places you in check' do
         black_pawn.move_to!(4, 4)
-        expect { white_pawn.move_to!(4, 5) }
-          .to raise_error('This places you in check')
-          .and not_change(white_pawn, :column_coordinate)
-          .and not_change(white_pawn, :row_coordinate)
-          .and not_change(black_pawn, :is_on_board?)
-          .and not_change(black_pawn, :column_coordinate)
-          .and not_change(black_pawn, :row_coordinate)
+        expect { white_pawn.move_to!(4, 5) }.to raise_error('This places you in check')
+        expect(white_pawn).to have_attributes(column_coordinate: 3, row_coordinate: 4)
+        expect(black_pawn).to have_attributes(column_coordinate: 4, row_coordinate: 4, is_on_board?: true)
       end
     end
   end
