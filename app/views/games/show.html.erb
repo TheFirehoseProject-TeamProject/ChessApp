@@ -37,11 +37,15 @@
             <%index_row = @board.length - index_row - 1 %>
             <div class = "row col-12">
               <% row.each_with_index do |field, index_field| %>
-                <span row = "<%=index_row%>" column = "<%=index_field%>" class="col-1 chess_field ui-widget-header <%= field[:class]%>">
-                  <% unless field[:piece].nil? %>
+              <span row = "<%=index_row%>" column = "<%=index_field%>" class="col-1 chess_field ui-widget-header <%= field[:class]%>">
+                <% if field[:piece].present? %>
                     <span id="<%= field[:piece].id %>" class="ui-widget-content piece"><%= image_tag field[:piece].image, class:"img-fluid"%></span>
-                  <%end%>
-                </span>
+                <%elsif field[:class] == 'white_field'%>
+                    <%= image_tag 'white_field.png', class:"img-fluid"%>
+                <%else%>
+                    <%= image_tag 'black_field.png', class:"img-fluid"%>
+                <%end%>
+              </span>
               <%end%>
             </div>
         <%end%>
