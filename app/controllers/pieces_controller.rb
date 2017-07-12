@@ -30,9 +30,9 @@ class PiecesController < ApplicationController
       if @piece.pawn_promotion?(destination_y)
         # pawn_promotion_choice = piece_params[:pawn_promotion]
 
-        # pawn_promotion_choice = piece_params[:type]
-        # @piece.type = pawn_promotion_choice
-        # @piece.image = @piece.color.capitalize + pawn_promotion_choice + '.png'
+        pawn_promotion_choice = piece_params[:type]
+        @piece.type = pawn_promotion_choice
+        @piece.image = @piece.color.capitalize + pawn_promotion_choice + '.png'
       end
 
       @piece.move_to!(destination_x, destination_y)
