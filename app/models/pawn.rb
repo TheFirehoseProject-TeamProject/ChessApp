@@ -51,6 +51,10 @@ class Pawn < Piece
 
   private
 
+  # def pawn_promotion?(destination_y)
+  #   destination_y.zero? || destination_y == 7
+  # end
+
   def promote!
     # byebug
     update(type: 'Queen')

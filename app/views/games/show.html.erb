@@ -61,6 +61,18 @@
       </div>
     </div>
   </div>
+
+<!--
+
+When I click on a piece for my pawn pawn_promotion
+  1. change the miage?
+  2. we need oto do the ajax PUT to tell the server we've moved
+    - We need to include the name of the piece we've picked
+
+
+-->
+
+
 <!-- <% end %> -->
 
 <!-- <button data-toggle="modal" data-target="#pawnPromotion">Test</button> -->
@@ -95,25 +107,20 @@
         drop: function(event, ui) {
           let row = $(this).attr('row');
           let column = $(this).attr('column');
+
+          // if pawn promjotion open the modal but do not PUT
+
+          // sendPieceData(pieceId, column, row);
           $.ajax({type: "PUT",
                  url: "/pieces/" + pieceId,
                  data: {
                     piece: {
                       row_coordinate: row,
                       column_coordinate: column,
-                      id: pieceId
+                      id: pieceId,
+
                       }
                  },
-                // error: function(xhr, status) {
-                //     if (xhr.status === 500 || xhr.status === 400){}
-                //     window.location.reload();
-                //     },
-                // success: function(data) {
-                //   if (data.piece.type === 'Pawn' && (data.piece.row_coordinate === 7 || data.piece.row_coordinate === 0)) {
-                //       $("#pawnPromotion").html(data);
-                //       jQuery("#pawnPromotion").modal('show');
-                //     }
-                //   window.location = window.location + '#loaded'; }
                  error: function(){
                    window.location.reload();
                  }
@@ -123,6 +130,9 @@
 
   });
   piece_moved_channel.bind('piece_moved', function(data) {
+    console.log('This is data: ');
+    console.log('--------------------');
+    console.log(data);
     let flashmessage = "<b><p class='text-center alert alert-info'>"+data.message+"</p></b>";
     $("#flashmessages").hide();
     $("#flashmessages").find("p").remove();
@@ -132,15 +142,15 @@
      };
     //  $('#pawnPromotion').modal('toggle');
     let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
-    console.log(piece);
+    // console.log(piece);
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
-    if (data.row_destination == 0 && piece.type == 'Pawn' || data.row_destination == 7 && piece.type == 'Pawn') {
-      $('#pawnPromotion').modal('toggle');
-    };
+    // if (data.row_destination == 0 && piece.type == 'Pawn' || data.row_destination == 7 && piece.type == 'Pawn') {
+    //   $('#pawnPromotion').modal('toggle');
+    // };
     makePiecesDraggable();
     change_turn(data.turn);
   });
@@ -156,4 +166,21 @@
       start:function(){$(this).stop(true,true)}
     });
   };
+
+  // function sendPieceData(pieceId, column, row) {
+  //   console.log('in sendPieceData');
+  //   $.ajax({type: "PUT",
+  //          url: "/pieces/" + pieceId,
+  //          data: {
+  //             piece: {
+  //               row_coordinate: row,
+  //               column_coordinate: column,
+  //               id: pieceId,
+  //               }
+  //          },
+  //          error: function(){
+  //            window.location.reload();
+  //          }
+  //   });
+  // };
 </script>

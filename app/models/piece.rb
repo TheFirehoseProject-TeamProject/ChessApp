@@ -112,6 +112,10 @@ class Piece < ApplicationRecord
 
   private
 
+  def pawn_promotion?(destination_y)
+    (destination_y.zero? && type == 'Pawn') || (destination_y == 7 && type == 'Pawn')
+  end
+
   def capture!(destination_piece)
     move_to_empty_space(destination_piece.column_coordinate, destination_piece.row_coordinate)
     remove_piece(destination_piece)
