@@ -12,12 +12,15 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them
 
+Must have Ruby environment to run this application:
+
+Can be found here: [Rbenv](https://github.com/rbenv/rbenv)
+
 ```
 Ruby 2.3.1
 
 Rails 5.0.3
 
-[Ruby Environment](https://github.com/rbenv/rbenv)
 ```
 
 ### Installing
