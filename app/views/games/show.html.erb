@@ -1,5 +1,6 @@
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 <script>
+
   $(function() {
     $("#flashmessages").hide();
     $("body").css("background", "url('/assets/board_background.png')");
@@ -48,34 +49,10 @@
     <br class="clear"/>
   </div>
 </div>
+<div id="dialog-confirm" style="background-color: white; display: none;">
+          <h4> Choose a Piece</h4><br/>
+</div>
 
-<!-- Modal for pawn promotion-->
-<!-- <% if @game.game_status == 0 %> -->
-  <div class="modal fade" id="pawnPromotion" tabindex="-1" role="dialog" aria-labelledby="pawnPromotionLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="pawnPromotionLabel">Choose a Piece</h4>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<!--
-
-When I click on a piece for my pawn pawn_promotion
-  1. change the miage?
-  2. we need oto do the ajax PUT to tell the server we've moved
-    - We need to include the name of the piece we've picked
-
-
--->
-
-
-<!-- <% end %> -->
-
-<!-- <button data-toggle="modal" data-target="#pawnPromotion">Test</button> -->
 <%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
@@ -94,48 +71,56 @@ When I click on a piece for my pawn pawn_promotion
       window.location.reload();
     }
   });
-  // var pawn_promote_channel = pusher.subscribe('pawn_promote_game' + <%= @game.id.to_s %>);
+  var pawn_promote_channel = pusher.subscribe('pawn_promote_game' + <%= @game.id.to_s %>);
   var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
 
   $(function() {
       makePiecesDraggable();
       let pieceId = 0;
+      let type = 0;
       $(".piece").mousedown(function(){
         pieceId = $(this).attr('id');
+        type = $(this).find("img").attr('alt')
       });
       $(".chess_field").droppable({
         drop: function(event, ui) {
           let row = $(this).attr('row');
           let column = $(this).attr('column');
-
-          // if pawn promjotion open the modal but do not PUT
-
-          sendPieceData(pieceId, column, row);
-          // $.ajax({type: "PUT",
-          //        url: "/pieces/" + pieceId,
-          //        data: {
-          //           piece: {
-          //             row_coordinate: row,
-          //             column_coordinate: column,
-          //             id: pieceId,
-
-          //             }
-          //        },
-          //        error: function(){
-          //          window.location.reload();
-          //        }
-          // });
+          let promotion_choice = 0;
+          debugger;
+           if (row == 0 && type == 'Blackpawn' || row == 7 && type == 'Whitepawn') {
+             $("#dialog-confirm").dialog({
+                resizable: false,
+                height: 140,
+                modal: true,
+                buttons: {
+                    Queen: function() {
+                          promotion_Queen();
+                          sendPieceData(pieceId, column, row, promotion_choice);
+                        $(this).dialog("close");
+                        window.location.reload();
+                    },
+                    Bishop: function() {
+                        promotion_Bishop();
+                        sendPieceData(pieceId, column, row, promotion_choice);
+                        $(this).dialog("close");
+                        window.location.reload();
+                    }
+                }
+                });
+             function promotion_Queen() { promotion_choice = 'Queen';  };
+             function promotion_Bishop() { promotion_choice = 'Bishop';  };
+    
+           }
+          else
+          {
+            sendPieceData(pieceId, column, row, promotion_choice);
+          }
         }
       });
 
   });
   piece_moved_channel.bind('piece_moved', function(data) {
-    
-    //  $('#pawnPromotion').modal('toggle');
-    
-    console.log('This is data: ');
-    console.log('--------------------');
-    console.log(data);
     let flashmessage = "<b><p class='text-center alert alert-info'>"+data.message+"</p></b>";
     $("#flashmessages").hide();
     $("#flashmessages").find("p").remove();
@@ -143,38 +128,19 @@ When I click on a piece for my pawn pawn_promotion
       $("#flashmessages").show();
       $("#flashmessages").append(flashmessage);
      };
-
     let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
-
-    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
-      console.log('inside pawn promotion conditional');
-      // jQuery('#pawnPromotion').modal('toggle');
-      $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
-      $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
-      $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
-      piece.css('top', '');
-      piece.css('left', '');
-      $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("img").attr("src", "/assets/pieces/WhiteQueen.png");
-    };
-
-    // let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
-    // console.log(piece);
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
-    
-    // if (data.row_destination == 0 && piece.type == 'Pawn' || data.row_destination == 7 && piece.type == 'Pawn') {
-    //   $('#pawnPromotion').modal('toggle');
-    // };
-
     makePiecesDraggable();
     change_turn(data.turn);
   });
-  // pawn_promote_channel.bind('pawn_promoted', function(data) {
-  //   console.log('test');
-  // });
+
+  pawn_promote_channel.bind('pawn_promoted', function(data) {
+    console.log('pawn promoted');
+  });
 
   function makePiecesDraggable(){
     $(".chessboard .piece").draggable({
@@ -185,7 +151,7 @@ When I click on a piece for my pawn pawn_promotion
     });
   };
 
-  function sendPieceData(pieceId, column, row) {
+  function sendPieceData(pieceId, column, row, promotion_choice) {
     console.log('in sendPieceData');
     $.ajax({type: "PUT",
            url: "/pieces/" + pieceId,
@@ -194,6 +160,7 @@ When I click on a piece for my pawn pawn_promotion
                 row_coordinate: row,
                 column_coordinate: column,
                 id: pieceId,
+                promotion_type: promotion_choice
                 }
            },
            error: function(){

@@ -17,15 +17,14 @@ ActiveRecord::Schema.define(version: 20170630040025) do
 
   create_table "games", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "number_of_moves"
     t.integer  "white_player_id"
     t.integer  "black_player_id"
     t.integer  "game_status"
     t.integer  "turn"
     t.integer  "piece_capturable_by_en_passant"
-    t.integer  "player_turn",                    default: 0, null: false
     t.index ["black_player_id"], name: "index_games_on_black_player_id", using: :btree
     t.index ["name"], name: "index_games_on_name", using: :btree
     t.index ["white_player_id"], name: "index_games_on_white_player_id", using: :btree
