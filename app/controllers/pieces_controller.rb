@@ -40,7 +40,6 @@ class PiecesController < ApplicationController
                                                                               row_origin: current_row,
                                                                               column_origin: current_column,
                                                                               type: current_piece_type)
-      # end
     else
       render plain: 'Invalid Move', status: :bad_request
     end

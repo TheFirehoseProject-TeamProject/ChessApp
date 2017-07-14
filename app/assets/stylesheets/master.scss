@@ -101,3 +101,35 @@ body {
     color: rgba(4, 111, 239, 1);
     background-color: white;
 }
+
+.queen {
+  height: 60px;
+  width: 60px;
+  border: none;
+  background-size: cover;
+}
+
+.bishop {
+  height: 60px;
+  width: 60px;
+  border: none;
+  background-size: cover;
+}
+
+.rook {
+  height: 60px;
+  width: 60px;
+  border: none;
+  background-size: cover;
+}
+
+.knight {
+  height: 60px;
+  width: 60px;
+  border: none;
+  background-size: cover;
+}
+
+.ui-dialog-titlebar-close {
+    visibility: hidden;
+}

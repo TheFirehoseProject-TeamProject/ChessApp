@@ -50,10 +50,12 @@
   </div>
 </div>
 <div id="dialog-confirm" style="background-color: white; display: none;">
-          <h4> Choose a Piece</h4><br/>
+  <h4> Choose a Piece</h4><br/>
+  <button class="queen" id="queenButton"></button>
+  <button class="bishop" id="bishopButton"></button>
+  <button class="rook" id="rookButton"></button>
+  <button class="knight" id="knightButton"></button>
 </div>
-
-<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 
 <script>
   Pusher.logToConsole = true;
@@ -71,7 +73,7 @@
       window.location.reload();
     }
   });
-  var pawn_promote_channel = pusher.subscribe('pawn_promote_game' + <%= @game.id.to_s %>);
+
   var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
 
   $(function() {
@@ -88,29 +90,52 @@
           let column = $(this).attr('column');
           let promotion_choice = 0;
           debugger;
-           if (row == 0 && type == 'Blackpawn' || row == 7 && type == 'Whitepawn') {
+           if (row === '0' && type === 'Blackpawn' || row === '7' && type === 'Whitepawn') {
              $("#dialog-confirm").dialog({
                 resizable: false,
                 height: 140,
-                modal: true,
-                buttons: {
-                    Queen: function() {
-                          promotion_Queen();
-                          sendPieceData(pieceId, column, row, promotion_choice);
-                        $(this).dialog("close");
-                        window.location.reload();
-                    },
-                    Bishop: function() {
-                        promotion_Bishop();
-                        sendPieceData(pieceId, column, row, promotion_choice);
-                        $(this).dialog("close");
-                        window.location.reload();
-                    }
-                }
-                });
+                modal: true
+              });
+              if (type === "Whitepawn") {
+                $('.queen').css({"background":"url('/assets/pieces/WhiteQueen.png')", "background-size": "cover"});
+                $('.bishop').css({"background":"url('/assets/pieces/WhiteBishop.png')", "background-size": "cover"});
+                $('.rook').css({"background":"url('/assets/pieces/WhiteRook.png')", "background-size": "cover"});
+                $('.knight').css({"background":"url('/assets/pieces/WhiteKnight.png')", "background-size": "cover"});
+              } else {
+                $('.queen').css({"background":"url('/assets/pieces/BlackQueen.png')", "background-size": "cover"});
+                $('.bishop').css({"background":"url('/assets/pieces/BlackBishop.png')", "background-size": "cover"});
+                $('.rook').css({"background":"url('/assets/pieces/BlackRook.png')", "background-size": "cover"});
+                $('.knight').css({"background":"url('/assets/pieces/BlackKnight.png')", "background-size": "cover"});
+              };
+              $('#queenButton').on('click', function() {
+                promotion_Queen();
+                sendPieceData(pieceId, column, row, promotion_choice);
+                $('#dialog-confirm').dialog("close");
+                window.location.reload();
+              });
+              $('#bishopButton').on('click', function() {
+                promotion_Bishop();
+                sendPieceData(pieceId, column, row, promotion_choice);
+                $('#dialog-confirm').dialog("close");
+                window.location.reload();
+              });
+              $('#rookButton').on('click', function() {
+                promotion_Rook();
+                sendPieceData(pieceId, column, row, promotion_choice);
+                $('#dialog-confirm').dialog("close");
+                window.location.reload();
+              });
+              $('#knightButton').on('click', function() {
+                promotion_Knight();
+                sendPieceData(pieceId, column, row, promotion_choice);
+                $('#dialog-confirm').dialog("close");
+                window.location.reload();
+              });
+
              function promotion_Queen() { promotion_choice = 'Queen';  };
              function promotion_Bishop() { promotion_choice = 'Bishop';  };
-    
+             function promotion_Rook() { promotion_choice = 'Rook'; };
+             function promotion_Knight() { promotion_choice = 'Knight'; };
            }
           else
           {
@@ -136,10 +161,6 @@
     piece.css('left', '');
     makePiecesDraggable();
     change_turn(data.turn);
-  });
-
-  pawn_promote_channel.bind('pawn_promoted', function(data) {
-    console.log('pawn promoted');
   });
 
   function makePiecesDraggable(){

@@ -24,26 +24,26 @@ class Pawn < Piece
         pawn_to_capture.update(column_coordinate: destination_x, row_coordinate: destination_y)
         raise 'This places you in check'
       end
-    elsif destination_y.zero? || destination_y == 7
-      if find_destination_piece(destination_x, destination_y)
-        destination_piece = find_destination_piece(destination_x, destination_y)
-        move_to_destination_and_capture!(destination_piece, destination_x, destination_y)
-        if game.check?
-          update(column_coordinate: original_column, row_coordinate: original_row)
-          destination_piece.update(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
-          raise 'This places you in check'
-        else
-          promote!
-        end
-      else
-        move_to_empty_space(destination_x, destination_y)
-        if game.check?
-          update(column_coordinate: original_column, row_coordinate: original_row)
-          raise 'This places you in check'
-        else
-          promote!
-        end
-      end
+    # elsif destination_y.zero? || destination_y == 7
+    #   if find_destination_piece(destination_x, destination_y)
+    #     destination_piece = find_destination_piece(destination_x, destination_y)
+    #     move_to_destination_and_capture!(destination_piece, destination_x, destination_y)
+    #     if game.check?
+    #       update(column_coordinate: original_column, row_coordinate: original_row)
+    #       destination_piece.update(column_coordinate: destination_x, row_coordinate: destination_y, is_on_board?: true)
+    #       raise 'This places you in check'
+    #     else
+    #       promote!
+    #     end
+    #   else
+    #     move_to_empty_space(destination_x, destination_y)
+    #     if game.check?
+    #       update(column_coordinate: original_column, row_coordinate: original_row)
+    #       raise 'This places you in check'
+    #     else
+    #       promote!
+    #     end
+    #   end
     else
       super
     end
@@ -51,14 +51,9 @@ class Pawn < Piece
 
   private
 
-  # def pawn_promotion?(destination_y)
-  #   destination_y.zero? || destination_y == 7
+  # def promote!
+  #   update(type: 'Queen')
   # end
-
-  def promote!
-    # byebug
-    update(type: 'Queen')
-  end
 
   def save_piece_capturable_by_en_passant(destination_x, destination_y)
     return nil if en_passant_move?(destination_x, destination_y)
