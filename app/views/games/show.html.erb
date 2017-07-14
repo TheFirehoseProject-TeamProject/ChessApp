@@ -90,7 +90,8 @@
           let column = $(this).attr('column');
           let promotion_choice = 0;
           debugger;
-           if (row === '0' && type === 'Blackpawn' || row === '7' && type === 'Whitepawn') {
+           // @game.color_current_turn is not updating after the turn has changed
+           if ((row === '0' && type === 'Blackpawn' && '<%= @game.color_current_turn %>' === 'black') || (row === '7' && type === 'Whitepawn' && '<%= @game.color_current_turn %>' === 'white')) {
              $("#dialog-confirm").dialog({
                 resizable: false,
                 height: 140,

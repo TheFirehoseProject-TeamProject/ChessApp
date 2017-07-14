@@ -263,6 +263,10 @@ class Game < ApplicationRecord
     )
   end
 
+  def color_current_turn
+    turn == black_player_id ? 'black' : 'white'
+  end
+
   private
 
   def undo_move_after_checkmate_test(piece, destination_piece, original_row, original_column, en_passant_status)
@@ -274,9 +278,7 @@ class Game < ApplicationRecord
                                             column_coordinate: destination_piece.column_coordinate)
   end
 
-  def color_current_turn
-    turn == black_player_id ? 'black' : 'white'
-  end
+
 
   def color_opponent
     turn == black_player_id ? 'white' : 'black'
