@@ -36,7 +36,7 @@ RSpec.describe Pawn, type: :model do
     context 'pawn has not reached the opposite side' do
       it 'should not promote the pawn' do
         pawn_black.update(row_coordinate: 2)
-        expect { pawn_black.move_to!(1, 1) }.to not_change(pawn_black.type)
+        expect { pawn_black.move_to!(1, 1) }.to not_change(pawn_black, :type)
       end
     end
   end
