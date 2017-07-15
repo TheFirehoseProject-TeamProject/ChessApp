@@ -278,8 +278,6 @@ class Game < ApplicationRecord
                                             column_coordinate: destination_piece.column_coordinate)
   end
 
-
-
   def color_opponent
     turn == black_player_id ? 'white' : 'black'
   end
