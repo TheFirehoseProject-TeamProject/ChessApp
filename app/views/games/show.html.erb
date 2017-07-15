@@ -2,6 +2,7 @@
 <script>
 
   $(function() {
+    
     $("#flashmessages").hide();
     $("body").css("background", "url('/assets/board_background.png')");
     change_turn("<%= @game.turn == @game.white_player_id ? 'black' : 'white' %>");
@@ -10,11 +11,13 @@
     if (turn === 'white') {
       $('#white_player_id').hide();
       $('#black_player_id').show();
+      turn_color = 'black'
      }
     else
     {
       $('#black_player_id').hide();
       $('#white_player_id').show();
+      turn_color = 'white'
     }
   }
 </script>
@@ -49,7 +52,7 @@
     <br class="clear"/>
   </div>
 </div>
-<div id="dialog-confirm" style="background-color: white; display: none;">
+<div class="promotion" id="dialog-confirm" style="display: none;">
   <h4> Choose a Piece</h4><br/>
   <button class="queen" id="queenButton"></button>
   <button class="bishop" id="bishopButton"></button>
@@ -75,6 +78,7 @@
   });
 
   var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
+  let turn_color = '<%= @game.color_current_turn %>';
 
   $(function() {
       makePiecesDraggable();
@@ -91,7 +95,7 @@
           let promotion_choice = 0;
           debugger;
            // @game.color_current_turn is not updating after the turn has changed
-           if ((row === '0' && type === 'Blackpawn' && '<%= @game.color_current_turn %>' === 'black') || (row === '7' && type === 'Whitepawn' && '<%= @game.color_current_turn %>' === 'white')) {
+           if ((row === '0' && type === 'Blackpawn' && turn_color === 'black') || (row === '7' && type === 'Whitepawn' && turn_color === 'white')) {
              $("#dialog-confirm").dialog({
                 resizable: false,
                 height: 140,
@@ -160,7 +164,7 @@
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
-    makePiecesDraggable();
+    makePiecesDraggable();   
     change_turn(data.turn);
   });
 
@@ -174,7 +178,6 @@
   };
 
   function sendPieceData(pieceId, column, row, promotion_choice) {
-    console.log('in sendPieceData');
     $.ajax({type: "PUT",
            url: "/pieces/" + pieceId,
            data: {
