@@ -4,3 +4,9 @@
 .chess_piece_selected {
   background-color: darkorange;
 }
+
+.piece{
+  margin: auto;
+  display: table;
+  z-index: +100;
+}

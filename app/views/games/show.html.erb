@@ -1,4 +1,3 @@
-<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 <script>
   $(function() {
     $("#flashmessages").hide();
@@ -17,38 +16,57 @@
     }
   }
 </script>
+
+<%= link_to "sign out",  destroy_user_session_path, method: :delete %>
 <div id="flashmessages"></div>
-<div class="chessboard <%= "waiting" if @waiting %>">
+<div class="container chessboard col-12 <%= "waiting" if @waiting %>">
   <div class='text-center'>
     <h3><%= link_to "Play against yourself", play_against_yourself_path, class: 'btn btn-info',method: :post if @waiting%></h3>
     <br />
   </div>
   <br />
   <div class="row">
-    <div id="turn" class="col-1 offset-1">
+    <div id="turn" class="col-2">
         <h4>Turn:</h4>
         <h5 id= "white_player_id" class="white_turn"><%= ("White: " + @game.white_player.name) unless @waiting%></h5></br>
         <h5 id= "black_player_id" class="black_turn"><%= ("Black: " + @game.black_player.name) unless @waiting%></h5></br>
         <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )unless @waiting%>
     </div>
-    <div class="col-8">
-      <% @board.reverse_each.with_index do |row, index_row| %>
-          <%index_row = @board.length - index_row - 1 %>
-          <div class = "row offset-2">
-            <% row.each_with_index do |field, index_field| %>
+    <div class="col-8" >
+      <div  id = "board" class="container col-8">
+        <% @board.reverse_each.with_index do |row, index_row| %>
+            <%index_row = @board.length - index_row - 1 %>
+            <div class = "row">
+              <% row.each_with_index do |field, index_field| %>
               <span row = "<%=index_row%>" column = "<%=index_field%>" class="chess_field ui-widget-header <%= field[:class]%>">
                 <% unless field[:piece].nil? %>
-                  <span id="<%= field[:piece].id %>" class="ui-widget-content piece"><%= image_tag(field[:piece].image)%></span>
+                  <span id="<%= field[:piece].id %>" class="ui-widget-content piece"><%= image_tag field[:piece].image, class:"img-fluid"%></span>
                 <%end%>
               </span>
             <%end%>
           </div>
-      <%end%>
+        <%end%>
+      </div>
     </div>
     <br class="clear"/>
-  </div>
+    </div>
 </div>
 
+<!-- Modal for pawn promotion-->
+<!-- <% if @game.game_status == 0 %> -->
+  <div class="modal fade" id="pawnPromotion" tabindex="-1" role="dialog" aria-labelledby="pawnPromotionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="pawnPromotionLabel">Choose a Piece</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- <% end %> -->
+
+<button id="promo_button" style="display: none;" data-toggle="modal" data-target="#pawnPromotion">Test</button>
 <script>
   Pusher.logToConsole = true;
   var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
@@ -56,12 +74,6 @@
     encrypted: true
   });
   var game = pusher.subscribe('game_<%="#{@game.id}"%>');
-  game.bind('second_player_joined', function(data) {
-    if (!window.location.href.substring(window.location.href).match('loaded')) {
-      window.location = window.location + '#loaded';
-      window.location.reload();
-    }
-  });
   var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
 
   $(function() {
@@ -71,6 +83,9 @@
         pieceId = $(this).attr('id');
       });
       $(".chess_field").droppable({
+        classes: {
+          "ui-droppable-hover": "ui-state-hover"
+          },
         drop: function(event, ui) {
           let row = $(this).attr('row');
           let column = $(this).attr('column');
@@ -91,6 +106,14 @@
       });
 
   });
+
+  game.bind('second_player_joined', function(data) {
+    if (!window.location.href.substring(window.location.href).match('loaded')) {
+      window.location = window.location + '#loaded';
+      window.location.reload();
+    }
+  });
+
   piece_moved_channel.bind('piece_moved', function(data) {
     let flashmessage = "<b><p class='text-center alert alert-info'>"+data.message+"</p></b>";
     $("#flashmessages").hide();
@@ -105,17 +128,53 @@
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
-    makePiecesDraggable();
+    piece.css("z-index","100");
+    $(".piece").css("opacity","1");
+    castling(data);
+    en_passant(data);
+    if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
+      $("#promo_button").click();
+    };
     change_turn(data.turn);
   });
 
+  function en_passant(data) {
+    if (data.type === 'Pawn' && data.column_destination != data.column_origin && !data.destiantion_piece) {
+      $(".chessboard").find($("span #" + data.en_passant_id)).remove();
+    }
+  }
+
+  function castling(data){
+    let rook_row = 0;
+    let rook_column = 0;
+    (data.color === "white") ?  rook_row = 0 : rook_row = 7;
+    (data.column_destination === 6) ? rook_column = 7 : rook_column = 0;
+    let rook = $("[row =" + rook_row + "][column =" + rook_column + "]").find("span");
+    if (data.type === "King" && data.column_destination === 6 && data.row_destination === data.row_origin && data.column_origin === 4){
+      $("[row =" + rook_row + "][column = 5]").append(rook);
+      $("[row =" + rook_row + "][column =" + rook_column + "]").find("span").remove();
+    }
+    if (data.type === "King" && data.column_destination === 2 && data.row_destination === data.row_origin && data.column_origin === 4){
+      $("[row =" + rook_row + "][column = 3]").append(rook);
+      $("[row =" + rook_row + "][column =" + rook_column + "]").find("span").remove();
+    }
+    rook.css('top', '');
+    rook.css('left', '');
+  };
+
   function makePiecesDraggable(){
     $(".chessboard .piece").draggable({
-      opacity: .4,
+      opacity: 1,
       create: function(){$(this).data('position',$(this).position())},
       cursorAt:{left:15},
       cursor:'move',
-      start:function(){$(this).stop(true,true)}
+      start:function(){
+        $(this).stop(true,true)
+        $(this).css("z-index","1000")
+        $(".piece").css("opacity","0.4")
+      },
+      containment: $("#board")
     });
   };
+
 </script>

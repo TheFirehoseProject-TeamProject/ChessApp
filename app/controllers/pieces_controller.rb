@@ -21,13 +21,19 @@ class PiecesController < ApplicationController
     destination_y = piece_params[:row_coordinate].to_i
     current_row = @piece.row_coordinate
     current_column = @piece.column_coordinate
+    en_passant_flag = @piece.game.piece_capturable_by_en_passant
+    destination_piece = @piece.find_destination_piece(destination_x, destination_y).present?
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
-      change_turn
       @piece.move_to!(destination_x, destination_y)
+      change_turn
       current_game.set_game_status
       Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
                                                                               turn: check_turn,
+                                                                              type: @piece.type,
+                                                                              color: @piece.color,
+                                                                              destination_piece: destination_piece,
+                                                                              en_passant_id: en_passant_flag,
                                                                               row_destination: destination_y,
                                                                               column_destination: destination_x,
                                                                               row_origin: current_row,
