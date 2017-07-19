@@ -37,5 +37,9 @@ RSpec.describe Queen, type: :model do
       expect(queen.valid_move?(2, 3)).to eq(false)
       expect(queen.valid_move?(3, 6)).to eq(false)
     end
+
+    it 'should return false for moving to current position' do
+      expect(queen.valid_move?(4, 4)).to eq(false)
+    end
   end
 end
