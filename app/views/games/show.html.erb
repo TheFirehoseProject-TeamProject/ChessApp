@@ -2,7 +2,7 @@
 <script>
 
   $(function() {
-    
+    // debugger;
     $("#flashmessages").hide();
     $("body").css("background", "url('/assets/board_background.png')");
     change_turn("<%= @game.turn == @game.white_player_id ? 'black' : 'white' %>");
@@ -11,13 +11,13 @@
     if (turn === 'white') {
       $('#white_player_id').hide();
       $('#black_player_id').show();
-      turn_color = 'black'
+      turn_color = 'Black'
      }
     else
     {
       $('#black_player_id').hide();
       $('#white_player_id').show();
-      turn_color = 'white'
+      turn_color = 'White'
     }
   }
 </script>
@@ -61,6 +61,7 @@
 </div>
 
 <script>
+
   Pusher.logToConsole = true;
   Pusher.log = function(msg) {
   console.log(msg);
@@ -78,7 +79,7 @@
   });
 
   var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
-  let turn_color = '<%= @game.color_current_turn %>';
+  let turn_color = '<%= @game.color_current_turn.capitalize %>';
 
   $(function() {
       makePiecesDraggable();
@@ -93,9 +94,9 @@
           let row = $(this).attr('row');
           let column = $(this).attr('column');
           let promotion_choice = 0;
-          debugger;
+          // debugger;
            // @game.color_current_turn is not updating after the turn has changed
-           if ((row === '0' && type === 'Blackpawn' && turn_color === 'black') || (row === '7' && type === 'Whitepawn' && turn_color === 'white')) {
+           if ((row === '0' && type === 'Blackpawn' && turn_color === 'Black') || (row === '7' && type === 'Whitepawn' && turn_color === 'White')) {
              $("#dialog-confirm").dialog({
                 resizable: false,
                 height: 140,
@@ -115,32 +116,36 @@
               $('#queenButton').on('click', function() {
                 promotion_Queen();
                 sendPieceData(pieceId, column, row, promotion_choice);
+                change_piece_image();
                 $('#dialog-confirm').dialog("close");
-                window.location.reload();
               });
               $('#bishopButton').on('click', function() {
                 promotion_Bishop();
                 sendPieceData(pieceId, column, row, promotion_choice);
+                change_piece_image();
                 $('#dialog-confirm').dialog("close");
-                window.location.reload();
               });
               $('#rookButton').on('click', function() {
                 promotion_Rook();
                 sendPieceData(pieceId, column, row, promotion_choice);
+                change_piece_image();
                 $('#dialog-confirm').dialog("close");
-                window.location.reload();
               });
               $('#knightButton').on('click', function() {
                 promotion_Knight();
                 sendPieceData(pieceId, column, row, promotion_choice);
+                change_piece_image();
                 $('#dialog-confirm').dialog("close");
-                window.location.reload();
               });
 
              function promotion_Queen() { promotion_choice = 'Queen';  };
              function promotion_Bishop() { promotion_choice = 'Bishop';  };
              function promotion_Rook() { promotion_choice = 'Rook'; };
              function promotion_Knight() { promotion_choice = 'Knight'; };
+
+             function change_piece_image() {
+               $('#' + pieceId + '').find("img").attr('src', '/assets/pieces/' + turn_color + promotion_choice + '.png');
+             }
            }
           else
           {
@@ -157,15 +162,30 @@
     if (data.message) {
       $("#flashmessages").show();
       $("#flashmessages").append(flashmessage);
-     };
+    };
+
+    // debugger;
     let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
     $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
     piece.css('top', '');
     piece.css('left', '');
-    makePiecesDraggable();   
     change_turn(data.turn);
+    makePiecesDraggable();
+    // debugger;
+    if ((data.row_destination === 0 && data.type === 'Pawn' && data.color === 'black') && (data.row_destination === 7 && data.type === 'Pawn' && data.color === 'white')) {
+      let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
+      // $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
+      $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
+      piece.find("img").attr('src', '/assets/images/pieces/' + '.png')
+      // $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
+      piece.css('top', '');
+      piece.css('left', '');
+      change_turn(data.turn);
+      makePiecesDraggable();
+    }
+
   });
 
   function makePiecesDraggable(){

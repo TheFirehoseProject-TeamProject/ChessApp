@@ -25,13 +25,14 @@ class PiecesController < ApplicationController
     current_piece_type = @piece.type
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
-      change_turn
+
       if @piece.pawn_promotion?(destination_y)
         @piece.update(type: piece_params[:promotion_type])
         @piece.update(image: 'pieces/' + @piece.color.capitalize + piece_params[:promotion_type] + '.png')
       end
 
       @piece.move_to!(destination_x, destination_y)
+      change_turn
       current_game.set_game_status
       Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
                                                                               turn: check_turn,
@@ -39,7 +40,8 @@ class PiecesController < ApplicationController
                                                                               column_destination: destination_x,
                                                                               row_origin: current_row,
                                                                               column_origin: current_column,
-                                                                              type: current_piece_type)
+                                                                              type: current_piece_type,
+                                                                              color: @piece.color)
     else
       render plain: 'Invalid Move', status: :bad_request
     end
