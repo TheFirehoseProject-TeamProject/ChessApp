@@ -23,6 +23,8 @@ class PiecesController < ApplicationController
     current_row = @piece.row_coordinate
     current_column = @piece.column_coordinate
     current_piece_type = @piece.type
+    en_passant_flag = @piece.game.piece_capturable_by_en_passant
+    destination_piece = @piece.find_destination_piece(destination_x, destination_y).present?
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
 
