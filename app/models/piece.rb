@@ -66,7 +66,6 @@ class Piece < ApplicationRecord
   def move_to_destination_and_capture!(pawn_to_capture, destination_x, destination_y)
     update_attributes(column_coordinate: destination_x, row_coordinate: destination_y)
     remove_piece(pawn_to_capture)
-    game.update(piece_capturable_by_en_passant: '')
   end
 
   def move_to_empty_space(destination_x, destination_y)
@@ -208,8 +207,7 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_up_right?(destination_y)
-    ((row_coordinate + 1)..(destination_y - 1)).each_with_index do |row, index|
-      index += 1
+    ((row_coordinate + 1)..(destination_y - 1)).each.with_index(1) do |row, index|
       present_pieces_check = game.pieces.where(row_coordinate: row, column_coordinate: column_coordinate + index).present?
       return true if present_pieces_check
     end
@@ -217,7 +215,7 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_down_left?(destination_y)
-    ((destination_y + 1)..(row_coordinate - 1)).each_with_index do |row, index|
+    ((destination_y + 1)..(row_coordinate - 1)).to_a.reverse.each_with_index do |row, index|
       index += 1
       present_pieces_check = game.pieces.where(row_coordinate: row, column_coordinate: column_coordinate - index).present?
       return true if present_pieces_check
@@ -226,8 +224,7 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_up_left?(destination_y)
-    ((row_coordinate + 1)..(destination_y - 1)).each_with_index do |row, index|
-      index += 1
+    ((row_coordinate + 1)..(destination_y - 1)).each.with_index(1) do |row, index|
       present_pieces_check = game.pieces.where(row_coordinate: row, column_coordinate: column_coordinate - index).present?
       return true if present_pieces_check
     end
@@ -235,9 +232,8 @@ class Piece < ApplicationRecord
   end
 
   def diagonal_obstruction_down_right?(destination_y)
-    ((destination_y + 1)..(row_coordinate - 1)).to_a.reverse.each_with_index do |row, index|
-      index += 1
-      present_pieces_check = game.pieces.where(row_coordinate: row, column_coordinate: column_coordinate + index).present?
+    ((destination_y + 1)..(row_coordinate - 1)).each.with_index(1) do |_row, index|
+      present_pieces_check = game.pieces.where(row_coordinate: row_coordinate - index, column_coordinate: column_coordinate + index).present?
       return true if present_pieces_check
     end
     false
