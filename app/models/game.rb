@@ -268,7 +268,7 @@ class Game < ApplicationRecord
   def color_current_turn
     turn == black_player_id ? 'black' : 'white'
   end
-  
+
   def restore_en_passant_piece(en_passant_piece_row, en_passant_piece_column, en_passant_id)
     Piece.find(en_passant_id).update(is_on_board?: true,
                                      row_coordinate: en_passant_piece_row,
