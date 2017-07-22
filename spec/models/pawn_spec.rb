@@ -1,4 +1,5 @@
 require 'rails_helper'
+RSpec::Matchers.define_negated_matcher :not_change, :change
 
 RSpec.describe Pawn, type: :model do
   let(:game) { FactoryGirl.create(:game) }
@@ -9,6 +10,36 @@ RSpec.describe Pawn, type: :model do
   let(:pawn_en_passant) { FactoryGirl.create(:pawn, column_coordinate: 2, row_coordinate: 4, game: game, color: 'white') }
   let!(:black_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
   let!(:white_king) { FactoryGirl.create(:king, game: game, column_coordinate: 4, row_coordinate: 0, color: 'white', is_on_board?: true) }
+
+  describe '#promote!' do
+    context 'pawn reaches opposite side of the board' do
+      let(:game_pp) { FactoryGirl.create(:game) }
+      let!(:queen) { FactoryGirl.create(:queen, game: game_pp, column_coordinate: 0, row_coordinate: 7, is_on_board?: true, color: 'black') }
+      let(:pawn) { FactoryGirl.create(:pawn, game: game_pp, column_coordinate: 1, row_coordinate: 6, is_on_board?: true, color: 'white') }
+      let!(:king_w) { FactoryGirl.create(:king, game: game_pp, column_coordinate: 7, row_coordinate: 0, is_on_board?: true, color: 'white') }
+      let!(:black_king) { FactoryGirl.create(:king, game: game_pp, column_coordinate: 4, row_coordinate: 7, color: 'black', is_on_board?: true) }
+
+      # it 'pawn promotes' do
+
+      #   pawn_black.update(row_coordinate: 1)
+      #   expect{ pawn_black.move_to!(1, 0) }.to change { pawn_black.type }
+      # end
+
+      it 'pawn cannot move because of check' do
+        expect { pawn.move_to!(1, 7) }.to raise_error('This places you in check')
+          .and not_change(pawn, :column_coordinate)
+          .and not_change(pawn, :row_coordinate)
+          .and not_change(pawn, :type)
+      end
+    end
+
+    context 'pawn has not reached the opposite side' do
+      it 'should not promote the pawn' do
+        pawn_black.update(row_coordinate: 2)
+        expect { pawn_black.move_to!(1, 1) }.to not_change(pawn_black, :type)
+      end
+    end
+  end
 
   describe '#valid_move?' do
     it 'white pawn should be able to move one field up' do
@@ -77,14 +108,6 @@ RSpec.describe Pawn, type: :model do
       pawn_black.reload
       expect(pawn_black).to have_attributes(column_coordinate: -1, row_coordinate: -1, is_on_board?: false)
     end
-    it 'should reset en_passant flag after en_passant move' do
-      pawn_en_passant
-      pawn_black.move_to!(1, 4)
-      pawn_en_passant.move_to!(1, 5)
-      pawn_black.reload
-      expect(pawn_black).to have_attributes(column_coordinate: -1, row_coordinate: -1, is_on_board?: false)
-      expect(game.piece_capturable_by_en_passant).to eq nil
-    end
     it 'should not move if no en passant situation and trying to move en passant' do
       pawn_en_passant.move_to!(1, 5)
       expect(pawn_en_passant.valid_move?(1, 5)).to eq false
@@ -111,9 +134,13 @@ RSpec.describe Pawn, type: :model do
     context 'when capturing a piece w/ en passant places you in check' do
       it 'returns error: This places you in check' do
         black_pawn.move_to!(4, 4)
-        expect { white_pawn.move_to!(4, 5) }.to raise_error('This places you in check')
-        expect(white_pawn).to have_attributes(column_coordinate: 3, row_coordinate: 4)
-        expect(black_pawn).to have_attributes(column_coordinate: 4, row_coordinate: 4, is_on_board?: true)
+        expect { white_pawn.move_to!(4, 5) }
+          .to raise_error('This places you in check')
+          .and not_change(white_pawn, :column_coordinate)
+          .and not_change(white_pawn, :row_coordinate)
+          .and not_change(black_pawn, :is_on_board?)
+          .and not_change(black_pawn, :column_coordinate)
+          .and not_change(black_pawn, :row_coordinate)
       end
     end
   end

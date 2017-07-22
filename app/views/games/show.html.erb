@@ -1,5 +1,7 @@
 <script>
+
   $(function() {
+    // debugger;
     $("#flashmessages").hide();
     $("body").css("background", "url('/assets/board_background.png')");
     change_turn("<%= @game.turn == @game.white_player_id ? 'black' : 'white' %>");
@@ -8,11 +10,13 @@
     if (turn === 'white') {
       $('#white_player_id').hide();
       $('#black_player_id').show();
+      turn_color = 'Black'
      }
     else
     {
       $('#black_player_id').hide();
       $('#white_player_id').show();
+      turn_color = 'White'
     }
   }
 </script>
@@ -32,12 +36,11 @@
         <h5 id= "black_player_id" class="black_turn"><%= ("Black: " + @game.black_player.name) unless @waiting%></h5></br>
         <%= image_tag gravatar_for(@game.turn == @game.white_player_id ? @game.white_player.email : @game.black_player.email )unless @waiting%>
     </div>
-    <div class="col-8" >
-      <div  id = "board" class="container col-8">
-        <% @board.reverse_each.with_index do |row, index_row| %>
-            <%index_row = @board.length - index_row - 1 %>
-            <div class = "row">
-              <% row.each_with_index do |field, index_field| %>
+    <div class="col-8">
+      <% @board.reverse_each.with_index do |row, index_row| %>
+          <%index_row = @board.length - index_row - 1 %>
+          <div class = "row offset-2">
+            <% row.each_with_index do |field, index_field| %>
               <span row = "<%=index_row%>" column = "<%=index_field%>" class="chess_field ui-widget-header <%= field[:class]%>">
                 <% unless field[:piece].nil? %>
                   <span id="<%= field[:piece].id %>" class="ui-widget-content piece"><%= image_tag field[:piece].image, class:"img-fluid"%></span>
@@ -51,36 +54,43 @@
     <br class="clear"/>
     </div>
 </div>
+<div class="promotion" id="dialog-confirm" style="display: none;">
+  <h4> Choose a Piece</h4><br/>
+  <button class="queen" id="queenButton"></button>
+  <button class="bishop" id="bishopButton"></button>
+  <button class="rook" id="rookButton"></button>
+  <button class="knight" id="knightButton"></button>
+</div>
 
-<!-- Modal for pawn promotion-->
-<!-- <% if @game.game_status == 0 %> -->
-  <div class="modal fade" id="pawnPromotion" tabindex="-1" role="dialog" aria-labelledby="pawnPromotionLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="pawnPromotionLabel">Choose a Piece</h4>
-        </div>
-      </div>
-    </div>
-  </div>
-<!-- <% end %> -->
-
-<button id="promo_button" style="display: none;" data-toggle="modal" data-target="#pawnPromotion">Test</button>
 <script>
+
   Pusher.logToConsole = true;
+  Pusher.log = function(msg) {
+  console.log(msg);
+};
   var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", {
     cluster: 'ap1',
     encrypted: true
   });
   var game = pusher.subscribe('game_<%="#{@game.id}"%>');
+
+  game.bind('second_player_joined', function(data) {
+    if (!window.location.href.substring(window.location.href).match('loaded')) {
+      window.location = window.location + '#loaded';
+      window.location.reload();
+    }
+  });
+
   var piece_moved_channel = pusher.subscribe('piece_moved_game' + <%= @game.id.to_s %>);
+  let turn_color = '<%= @game.color_current_turn.capitalize %>';
 
   $(function() {
       makePiecesDraggable();
       let pieceId = 0;
+      let type = 0;
       $(".piece").mousedown(function(){
         pieceId = $(this).attr('id');
+        type = $(this).find("img").attr('alt')
       });
       $(".chess_field").droppable({
         classes: {
@@ -89,19 +99,64 @@
         drop: function(event, ui) {
           let row = $(this).attr('row');
           let column = $(this).attr('column');
-          $.ajax({type: "PUT",
-                 url: "/pieces/" + pieceId,
-                 data: {
-                    piece: {
-                      row_coordinate: row,
-                      column_coordinate: column,
-                      id: pieceId
-                      }
-                 },
-                 error: function(){
-                   window.location.reload();
-                 }
-          });
+          let promotion_choice = 0;
+          // debugger;
+           // @game.color_current_turn is not updating after the turn has changed
+           if ((row === '0' && type === 'Blackpawn' && turn_color === 'Black') || (row === '7' && type === 'Whitepawn' && turn_color === 'White')) {
+             $("#dialog-confirm").dialog({
+                resizable: false,
+                height: 140,
+                modal: true
+              });
+              if (type === "Whitepawn") {
+                $('.queen').css({"background":"url('/assets/pieces/WhiteQueen.png')", "background-size": "cover"});
+                $('.bishop').css({"background":"url('/assets/pieces/WhiteBishop.png')", "background-size": "cover"});
+                $('.rook').css({"background":"url('/assets/pieces/WhiteRook.png')", "background-size": "cover"});
+                $('.knight').css({"background":"url('/assets/pieces/WhiteKnight.png')", "background-size": "cover"});
+              } else {
+                $('.queen').css({"background":"url('/assets/pieces/BlackQueen.png')", "background-size": "cover"});
+                $('.bishop').css({"background":"url('/assets/pieces/BlackBishop.png')", "background-size": "cover"});
+                $('.rook').css({"background":"url('/assets/pieces/BlackRook.png')", "background-size": "cover"});
+                $('.knight').css({"background":"url('/assets/pieces/BlackKnight.png')", "background-size": "cover"});
+              };
+              $('#queenButton').on('click', function() {
+                promotion_Queen();
+                sendPieceData(pieceId, column, row, promotion_choice);
+                change_piece_image();
+                $('#dialog-confirm').dialog("close");
+              });
+              $('#bishopButton').on('click', function() {
+                promotion_Bishop();
+                sendPieceData(pieceId, column, row, promotion_choice);
+                change_piece_image();
+                $('#dialog-confirm').dialog("close");
+              });
+              $('#rookButton').on('click', function() {
+                promotion_Rook();
+                sendPieceData(pieceId, column, row, promotion_choice);
+                change_piece_image();
+                $('#dialog-confirm').dialog("close");
+              });
+              $('#knightButton').on('click', function() {
+                promotion_Knight();
+                sendPieceData(pieceId, column, row, promotion_choice);
+                change_piece_image();
+                $('#dialog-confirm').dialog("close");
+              });
+
+             function promotion_Queen() { promotion_choice = 'Queen';  };
+             function promotion_Bishop() { promotion_choice = 'Bishop';  };
+             function promotion_Rook() { promotion_choice = 'Rook'; };
+             function promotion_Knight() { promotion_choice = 'Knight'; };
+
+             function change_piece_image() {
+               $('#' + pieceId + '').find("img").attr('src', '/assets/pieces/' + turn_color + promotion_choice + '.png');
+             }
+           }
+          else
+          {
+            sendPieceData(pieceId, column, row, promotion_choice);
+          }
         }
       });
 
@@ -121,7 +176,9 @@
     if (data.message) {
       $("#flashmessages").show();
       $("#flashmessages").append(flashmessage);
-     };
+    };
+
+    // debugger;
     let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
     $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
@@ -135,7 +192,22 @@
     if (data.row_destination == 0 && data.type == 'Pawn' || data.row_destination == 7 && data.type == 'Pawn') {
       $("#promo_button").click();
     };
+
     change_turn(data.turn);
+    makePiecesDraggable();
+    // debugger;
+    if ((data.row_destination === 0 && data.type === 'Pawn' && data.color === 'black') && (data.row_destination === 7 && data.type === 'Pawn' && data.color === 'white')) {
+      let piece = $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span");
+      // $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").find("span").remove();
+      $("[row=" + data.row_destination + "][column=" + data.column_destination + "]").append(piece);
+      piece.find("img").attr('src', '/assets/images/pieces/' + '.png')
+      // $("[row=" + data.row_origin + "][column=" + data.column_origin + "]").find("span").remove();
+      piece.css('top', '');
+      piece.css('left', '');
+      change_turn(data.turn);
+      makePiecesDraggable();
+    }
+
   });
 
   function en_passant(data) {
@@ -166,7 +238,6 @@
     $(".chessboard .piece").draggable({
       opacity: 1,
       create: function(){$(this).data('position',$(this).position())},
-      cursorAt:{left:15},
       cursor:'move',
       start:function(){
         $(this).stop(true,true)
@@ -177,4 +248,20 @@
     });
   };
 
+  function sendPieceData(pieceId, column, row, promotion_choice) {
+    $.ajax({type: "PUT",
+           url: "/pieces/" + pieceId,
+           data: {
+              piece: {
+                row_coordinate: row,
+                column_coordinate: column,
+                id: pieceId,
+                promotion_type: promotion_choice
+                }
+           },
+           error: function(){
+             window.location.reload();
+           }
+    });
+  };
 </script>

@@ -17,4 +17,26 @@ RSpec.describe PiecesController, type: :controller do
       expect(game.turn).to eq(black_player.id)
     end
   end
+
+  # describe 'piece#pawn_promote' do
+  #   let(:game_pp) { FactoryGirl.create(:game) }
+  #   let(:black_player) { FactoryGirl.create(:user, game_id: game_pp) }
+  #   let(:white_player) { FactoryGirl.create(:user, game_id: game_pp) }
+  #   let(:pawn_w) { FactoryGirl.create(:pawn, game_id: game_pp, color: 'white', is_on_board?: true, column_coordinate: 1, row_coordinate: 6 ) }
+  #   before(:all) do
+  #     sign_in white_player
+  #     sign_in black_player
+  #   end
+
+  #   it 'changes pawn to a queen if queen is selected' do
+
+  #     expect{ pawn_w.move_to!(1, 7) }.to change{ pawn_w.type }
+  #   end
+  #   it 'changes pawn to a rook if rook is selected' do
+  #   end
+  #   it 'changes pawn to a bishop if bishop is selected' do
+  #   end
+  #   it 'changes pawn to a knight if knight is selected' do
+  #   end
+  # end
 end

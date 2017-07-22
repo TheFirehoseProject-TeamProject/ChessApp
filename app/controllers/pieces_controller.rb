@@ -1,5 +1,6 @@
 class PiecesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :update
+
   def update
     @piece = Piece.find(params[:id])
     checks_before_move
@@ -12,7 +13,7 @@ class PiecesController < ApplicationController
   end
 
   def piece_params
-    params.require(:piece).permit(:row_coordinate, :column_coordinate, :type, :color, :id)
+    params.require(:piece).permit(:row_coordinate, :column_coordinate, :type, :id, :promotion_type)
   end
 
   def checks_before_move
@@ -21,23 +22,30 @@ class PiecesController < ApplicationController
     destination_y = piece_params[:row_coordinate].to_i
     current_row = @piece.row_coordinate
     current_column = @piece.column_coordinate
+    current_piece_type = @piece.type
     en_passant_flag = @piece.game.piece_capturable_by_en_passant
     destination_piece = @piece.find_destination_piece(destination_x, destination_y).present?
     render plain: 'Invalid Move', status: :bad_request if @piece.not_moved?(destination_x, destination_y)
     if !@piece.obstructed?(destination_x, destination_y) && @piece.valid_move?(destination_x, destination_y) && check_turn == @piece.color
+
+      if @piece.pawn_promotion?(destination_y)
+        @piece.update(type: piece_params[:promotion_type])
+        @piece.update(image: 'pieces/' + @piece.color.capitalize + piece_params[:promotion_type] + '.png')
+      end
+
       @piece.move_to!(destination_x, destination_y)
       change_turn
       current_game.set_game_status
       Pusher.trigger('piece_moved_game' + @piece.game.id.to_s, 'piece_moved', message: flashmessages,
                                                                               turn: check_turn,
-                                                                              type: @piece.type,
-                                                                              color: @piece.color,
                                                                               destination_piece: destination_piece,
                                                                               en_passant_id: en_passant_flag,
                                                                               row_destination: destination_y,
                                                                               column_destination: destination_x,
                                                                               row_origin: current_row,
-                                                                              column_origin: current_column)
+                                                                              column_origin: current_column,
+                                                                              type: current_piece_type,
+                                                                              color: @piece.color)
     else
       render plain: 'Invalid Move', status: :bad_request
     end

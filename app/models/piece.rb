@@ -109,6 +109,10 @@ class Piece < ApplicationRecord
     false
   end
 
+  def pawn_promotion?(destination_y)
+    (destination_y.zero? && type == 'Pawn') || (destination_y == 7 && type == 'Pawn')
+  end
+
   private
 
   def capture!(destination_piece)
